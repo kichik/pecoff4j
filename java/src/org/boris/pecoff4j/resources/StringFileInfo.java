@@ -77,10 +77,10 @@ public class StringFileInfo
 		this.padding = padding;
 	}
     
-    public boolean allTablesRead() {
-    	int actualLength = 6 + padding + Strings.getUtf16Length(key);
+	public int sizeOf() {
+		int actualLength = 6 + padding + Strings.getUtf16Length(key);
     	for (StringTable t : tables)
-    		actualLength += t.getLength();
-    	return this.length <= actualLength;
-    }
+    		actualLength += t.sizeOf();
+		return actualLength;
+	}
 }

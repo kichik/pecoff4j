@@ -25,7 +25,12 @@ import org.boris.pecoff4j.util.ResourceHelper;
 public class VersionStringsTest {
 
     public static void main(String[] args) throws IOException {
-        PE pe = PEParser.parse("C:/windows/system32/notepad.exe");
+    	testVersionStrings("C:/windows/system32/notepad.exe");
+        testVersionStrings("C:/windows/system32/ieframe.dll");
+    }
+
+	public static void testVersionStrings(String path) throws IOException {
+		PE pe = PEParser.parse(path);
         ResourceDirectory rd = pe.getImageData().getResourceTable();
 
         ResourceEntry[] entries = ResourceHelper.findResources(rd, ResourceType.VERSION_INFO);
@@ -41,6 +46,6 @@ public class VersionStringsTest {
                 System.out.println(key + " = " + value);
             }
         }
-    }
+	}
 
 }

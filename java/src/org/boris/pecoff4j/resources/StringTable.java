@@ -76,10 +76,10 @@ public class StringTable
         this.padding = padding;
     }
     
-    public boolean allStringsRead() {
-    	int actualLength = 6 + padding + Strings.getUtf16Length(key);
+	public int sizeOf() {
+		int actualLength = 6 + padding + Strings.getUtf16Length(key);
     	for (StringPair s : strings)
-    		actualLength += s.getLength();
-    	return this.length <= actualLength;
-    }
+    		actualLength += s.sizeOf();
+		return actualLength;
+	}
 }
