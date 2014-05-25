@@ -1,5 +1,4 @@
-PECOFF4J
-========
+# PECOFF4J
 
 PE/COFF 4J is a java engineering library for portable executables, the format used by Windows. It has the following features:
 
@@ -8,21 +7,20 @@ PE/COFF 4J is a java engineering library for portable executables, the format us
 * Resource directory parser - understands version info, icons.
 
 This is a fork of http://sourceforge.net/projects/pecoff4j/
+
 Imported from CVS on May 24th, 2014
 
 [![Build Status](https://drone.io/github.com/kichik/pecoff4j/status.png)](https://drone.io/github.com/kichik/pecoff4j/latest)
 
-License
-=======
+## License
+
 Sources are licensed under [Common Public License v1.0](http://www.eclipse.org/legal/cpl-v10.html)
 
-New Features
-============
+## New Features
 
 The project was forked to implement version string parsing for a [StackOverflow question](http://stackoverflow.com/questions/23845480/how-to-get-windows-file-details/23848792).
 
-Example
--------
+### Example
 
 ```java
 import java.io.IOException;
@@ -76,7 +74,6 @@ ProductName = Microsoft® Windows® Operating System
 ProductVersion = 6.1.7600.16385
 ```
 
-Other Forks
-===========
+## Other Forks
 
 [jonnyzzz/PE](https://github.com/jonnyzzz/PE) has even more features and probably got much more love than this fork.
