@@ -10,6 +10,8 @@ PE/COFF 4J is a java engineering library for portable executables, the format us
 This is a fork of http://sourceforge.net/projects/pecoff4j/
 Imported from CVS on May 24th, 2014
 
+[![Build Status](https://drone.io/github.com/kichik/pecoff4j/status.png)](https://drone.io/github.com/kichik/pecoff4j/latest)
+
 License
 =======
 Sources are licensed under [Common Public License v1.0](http://www.eclipse.org/legal/cpl-v10.html)
