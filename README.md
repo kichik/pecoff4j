@@ -1,6 +1,12 @@
 PECOFF4J
 ========
 
+PE/COFF 4J is a java engineering library for portable executables, the format used by Windows. It has the following features:
+
+* Parser for Windows executables and DLLs.
+* Assembler for creating and modifying executables and DLLs.
+* Resource directory parser - understands version info, icons.
+
 This is a fork of http://sourceforge.net/projects/pecoff4j/
 Imported from CVS on May 24th, 2014
 
