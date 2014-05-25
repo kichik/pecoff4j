@@ -6,6 +6,7 @@
  * 
  * Contributors:
  *     Peter Smith
+ *     Amir Szekely
  *******************************************************************************/
 package org.boris.pecoff4j.io;
 
@@ -142,14 +143,10 @@ public class ResourceParser
         vi.setValueLength(dr.readWord());
         vi.setType(dr.readWord());
         vi.setKey(dr.readUnicode());
-        if (vi.getKey().length() % 2 == 1)
-            dr.readWord(); // padding
+        alignDataReader(dr);
         vi.setFixedFileInfo(ResourceParser.readFixedFileInfo(dr));
-
-        int length = dr.readWord(); // length
-        dr.readWord(); // value length
-        dr.readWord(); // type
-        vi.setStringFileInfo(readStringFileInfo(dr, length));
+        vi.setStringFileInfo(readStringFileInfo(dr));
+        // TODO read VarFileInfo
 
         return vi;
     }
@@ -177,10 +174,11 @@ public class ResourceParser
         vfi.setValueLength(dr.readWord());
         vfi.setType(dr.readWord());
         vfi.setKey(dr.readUnicode());
-        if (vfi.getKey().length() % 2 == 1) {
-            dr.readWord(); // padding
-            vfi.setPadding(2);
-        }
+        vfi.setPadding(alignDataReader(dr));
+        
+        while (!vfi.allStringsRead())
+        	vfi.add(readStringPair(dr));
+        
         return vfi;
     }
 
@@ -190,11 +188,9 @@ public class ResourceParser
         sp.setValueLength(dr.readWord());
         sp.setType(dr.readWord());
         sp.setKey(dr.readUnicode());
-        if (sp.getKey().length() % 2 == 0) {
-            dr.readWord();
-            sp.setPadding(2);
-        }
+        sp.setPadding(alignDataReader(dr));
         sp.setValue(dr.readUnicode());
+        alignDataReader(dr);
         return sp;
     }
 
@@ -214,9 +210,18 @@ public class ResourceParser
         return r;
     }
 
-    public static StringFileInfo readStringFileInfo(IDataReader dr, int length)
+    public static StringFileInfo readStringFileInfo(IDataReader dr)
             throws IOException {
         StringFileInfo sfi = new StringFileInfo();
+        
+        sfi.setLength(dr.readWord());
+        sfi.setValueLength(dr.readWord());
+        sfi.setType(dr.readWord());
+        sfi.setKey(dr.readUnicode());
+        sfi.setPadding(alignDataReader(dr));
+        
+        while (!sfi.allTablesRead())
+        	sfi.add(readStringTable(dr));
 
         return sfi;
     }
@@ -247,5 +252,12 @@ public class ResourceParser
         }
 
         return gi;
+    }
+    
+    private static int alignDataReader(IDataReader dr) throws IOException {
+    	int off = (4 - (dr.getPosition() % 4)) % 4;
+    	for (int i = 0; i < off; i++)
+    		dr.readByte();
+    	return off;
     }
 }

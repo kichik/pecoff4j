@@ -6,10 +6,12 @@
  * 
  * Contributors:
  *     Peter Smith
+ *     Amir Szekely
  *******************************************************************************/
 package org.boris.pecoff4j.resources;
 
 import org.boris.pecoff4j.util.Reflection;
+import org.boris.pecoff4j.util.Strings;
 
 public class StringPair
 {
@@ -65,7 +67,7 @@ public class StringPair
     }
 
     public int sizeOf() {
-        return 6 + padding + key.length() * 2 + value.length() * 2;
+        return 6 + padding + Strings.getUtf16Length(key) + Strings.getUtf16Length(value);
     }
 
     public int getPadding() {
