@@ -12,6 +12,10 @@ Imported from CVS on May 24th, 2014
 
 [![Build Status](https://drone.io/github.com/kichik/pecoff4j/status.png)](https://drone.io/github.com/kichik/pecoff4j/latest)
 
+## Downloads
+
+https://drone.io/github.com/kichik/pecoff4j/files
+
 ## License
 
 Sources are licensed under [Common Public License v1.0](http://www.eclipse.org/legal/cpl-v10.html)
