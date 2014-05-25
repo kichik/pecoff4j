@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<title>PE/COFF 4J</title>
+		<link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon"/>
+		<link rel="stylesheet" href="style.css" type="text/css"/>
+		<meta name="description" content="Engineering library for Portable Executables"/>
+		<meta name="keywords" content="java, coff, exe, parser, library, portable, executable"/>
+		<meta http-equiv="pragma" content="no-cache"/>
+	</head>
+	<body>
+
+	<div id="heading">
+		<div class="title"><img src="pecoff4j.gif"> PE/COFF 4J</div>
+		<div class="subtitle">Java Engineering Library for Portable Executables</div>
+	</div>
+	
+	<div class="content">
+		<div class="section">
+			<div class="section-title">About</div>
+			<div class="section-content">
+				PE/COFF 4J is a java engineering library for portable executables, the format used by Windows. It has the following features:
+				<ul>
+						<li>Parser for Windows executables and DLLs.</li>
+						<li>Assembler for creating and modifying executables and DLLs.</li>
+						<li>Resource directory parser - understands version info, icons.</li>
+				</ul>
+				<p>
+					PE/COFF 4J is licensed under the <a href="http://www.eclipse.org/legal/cpl-v10.html">Common Public License (CPL)</a>.
+				</p>
+			</div>
+		</div>
+		<div class="section">
+			<div class="section-title">Download</div>
+			<div class="section-content">
+				The latest <a href="https://sourceforge.net/project/showfiles.php?group_id=214146">download</a> is available from the Project Page.
+			</div>
+		</div>
+		<div class="section">
+			<div class="section-title">Usage</div>
+			<div class="section-content">
+				The following snippet shows how to parse an executable.
+<pre>
+package org.boris.pecoff4j;
+
+import org.boris.pecoff4j.io.PEParser;
+
+/**
+ * An example demonstrating parsing an executable.
+ */
+public class ParseExecutableTest {
+    public static void main(String[] args) throws Exception {
+        PE pe = PEParser.parse("c:/windows/system32/notepad.exe");
+        System.out.println(pe);
+    }
+}
+</pre>
+			</div>
+		</div>
+		<div class="section">
+			<div class="section-title">Change History</div>
+			<div class="section-content">
+				V0.0.1
+				<ul>
+					<li>Initial version.</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+    <div id="footer">
+		<div class="footer"/>
+		<table style="border:0px;width:750px">
+		<tr style="border:0px;vertical-align:top">
+		<td style="border:0px;vertical-align:top;width:619px">
+        <a href="http://www.opensource.org/docs/definition.php"><img border="0" alt="Open Source" src="http://opensource.org/trademarks/open_source_button.png" style="width:88px;height:31px" /></a>
+        <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=214146&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" /></a>
+        </td>
+        <td align="right" style="border:0px;vertical-align:top">
+        <a href="http://winrun4j.sourceforge.net/"><img border="0" alt="WinRun4J - Configurable Java Launcher for Windows" src="others/winrun4j.gif"/></a>
+        <a href="http://xlloop.sourceforge.net/"><img border="0" alt="XLLoop - Excel Functions in Java, Javascript, Ruby, Python, Erlang" src="others/xlloop.gif"/></a>
+        <a href="http://variantcodec.sourceforge.net/"><img border="0" alt="VariantCodec - Generic Data Structure Serialization Library for Java" src="others/variantcodec.gif"/></a>
+        <a href="http://jvst.sourceforge.net/"><img border="0" alt="JVST - VST Interface for Java" src="others/jvst.gif"/></a>
+        <a href="http://jxll.sourceforge.net/"><img border="0" alt="JXLL - Excel Addin Interaction Library" src="others/jxll.gif"/></a>
+        <a href="http://expr4j.sourceforge.net/"><img border="0" alt="Expr4J - Expression Calculation Engine for Java" src="others/expr4j.gif"/></a>
+        </td>
+        </tr>
+        </table>
+    </div>
+</body>
+</html>

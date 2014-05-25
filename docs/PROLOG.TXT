@@ -1,0 +1,200 @@
+
+Data-Segment Initialization
+
+The Windows prolog and epilog contain instructions that 
+initialize the DS register, setting the register to the 
+segment address of the application or DLL. Windows requires 
+callback functions, such as window, dialog box, and 
+enumeration procedures, to initialize the DS register 
+whenever they are called by Windows or an application. This 
+guarantees that the function accesses its own data segment 
+rather than the data segment of the caller. 
+
+Exported Far Functions
+
+The Windows prolog used with exported far functions, such as 
+dialog box and enumeration procedures, ensures that the DS 
+register receives the data segment address for the 
+application when Windows or an application calls the exported 
+function. In Windows version 3.0 and earlier, the prolog and 
+epilog for exported far functions have the following form: 
+push    ds          ; put DS in AX, take 3 bytes to do it,
+pop     ax          ;   so the code can be rewritten as
+nop                 ;   MOV AX, IMM when appropriate
+inc     bp          ; push odd BP to indicate this stack
+push    bp          ;   frame corresponds to a far CALL
+mov     bp, sp      ; set up BP to access arguments and
+                    ;   local variables
+push    ds          ; save DS
+mov     ds, ax      ; set DS to proper data segment
+sub     sp, const   ; allocate local storage (optional)
+ ...
+sub     bp, 2       ; restore registers
+mov     sp, bp
+pop     ds
+pop     bp
+dec     bp
+retf
+Because Windows 3.1 does not support real mode, the inc bp and 
+dec bp instructions are not required. Also, a variety of other 
+changes can be made to the prolog and epilog to improve speed 
+and reduce the size of the code. If a far function is part of 
+an application (not part of a DLL), the SS register is already 
+the proper value for the DS register, so calling the 
+________________
+MakeProcInstance function is not necessary. The prolog and 
+epilog can be modified as follows: 
+push    bp          ; set up stack frame (optional)
+mov     bp, sp
+push    ds          ; save calling function's DS
+push    ss          ; move SS to DS
+pop     ds
+ ...
+pop     ds          ; restore registers
+pop     bp
+retf
+An alternative form of the prolog and epilog for far functions 
+follows: 
+push    bp          ; set up stack frame (optional)
+mov     bp, sp
+push    ds          ; save calling function's DS
+mov     ax, ss      ; move SS to DS
+mov     ds, ax
+sub     sp, const   ; (optional) allocate local storage
+ ...
+mov     ds, [bp-2]  ; restore registers
+leave
+retf
+Each of the variations of prolog and epilog code discussed 
+previously works whether or not a far function is exported. 
+The code can be called by an application or DLL as well as by 
+the system. 
+If an application copies the contents of the SS register to 
+the DS register, it doesn't need to call the ________________
+                                             MakeProcInstance 
+function to obtain a procedure-instance address before calling 
+an exported far function. Similarly, if a DLL moves the DGROUP 
+data segment to the DS register through the AX register, the 
+DLL doesn't need to call MakeProcInstance before calling an 
+exported far function. 
+Although window procedures for an application require this 
+same prolog, Windows loads the AX register before calling 
+these procedures. An application, therefore, never needs to 
+create a procedure-instance address for its window procedures. 
+
+Nonexported Far Functions
+
+Although not required, nonexported far functions can also 
+include prolog code that initializes the DS register. In this 
+case, it is assumed that the function is never called by 
+Windows or an application and that the DS register contains 
+the correct segment address when the function is called. The 
+prolog for a nonexported function has the following form: 
+mov     ax, ds      ; copy DS to AX
+nop
+push    bp          ; set up stack frame (optional)
+mov     bp, sp
+push    ds          ; save calling function's DS
+mov     ds, ax      ; move same value back to DS
+ ...
+pop     ds          ; pop same value back to DS
+pop     bp
+retf
+An alternative form of the prolog for a nonexported function 
+follows: 
+push    ds          ; copy DS to AX
+pop     ax
+nop
+push    bp          ; set up stack frame (optional)
+mov     bp, sp
+push    ds          ; save calling function's DS
+mov     ds, ax      ; move same value back to DS
+ ...
+pop     ds          ; pop same value back to DS
+pop     bp
+retf
+A compiler should not generate the preceding code by default 
+because it reloads the DS register with the same value two 
+times per far call. Loading segment registers is a slow 
+operation in protected mode and should be avoided as much as 
+possible. 
+
+Exported Far Functions in a Dynamic-Link Library
+
+Exported far functions in DLLs also require a prolog. The 
+prolog code in a DLL must generate a reference to the DGROUP 
+data segment. The SS register cannot be used because 
+execution occurs on the calling function's stack. Exported 
+far functions cannot use this method because fixups to DGROUP 
+are illegal for a multiple instance application. 
+The prolog and epilog for exported far functions in a DLL has 
+the following form: 
+mov     ax, DGROUP      ; get DGROUP value
+push    bp              ; set up stack frame (optional)
+mov     bp, sp
+push    ds              ; save calling function's DS
+mov     ds, ax          ; move DGROUP to DS
+ ...
+pop     ds              ; restore registers
+pop     bp
+retf
+Following is an alternative form of the prolog for exported 
+far functions in a DLL: 
+mov     ax, DGROUP      ; get DGROUP value
+push    bp              ; set up stack frame (optional)
+mov     bp, sp
+push    ds              ; save calling function's DS
+mov     ds, ax          ; move DGROUP to DS
+sub     sp, const       ; allocate local storage (optional)
+ ...
+mov     ds, [bp-2]      ; restore registers
+leave
+Windows inserts the current data segment address as the second 
+operand (DGROUP) of the initial mov instruction. 
+
+Prologs in Real Mode
+
+When Windows 3.0 and earlier is running in real mode, Windows 
+must walk each application stack whenever it moves or 
+discards segments. In particular, it must check each stack 
+for any segment addresses that may have been affected by the 
+segment operations. 
+To help Windows locate segment addresses associated with the 
+stack frames of far functions, the Windows prolog increments 
+the old frame pointer, contained in the BP register, before 
+saving it on the stack. Because all stack offsets, including 
+frame pointers, are expected to be word-aligned, incrementing 
+the BP register gives Windows a quick way to locate all far 
+function stack frames. 
+Windows only walks the stack in real mode. In protected mode, 
+selector values do not change even though Windows may move 
+and discard segments. Therefore, functions in protected mode 
+do not need to increment the BP register when they save it.
+
+Prologs in Protected Mode
+
+Although exported functions in protected-mode, 
+single-instance applications need to set the DS register, 
+these functions do not require the exported prolog described 
+in the previous section. Instead, they can use code similar 
+to that generated by the _loadds keyword of Borland C++. 
+The code generated by __loadds copies the data segment 
+selector to the DS register whenever the function is called. 
+Because a selector does not change value when the 
+corresponding segment is moved, there is no need to set the AX 
+register to the appropriate data segment address before 
+calling the function (or to mark the stack frame). 
+                                                   
+                                                   Functions 
+that use the _loadds code can be used as callback functions. 
+Because no prolog code is required, the functions do not need 
+to be exported when used in an application. Functions in DLLs 
+can also use the _loadds code. However, the functions must be 
+exported to ensure that other applications can link 
+dynamically to them. 
+In multiple-instance applications, the Windows prolog is 
+needed only for far functions called by Windows. For these 
+functions, procedure-instance addresses are required. The _
+_loadds code cannot be used in multiple-instance applications. 
+Instead, applications should copy the SS register to the DS 
+register. 

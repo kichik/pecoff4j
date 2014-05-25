@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PE/COFF4J
+Bundle-SymbolicName: org.boris.pecoff4j
+Bundle-Version: 0.0.2
+Export-Package: org.boris.elf,
+ org.boris.pecoff4j,
+ org.boris.pecoff4j.constant,
+ org.boris.pecoff4j.io,
+ org.boris.pecoff4j.resources,
+ org.boris.pecoff4j.util
+Bundle-Vendor: Boris Inc.

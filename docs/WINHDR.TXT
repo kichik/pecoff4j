@@ -1,0 +1,683 @@
+  Executable-File Header Format (3.1)
+ ฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿
+An executable (.EXE) file for the Windows operating system contains a
+combination of code and data or a combination of code, data, and resources.
+The executable file also contains two headers: an MS-DOS header and a
+Windows header. The next two sections describe these headers; the third
+section describes the code and data contained in a Windows executable file.
+
+ MS-DOS Header
+ ฿฿฿฿฿฿฿฿฿฿฿฿฿
+The MS-DOS (old-style) executable-file header contains four distinct parts:
+a collection of header information (such as the signature word, the file
+size, and so on), a reserved section, a pointer to a Windows header (if one
+exists), and a stub program.
+
+If the word value at offset 18h is 40h or greater, the word value at 3Ch is
+typically an offset to a Windows header. Applications must verify this for
+each executable-file header being tested, because a few applications have a
+different header style.
+
+MS-DOS uses the stub program to display a message if Windows has not been
+loaded when the user attempts to run a program.
+
+ Windows Header
+ ฿฿฿฿฿฿฿฿฿฿฿฿฿฿
+The Windows (new-style) executable-file header contains information that the
+loader requires for segmented executable files. This information includes
+the linker version number, data specified by the linker, data specified by
+the resource compiler, tables of segment data, tables of resource data, and
+so on. The following illustration shows the Windows executable-file header:
+
+The following sections describe the entries in the Windows executable-file
+header.
+
+ Information Block
+ ฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿
+The information block in the Windows header contains the linker version
+number, the lengths of various tables that further describe the executable
+file, the offsets from the beginning of the header to the beginning of these
+tables, the heap and stack sizes, and so on. The following list summarizes
+the contents of the header information block (the locations are relative to
+the beginning of the block):
+
+ Location ณ Description
+ อออออออออุอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+  00h     ณ Specifies the signature word. The low byte contains "N" (4Eh)
+          ณ and the high byte contains "E" (45h).
+          ณ
+  02h     ณ Specifies the linker version number.
+          ณ
+  03h     ณ Specifies the linker revision number.
+          ณ
+  04h     ณ Specifies the offset to the entry table (relative to the
+          ณ beginning of the header).
+          ณ
+  06h     ณ Specifies the length of the entry table, in bytes.
+          ณ
+  08h     ณ Reserved.
+          ณ
+  0Ch     ณ Specifies flags that describe the contents of the executable
+          ณ file. This value can be one or more of the following bits:
+          ณ
+          ณ Bit ณ Meaning
+          ณ ออออุอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+          ณ  0  ณ The linker sets this bit if the executable-file format is
+          ณ     ณ SINGLEDATA. An executable file with this format contains
+          ณ     ณ one data segment. This bit is set if the file is a
+          ณ     ณ dynamic-link library (DLL).
+          ณ     ณ
+          ณ  1  ณ The linker sets this bit if the executable-file format is
+          ณ     ณ MULTIPLEDATA. An executable file with this format
+          ณ     ณ contains multiple data segments. This bit is set if the
+          ณ     ณ file is a Windows application.
+          ณ     ณ
+          ณ     ณ If neither bit 0 nor bit 1 is set, the executable-file
+          ณ     ณ format is NOAUTODATA. An executable file with this format
+          ณ     ณ does not contain an automatic data segment.
+          ณ     ณ
+          ณ  2  ณ Reserved.
+          ณ     ณ
+          ณ  3  ณ Reserved.
+          ณ     ณ
+          ณ  8  ณ Reserved.
+          ณ     ณ
+          ณ  9  ณ Reserved.
+          ณ     ณ
+          ณ 11  ณ If this bit is set, the first segment in the executable
+          ณ     ณ file contains code that loads the application.
+          ณ     ณ
+          ณ 13  ณ If this bit is set, the linker detects errors at link
+          ณ     ณ time but still creates an executable file.
+          ณ     ณ
+          ณ 14  ณ Reserved.
+          ณ     ณ
+          ณ 15  ณ If this bit is set, the executable file is a library module.
+          ณ     ณ
+          ณ     ณ If bit 15 is set, the CS:IP registers point to an
+          ณ     ณ initialization procedure called with the value in the AX
+          ณ     ณ register equal to the module handle. The initialization
+          ณ     ณ procedure must execute a far return to the caller. If the
+          ณ     ณ procedure is successful, the value in AX is nonzero.
+          ณ     ณ Otherwise, the value in AX is zero.
+          ณ     ณ
+          ณ     ณ The value in the DS register is set to the library's data
+          ณ     ณ segment if SINGLEDATA is set. Otherwise, DS is set to the
+          ณ     ณ data segment of the application that loads the library.
+          ณ
+  0Eh     ณ Specifies the automatic data segment number. (0Eh is zero if the
+          ณ SINGLEDATA and MULTIPLEDATA bits are cleared.)
+          ณ
+  10h     ณ Specifies the initial size, in bytes, of the local heap. This
+          ณ value is zero if there is no local allocation.
+          ณ
+  12h     ณ Specifies the initial size, in bytes, of the stack. This value
+          ณ is zero if the SS register value does not equal the DS register
+          ณ value.
+          ณ
+  14h     ณ Specifies the segment:offset value of CS:IP.
+          ณ
+  18h     ณ Specifies the segment:offset value of SS:SP.
+          ณ
+          ณ The value specified in SS is an index to the module's segment
+          ณ table. The first entry in the segment table corresponds to
+          ณ segment number 1.
+          ณ
+          ณ If SS addresses the automatic data segment and SP is zero, SP
+          ณ is set to the address obtained by adding the size of the
+          ณ automatic data segment to the size of the stack.
+          ณ
+  1Ch     ณ Specifies the number of entries in the segment table.
+          ณ
+  1Eh     ณ Specifies the number of entries in the module-reference table.
+          ณ
+  20h     ณ Specifies the number of bytes in the nonresident-name table.
+          ณ
+  22h     ณ Specifies a relative offset from the beginning of the Windows
+          ณ header to the beginning of the segment table.
+          ณ
+  24h     ณ Specifies a relative offset from the beginning of the Windows
+          ณ header to the beginning of the resource table.
+          ณ
+  26h     ณ Specifies a relative offset from the beginning of the Windows
+          ณ header to the beginning of the resident-name table.
+          ณ
+  28h     ณ Specifies a relative offset from the beginning of the Windows
+          ณ header to the beginning of the module-reference table.
+          ณ
+  2Ah     ณ Specifies a relative offset from the beginning of the Windows
+          ณ header to the beginning of the imported-name table.
+          ณ
+  2Ch     ณ Specifies a relative offset from the beginning of the file to
+          ณ the beginning of the nonresident-name table.
+          ณ
+  30h     ณ Specifies the number of movable entry points.
+          ณ
+  32h     ณ Specifies a shift count that is used to align the logical
+          ณ sector. This count is log2 of the segment sector size. It is
+          ณ typically 4, although the default count is 9. (This value
+          ณ corresponds to the /alignment [/a] linker switch. When the
+          ณ linker command line contains /a:16, the shift count is 4.
+          ณ
+          ณ When the linker command line contains /a:512, the shift count is
+          ณ 9.)
+          ณ
+  34h     ณ Specifies the number of resource segments.
+          ณ
+  36h     ณ Specifies the target operating system, depending on which bits
+          ณ are set:
+          ณ
+          ณ Bit ณ Meaning
+          ณ ออออุอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+          ณ  0  ณ Operating system format is unknown.
+          ณ     ณ
+          ณ  1  ณ Reserved.
+          ณ     ณ
+          ณ  2  ณ Operating system is Microsoft Windows.
+          ณ     ณ
+          ณ  3  ณ Reserved.
+          ณ     ณ
+          ณ  4  ณ Reserved.
+          ณ     ณ
+  37h     ณ Specifies additional information about the executable file. It
+          ณ can be one or more of the following values:
+          ณ
+          ณ Bit ณ Meaning
+          ณ ออออุอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+          ณ  1  ณ If this bit is set, the executable file contains a
+          ณ     ณ Windows 2.x application that runs in version 3.x
+          ณ     ณ protected mode.
+          ณ     ณ
+          ณ  2  ณ If this bit is set, the executable file contains a
+          ณ     ณ Windows 2.x application that supports proportional fonts.
+          ณ     ณ
+          ณ  3  ณ If this bit is set, the executable file contains a
+          ณ     ณ fast-load area.
+          ณ
+  38h     ณ Specifies the offset, in sectors, to the beginning of the
+          ณ fast-load area. (Only Windows uses this value.)
+          ณ
+  3Ah     ณ Specifies the length, in sectors, of the fast-load area. (Only
+          ณ Windows uses this value.)
+          ณ
+  3Ch     ณ Reserved.
+          ณ
+  3Eh     ณ Specifies the expected version number for Windows. (Only
+          ณ Windows uses this value.)
+
+ Segment Table
+ ฿฿฿฿฿฿฿฿฿฿฿฿฿
+The segment table contains information that describes each segment in an
+executable file. This information includes the segment length, segment type,
+and segment-relocation data. The following list summarizes the values found
+in the segment table (the locations are relative to the beginning of each
+entry):
+
+ Location ณ Description
+ อออออออออุอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+  00h     ณ Specifies the offset, in sectors, to the segment data (relative
+          ณ to the beginning of the file). A value of zero means no data
+          ณ exists.
+          ณ
+  02h     ณ Specifies the length, in bytes, of the segment, in the file. A
+          ณ value of zero indicates that the segment length is 64K, unless
+          ณ the selector offset is also zero.
+          ณ
+  04h     ณ Specifies flags that describe the contents of the executable
+          ณ file. This value can be one or more of the following:
+          ณ
+          ณ Bit ณ Meaning
+          ณ ออออุอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+          ณ  0  ณ If this bit is set, the segment is a data segment.
+          ณ     ณ Otherwise, the segment is a code segment.
+          ณ     ณ
+          ณ  1  ณ If this bit is set, the loader has allocated memory for
+          ณ     ณ the segment.
+          ณ     ณ
+          ณ  2  ณ If this bit is set, the segment is loaded.
+          ณ     ณ
+          ณ  3  ณ Reserved.
+          ณ     ณ
+          ณ  4  ณ If this bit is set, the segment type is MOVABLE.
+          ณ     ณ Otherwise, the segment type is FIXED.
+          ณ     ณ
+          ณ  5  ณ If this bit is set, the segment type is PURE or
+          ณ     ณ SHAREABLE. Otherwise, the segment type is IMPURE or
+          ณ     ณ NONSHAREABLE.
+          ณ     ณ
+          ณ  6  ณ If this bit is set, the segment type is PRELOAD.
+          ณ     ณ Otherwise, the segment type is LOADONCALL.
+          ณ     ณ
+          ณ  7  ณ If this bit is set and the segment is a code segment, the
+          ณ     ณ segment type is EXECUTEONLY. If this bit is set and the
+          ณ     ณ segment is a data segment, the segment type is READONLY.
+          ณ     ณ
+          ณ  8  ณ If this bit is set, the segment contains relocation data.
+          ณ     ณ
+          ณ  9  ณ Reserved.
+          ณ     ณ
+          ณ 10  ณ Reserved.
+          ณ     ณ
+          ณ 11  ณ Reserved.
+          ณ     ณ
+          ณ 12  ณ If this bit is set, the segment is discardable.
+          ณ     ณ
+          ณ 13  ณ Reserved.
+          ณ     ณ
+          ณ 14  ณ Reserved.
+          ณ     ณ
+          ณ 15  ณ Reserved.
+          ณ
+  06h     ณ Specifies the minimum allocation size of the segment, in bytes.
+          ณ A value of zero indicates that the minimum allocation size is
+          ณ 64K.
+
+ Resource Table
+ ฿฿฿฿฿฿฿฿฿฿฿฿฿฿
+The resource table describes and identifies the location of each resource in
+the executable file. The table has the following form:
+
+
+ WORD     rscAlignShift;
+ TYPEINFO rscTypes[];
+ WORD     rscEndTypes;
+ BYTE     rscResourceNames[];
+ BYTE     rscEndNames;
+
+
+Following are the members in the resource table:
+
+ rscAlignShift    ณ Specifies the alignment shift count for resource data.
+                  ณ When the shift count is used as an exponent of 2, the
+                  ณ resulting value specifies the factor, in bytes, for
+                  ณ computing the location of a resource in the executable
+                  ณ file.
+                  ณ
+ rscTypes         ณ Specifies an array of TYPEINFO structures containing
+                  ณ information about resource types. There must be one
+                  ณ TYPEINFO structure for each type of resource in the
+                  ณ executable file.
+                  ณ
+ rscEndTypes      ณ Specifies the end of the resource type definitions. This
+                  ณ member must be zero.
+                  ณ
+ rscResourceNames ณ Specifies the names (if any) associated with the
+                  ณ resources in this table. Each name is stored as
+                  ณ consecutive bytes; the first byte specifies the number
+                  ณ of characters in the name.
+                  ณ
+ rscEndNames      ณ Specifies the end of the resource names and the end of
+                  ณ the resource table. This member must be zero.
+
+ Type Information
+ ฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿
+The TYPEINFO structure has the following form:
+
+
+ typedef struct _TYPEINFO {
+     WORD        rtTypeID;
+     WORD        rtResourceCount;
+     DWORD       rtReserved;
+     NAMEINFO    rtNameInfo[];
+ } TYPEINFO;
+
+
+Following are the members in the TYPEINFO structure:
+
+ rtTypeID         ณ Specifies the type identifier of the resource. This
+                  ณ integer value is either a resource-type value or an
+                  ณ offset to a resource-type name. If the high bit in this
+                  ณ member is set (0x8000), the value is one of the
+                  ณ following resource-type values:
+                  ณ
+                  ณ Value           ณ Resource type
+                  ณ ออออออออออออออออุอออออออออออออออออออออออออออออออออออออ
+                  ณ RT_ACCELERATOR  ณ Accelerator table
+                  ณ                 ณ
+                  ณ RT_BITMAP       ณ Bitmap
+                  ณ                 ณ
+                  ณ RT_CURSOR       ณ Cursor
+                  ณ                 ณ
+                  ณ RT_DIALOG       ณ Dialog box
+                  ณ                 ณ
+                  ณ RT_FONT         ณ Font component
+                  ณ                 ณ
+                  ณ RT_FONTDIR      ณ Font directory
+                  ณ                 ณ
+                  ณ RT_GROUP_CURSOR ณ Cursor directory
+                  ณ                 ณ
+                  ณ RT_GROUP_ICON   ณ Icon directory
+                  ณ                 ณ
+                  ณ RT_ICON         ณ Icon
+                  ณ                 ณ
+                  ณ RT_MENU         ณ Menu
+                  ณ                 ณ
+                  ณ RT_RCDATA       ณ Resource data
+                  ณ                 ณ
+                  ณ RT_STRING       ณ String table
+                  ณ
+                  ณ If the high bit of the value in this member is not set,
+                  ณ the value represents an offset, in bytes relative to
+                  ณ the beginning of the resource table, to a name in the
+                  ณ rscResourceNames member.
+                  ณ
+rtResourceCount   ณ Specifies the number of resources of this type in the
+                  ณ executable file.
+                  ณ
+rtReserved        ณ Reserved.
+                  ณ
+rtNameInfo        ณ Specifies an array of NAMEINFO structures containing
+                  ณ information about individual resources. The
+                  ณ rtResourceCount member specifies the number of
+                  ณ structures in the array.
+
+ Name Information
+ ฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿
+The NAMEINFO structure has the following form:
+
+
+ typedef struct _NAMEINFO {
+     WORD rnOffset;
+     WORD rnLength;
+     WORD rnFlags;
+     WORD rnID;
+     WORD rnHandle;
+     WORD rnUsage;
+ } NAMEINFO;
+
+
+Following are the members in the NAMEINFO structure:
+
+ rnOffset ณ Specifies an offset to the contents of the resource data
+          ณ (relative to the beginning of the file). The offset is in terms
+          ณ of alignment units specified by the rscAlignShift member at
+          ณ the beginning of the resource table.
+          ณ
+ rnLength ณ Specifies the resource length, in bytes.
+          ณ
+ rnFlags  ณ Specifies whether the resource is fixed, preloaded, or shareable.
+          ณ This member can be one or more of the following values:
+          ณ
+          ณ Value  ณ Meaning
+          ณ อออออออุออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+          ณ 0x0010 ณ Resource is movable (MOVEABLE). Otherwise, it is fixed.
+          ณ        ณ
+          ณ 0x0020 ณ Resource can be shared (PURE).
+          ณ        ณ
+          ณ 0x0040 ณ Resource is preloaded (PRELOAD). Otherwise, it is
+          ณ        ณ loaded on demand.
+          ณ
+ rnID     ณ Specifies or points to the resource identifier. If the
+          ณ identifier is an integer, the high bit is set (8000h).
+          ณ Otherwise, it is an offset to a resource string, relative to
+          ณ the beginning of the resource table.
+          ณ
+ rnHandle ณ Reserved.
+          ณ
+ rnUsage  ณ Reserved.
+
+ Resident-Name Table
+ ฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿
+The resident-name table contains strings that identify exported functions in
+the executable file. As the name implies, these strings are resident in
+system memory and are never discarded. The resident-name strings are
+case-sensitive and are not null-terminated. The following list summarizes
+the values found in the resident-name table (the locations are relative to
+the beginning of each entry):
+
+ Location  ณ Description
+ ออออออออออุออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+   00h     ณ Specifies the length of a string. If there are no more strings
+           ณ in the table, this value is zero.
+           ณ
+ 01h - xxh ณ Specifies the resident-name text. This string is case-sensitive
+           ณ and is not null-terminated.
+           ณ
+ xxh + 01h ณ Specifies an ordinal number that identifies the string. This
+           ณ number is an index into the entry table.
+
+The first string in the resident-name table is the module name.
+
+ Module-Reference Table
+ ฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿
+The module-reference table contains offsets for module names stored in the
+imported-name table. Each entry in this table is 2 bytes long.
+
+ Imported-Name Table
+ ฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿
+The imported-name table contains the names of modules that the executable
+file imports. Each entry contains two parts: a single byte that specifies
+the length of the string and the string itself. The strings in this table
+are not null-terminated.
+
+ Entry Table
+ ฿฿฿฿฿฿฿฿฿฿฿
+The entry table contains bundles of entry points from the executable file
+(the linker generates each bundle). The numbering system for these ordinal
+values is 1-based--that is, the ordinal value corresponding to the first
+entry point is 1.
+
+The linker generates the densest possible bundles under the restriction that
+it cannot reorder the entry points. This restriction is necessary because
+other executable files may refer to entry points within a given bundle by
+their ordinal values.
+
+The entry-table data is organized by bundle, each of which begins with a
+2-byte header. The first byte of the header specifies the number of entries
+in the bundle (a value of 00h designates the end of the table). The second
+byte specifies whether the corresponding segment is movable or fixed. If the
+value in this byte is 0FFh, the segment is movable.
+
+If the value in this byte is 0FEh, the entry does not refer to a segment
+but refers, instead, to a constant defined within the module. If the value
+in this byte is neither 0FFh nor 0FEh, it is a segment index.
+
+For movable segments, each entry consists of 6 bytes and has the following
+form:
+
+ Location ณ Description
+ อออออออออุอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+  00h     ณ Specifies a byte value. This value can be a combination of the
+          ณ following bits:
+          ณ
+          ณ Bit(s) ณ Meaning
+          ณ อออออออุออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+          ณ   0    ณ If this bit is set, the entry is exported.
+          ณ        ณ
+          ณ   1    ณ If this bit is set, the segment uses a global (shared)
+          ณ        ณ data segment.
+          ณ        ณ
+          ณ  3-7   ณ If the executable file contains code that performs
+          ณ        ณ ring transitions, these bits specify the number of
+          ณ        ณ words that compose the stack. At the time of the ring
+          ณ        ณ transition, these words must be copied from one ring
+          ณ        ณ to the other.
+          ณ
+  01h     ณ Specifies an int 3fh instruction.
+          ณ
+  03h     ณ Specifies the segment number.
+          ณ
+  04h     ณ Specifies the segment offset.
+
+For fixed segments, each entry consists of 3 bytes and has the following
+form:
+
+ Location ณ Description
+ อออออออออุออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+  00h     ณ Specifies a byte value. This value can be a combination of the
+          ณ following bits:
+          ณ
+          ณ Bit(s) ณ Meaning
+          ณ อออออออุอออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+          ณ  0     ณ If this bit is set, the entry is exported.
+          ณ        ณ
+          ณ  1     ณ If this bit is set, the entry uses a global (shared)
+          ณ        ณ data segment. (This may be set only for SINGLEDATA
+          ณ        ณ library modules.)
+          ณ        ณ
+          ณ 3-7    ณ If the executable file contains code that performs
+          ณ        ณ ring transitions, these bits specify the number of
+          ณ        ณ words that compose the stack. At the time of the ring
+          ณ        ณ transition, these words must be copied from one ring
+          ณ        ณ to the other.
+          ณ
+  01h     ณ Specifies an offset.
+
+ Nonresident-Name Table
+ ฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿
+The nonresident-name table contains strings that identify exported functions
+in the executable file. As the name implies, these strings are not always
+resident in system memory and are discardable. The nonresident-name strings
+are case-sensitive; they are not null-terminated. The following list
+summarizes the values found in the nonresident-name table (the specified
+locations are relative to the beginning of each entry):
+
+ Location  ณ Description
+ ออออออออออุอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+  00h      ณ Specifies the length, in bytes, of a string. If this byte is
+           ณ 00h, there are no more strings in the table.
+           ณ
+ 01h - xxh ณ Specifies the nonresident-name text. This string is
+           ณ case-sensitive and is not null-terminated.
+           ณ
+ xx + 01h  ณ Specifies an ordinal number that is an index to the entry
+           ณ table.
+
+The first name that appears in the nonresident-name table is the module
+description string (which was specified in the module-definition file).
+
+ Code Segments and Relocation Data
+ ฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿
+Code and data segments follow the Windows header. Some of the code segments
+may contain calls to functions in other segments and may, therefore, require
+relocation data to resolve those references. This relocation data is stored
+in a relocation table that appears immediately after the code or data in the
+segment.
+
+The first 2 bytes in this table specify the number of relocation
+items the table contains. A relocation item is a collection of bytes
+specifying the following information:
+
+ þ Address type (segment only, offset only, segment and offset)
+ þ Relocation type (internal reference, imported ordinal, imported name)
+ þ Segment number or ordinal identifier (for internal references)
+ þ Reference-table index or function ordinal number (for imported ordinals)
+ þ Reference-table index or name-table offset (for imported names)
+
+Each relocation item contains 8 bytes of data, the first byte of which
+specifies one of the following relocation-address types:
+
+ Value ณ Meaning
+ ออออออุอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+   0   ณ Low byte at the specified offset
+       ณ
+   2   ณ 16-bit selector
+       ณ
+   3   ณ 32-bit pointer
+       ณ
+   5   ณ 16-bit offset
+       ณ
+  11   ณ 48-bit pointer
+       ณ
+  13   ณ 32-bit offset
+
+The second byte specifies one of the following relocation types:
+
+ Value ณ Meaning
+ ออออออุอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+   0   ณ Internal reference
+       ณ
+   1   ณ Imported ordinal
+       ณ
+   2   ณ Imported name
+       ณ
+   3   ณ OSFIXUP
+
+The third and fourth bytes specify the offset of the relocation item within
+the segment.
+
+If the relocation type is imported ordinal, the fifth and sixth bytes
+specify an index to a module's reference table and the seventh and eighth
+bytes specify a function ordinal value.
+
+If the relocation type is imported name, the fifth and sixth bytes specify
+an index to a module's reference table and the seventh and eighth bytes
+specify an offset to an imported-name table.
+
+If the relocation type is internal reference and the segment is fixed, the
+fifth byte specifies the segment number, the sixth byte is zero, and the
+seventh and eighth bytes specify an offset to the segment. If the relocation
+type is internal reference and the segment is movable, the fifth byte
+specifies 0FFh, the sixth byte is zero; and the seventh and eighth bytes
+specify an ordinal value found in the segment's entry table.
+
+
+Offset 339B3B - keyword Execute-lpDoc
+  Execute (OLE 1.x)
+ ฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿
+ Declaration:
+  OLESTATUS Execute(lpDoc, hCommands)
+  LPOLESERVERDOC lpDoc;
+  HGLOBAL hCommands;
+
+The Execute function receives WM_DDE_EXECUTE commands sent by client
+applications. The applications send these commands by calling the
+OleExecute function.
+
+ Parameter ณ Description
+ ออออออออออุออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+ lpDoc     ณ Points to an OLESERVERDOC structure to which the dynamic data
+           ณ exchange (DDE) commands apply.
+           ณ
+ hCommands ณ Identifies memory containing one or more DDE execute commands.
+
+ Returns:
+The return value is OLE_OK if the function is successful. Otherwise, it is
+an error value.
+
+ Comments:
+The server should never free the handle specified in the hCommands
+parameter.
+
+
+
+Offset 33C06E - keyword Execute-lpServer
+  Execute (OLE 1.x)
+ ฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿
+ Declaration:
+  OLESTATUS Execute(lpServer, hCommands)
+  LPOLESERVER lpServer;
+  HGLOBAL hCommands;
+
+The Execute function receives WM_DDE_EXECUTE commands sent by client
+applications. The applications send these commands by calling the
+OleExecute function.
+
+ Parameter ณ Description
+ ออออออออออุอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+ lpServer  ณ Points to an OLESERVER structure identifying the server.
+ hCommands ณ Identifies memory containing one or more dynamic data exchange
+           ณ (DDE) execute commands.
+
+ Returns:
+The return value is OLE_OK if the function is successful. Otherwise, it is
+an error value.
+
+ Comments:
+The server should never free the handle specified in the hCommands
+parameter.
+
+
+Offset 2A35E1 - keyword EXETYPE-Module-Definition
+  EXETYPE Module Definition Statement
+ ฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿฿
+EXETYPE Module-Definition Statement EXETYPE headertype
+
+The EXETYPE statement specifies the default executable-file (.EXE) header
+type. The statement is required for every Windows application.
+
+ Parameter  ณ Description
+ อออออออออออุอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออ
+ headertype ณ Specifies the header type. When linking an application
+            ณ intended for the Windows environment, set this parameter to
+            ณ the value "WINDOWS".

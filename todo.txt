@@ -1,0 +1,22 @@
+
+- resource assembler needs to write out resource directory from scratch
+
+- use cases
+	- winrun4j rcedit impl
+	- icon extractor
+	- resource stripper
+	- resource list (details)
+	- build minimal hello world from scratch
+	- generate jni bindings on the fly
+
+- handle .obj files
+- handle .lib files
+- support for elf format, .so files
+- linker implementation
+
+- resource compiler
+- full assembly assembler api (ie. allow user to build exe/dll from 
+  scratch)
+  
+  look at flat assembler (and others) for syntax ideas for an assembler
+  api.

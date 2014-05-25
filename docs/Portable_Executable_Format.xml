@@ -1,0 +1,339 @@
+<?xml version="1.0"?>
+<!-- Portable Executable Format XML-->
+<!-- Last updated: 14 August 2007-->
+<!-- Created by: Layne Moessing-->
+<PE Identifier="value">
+	<IMAGE_DOS_HEADER>
+		<e_magic type="WORD">value</e_magic>
+		<e_cblp type="WORD">value</e_cblp>
+		<e_cp type="WORD">value</e_cp>
+		<e_crlc type="WORD">value</e_crlc>
+		<e_cparhdr type="WORD">value</e_cparhdr>
+		<e_minalloc type="WORD">value</e_minalloc>
+		<e_maxalloc type="WORD">value</e_maxalloc>
+		<e_ss type="WORD">value</e_ss>
+		<e_sp type="WORD">value</e_sp>
+		<e_csum type="WORD">value</e_csum>
+		<e_ip type="WORD">value</e_ip>
+		<e_cs type="WORD">value</e_cs>
+		<e_lfarlc type="WORD">value</e_lfarlc>
+		<e_ovno type="WORD">value</e_ovno>
+		<e_res type="WORD">value</e_res>
+		<e_oemid type="WORD">value</e_oemid>
+		<e_oeminfo type="WORD">value</e_oeminfo>
+		<e_res2 type="WORD">value</e_res2>
+		<e_lfanew type="DWORD">value</e_lfanew>
+	</IMAGE_DOS_HEADER>
+	<IMAGE_NT_HEADERS>
+		<Signature type="DWORD">value</Signature>
+		<IMAGE_FILE_HEADER>
+			<Machine type="WORD">value</Machine>
+			<NumberOfSections type="WORD">value</NumberOfSections>
+			<TimeDateStamp type="DWORD">value</TimeDateStamp>
+			<PointerToSymbolTable type="DWORD">value</PointerToSymbolTable>
+			<NumberOfSymbols type="DWORD">value</NumberOfSymbols>
+			<SizeOfOptionalHeader type="WORD">value</SizeOfOptionalHeader>
+			<Characteristics type="WORD">value</Characteristics>
+		</IMAGE_FILE_HEADER>
+		<IMAGE_OPTIONAL_HEADER>
+			<Magic type="WORD">value</Magic>
+			<MajorLinkerVersion type="BYTE">value</MajorLinkerVersion>
+			<MinorLinkerVersion type="BYTE">value</MinorLinkerVersion>
+			<SizeOfCode type="DWORD">value</SizeOfCode>
+			<SizeOfInitializedData type="DWORD">value</SizeOfInitializedData>
+			<SizeOfUninitializedData type="DWORD">value</SizeOfUninitializedData>
+			<AddressOfEntryPoint type="DWORD">value</AddressOfEntryPoint>
+			<BaseOfCode type="DWORD">value</BaseOfCode>
+			<ImageBase type="DWORD">value</ImageBase>
+			<SectionAlignment type="DWORD">value</SectionAlignment>
+			<FileAlignment type="DWORD">value</FileAlignment>
+			<MajorOperatingSystemVersion type="WORD">value</MajorOperatingSystemVersion>
+			<MinorOperatingSystemVersion type="WORD">value</MinorOperatingSystemVersion>
+			<MajorImageVersion type="WORD">value</MajorImageVersion>
+			<MinorImageVersion type="WORD">value</MinorImageVersion>
+			<MajorSubsystemVersion type="WORD">value</MajorSubsystemVersion>
+			<MinorSubsystemVersion type="WORD">value</MinorSubsystemVersion>
+			<Win32VersionValue type="DWORD">value</Win32VersionValue>
+			<SizeOfImage type="DWORD">value</SizeOfImage>
+			<SizeOfHeaders type="DWORD">value</SizeOfHeaders>
+			<CheckSum type="DWORD">value</CheckSum>
+			<Subsystem type="WORD">value</Subsystem>
+			<DllCharacteristics type="WORD">value</DllCharacteristics>
+			<SizeOfStackReserve type="DWORD">value</SizeOfStackReserve>
+			<SizeOfStackCommit type="DWORD">value</SizeOfStackCommit>
+			<SizeOfHeapReserve type="DWORD">value</SizeOfHeapReserve>
+			<SizeOfHeapCommit type="DWORD">value</SizeOfHeapCommit>
+			<LoaderFlags type="DWORD">value</LoaderFlags>
+			<NumberOfRvaAndSizes type="DWORD">value</NumberOfRvaAndSizes>
+		</IMAGE_OPTIONAL_HEADER>
+		<IMAGE_DATA_DIRECTORY>
+			<IMAGE_DIRECTORY_ENTRY_EXPORT>
+				<VirtualAddress type="DWORD">value</VirtualAddress>
+				<Size type="DWORD">value</Size>
+			</IMAGE_DIRECTORY_ENTRY_EXPORT>
+			<IMAGE_DIRECTORY_ENTRY_IMPORT>
+				<VirtualAddress type="DWORD">value</VirtualAddress>
+				<Size type="DWORD">value</Size>
+			</IMAGE_DIRECTORY_ENTRY_IMPORT>
+			<IMAGE_DIRECTORY_ENTRY_RESOURCE>
+				<VirtualAddress type="DWORD">value</VirtualAddress>
+				<Size type="DWORD">value</Size>
+			</IMAGE_DIRECTORY_ENTRY_RESOURCE>
+			<IMAGE_DIRECTORY_ENTRY_EXCEPTION>
+				<VirtualAddress type="DWORD">value</VirtualAddress>
+				<Size type="DWORD">value</Size>
+			</IMAGE_DIRECTORY_ENTRY_EXCEPTION>
+			<IMAGE_DIRECTORY_ENTRY_SECURITY>
+				<VirtualAddress type="DWORD">value</VirtualAddress>
+				<Size type="DWORD">value</Size>
+			</IMAGE_DIRECTORY_ENTRY_SECURITY>
+			<IMAGE_DIRECTORY_ENTRY_BASERELOC>
+				<VirtualAddress type="DWORD">value</VirtualAddress>
+				<Size type="DWORD">value</Size>
+			</IMAGE_DIRECTORY_ENTRY_BASERELOC>
+			<IMAGE_DIRECTORY_ENTRY_DEBUG>
+				<VirtualAddress type="DWORD">value</VirtualAddress>
+				<Size type="DWORD">value</Size>
+			</IMAGE_DIRECTORY_ENTRY_DEBUG>
+			<IMAGE_DIRECTORY_ENTRY_COPYRIGHT>
+				<VirtualAddress type="DWORD">value</VirtualAddress>
+				<Size type="DWORD">value</Size>
+			</IMAGE_DIRECTORY_ENTRY_COPYRIGHT>
+			<IMAGE_DIRECTORY_ENTRY_GLOBALPTR>
+				<VirtualAddress type="DWORD">value</VirtualAddress>
+				<Size type="DWORD">value</Size>
+			</IMAGE_DIRECTORY_ENTRY_GLOBALPTR>
+			<IMAGE_DIRECTORY_ENTRY_TLS>
+				<VirtualAddress type="DWORD">value</VirtualAddress>
+				<Size type="DWORD">value</Size>
+			</IMAGE_DIRECTORY_ENTRY_TLS>
+			<IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG>
+				<VirtualAddress type="DWORD">value</VirtualAddress>
+				<Size type="DWORD">value</Size>
+			</IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG>
+			<IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT>
+				<VirtualAddress type="DWORD">value</VirtualAddress>
+				<Size type="DWORD">value</Size>
+			</IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT>
+			<IMAGE_DIRECTORY_ENTRY_IAT>
+				<VirtualAddress type="DWORD">value</VirtualAddress>
+				<Size type="DWORD">value</Size>
+			</IMAGE_DIRECTORY_ENTRY_IAT>
+			<IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT>
+				<VirtualAddress type="DWORD">value</VirtualAddress>
+				<Size type="DWORD">value</Size>
+			</IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT>
+			<IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR>
+				<VirtualAddress type="DWORD">value</VirtualAddress>
+				<Size type="DWORD">value</Size>
+			</IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR>
+			<IMAGE_DIRECTORY_ENTRY_RESERVED>
+				<VirtualAddress type="DWORD">value</VirtualAddress>
+				<Size type="DWORD">value</Size>
+			</IMAGE_DIRECTORY_ENTRY_RESERVED>
+		</IMAGE_DATA_DIRECTORY>
+	</IMAGE_NT_HEADERS>
+	<Sections>
+		<IMAGE_SECTION_HEADER>
+			<Name type="BYTE">value</Name>
+			<union label="Misc">
+				<PhysicalAddress>type ="DWORD">value</PhysicalAddress>
+				<VirtualSize>type ="DWORD">value</VirtualSize>
+			</union>
+			<VirtualAddress type="DWORD">value</VirtualAddress>
+			<SizeOfRawData type="DWORD">value</SizeOfRawData>
+			<PointerToRawData type="DWORD">value</PointerToRawData>
+			<PointerToRelocations type="DWORD">value</PointerToRelocations>
+			<PointerToLinenumbers type="DWORD">value</PointerToLinenumbers>
+			<NumberOfRelocations type="WORD">value</NumberOfRelocations>
+			<NumberOfLinenumbers type="WORD">value</NumberOfLinenumbers>
+			<Characteristics type="DWORD">value</Characteristics>
+		</IMAGE_SECTION_HEADER>
+	</Sections>
+	<Directories>
+		<IMAGE_DIRECTORY_ENTRY_EXPORT>
+			<IMAGE_EXPORT_DIRECTORY>
+				<Characteristics type="DWORD">value</Characteristics>
+				<TimeDateStamp type="DWORD">value</TimeDateStamp>
+				<MajorVersion type="WORD">value</MajorVersion>
+				<MinorVersion type="WORD">value</MinorVersion>
+				<Name type="DWORD">value</Name>
+				<Base type="DWORD">value</Base>
+				<NumberOfFunctions type="DWORD">value</NumberOfFunctions>
+				<NumberOfNames type="DWORD">value</NumberOfNames>
+				<AddressOfFunctions type="DWORD">value</AddressOfFunctions>
+				<AddressOfNames type="DWORD">value</AddressOfNames>
+				<AddressOfNameOrdinals type="DWORD">value</AddressOfNameOrdinals>
+				<export>
+					<Ordinal>value</Ordinal>
+					<RVA>value</RVA>
+					<Name>value</Name>
+					<forwarder>value</forwarder>
+				</export>
+			</IMAGE_EXPORT_DIRECTORY>
+		</IMAGE_DIRECTORY_ENTRY_EXPORT>
+		<IMAGE_DIRECTORY_ENTRY_IMPORT>
+			<IMAGE_IMPORT_DESCRIPTOR>
+				<OriginalFirstThunk type="DWORD">value</OriginalFirstThunk>
+				<TimeDateStamp type="DWORD">value</TimeDateStamp>
+				<ForwarderChain type="DWORD">value</ForwarderChain>
+				<Name type="DWORD">value</Name>
+				<FirstThunk type="DWORD">value</FirstThunk>
+				<imports>
+					<dll>value</dll>
+					<symbol>value</symbol>
+					<ordinal>value</ordinal>
+					<Bound>value</Bound>
+				</imports>
+			</IMAGE_IMPORT_DESCRIPTOR>
+		</IMAGE_DIRECTORY_ENTRY_IMPORT>
+		<IMAGE_DIRECTORY_ENTRY_RESOURCE>
+			<IMAGE_RESOURCE_DIRECTORY>
+				<Characteristics type="DWORD">value</Characteristics>
+				<TimeDateStamp type="DWORD">value</TimeDateStamp>
+				<MajorVersion type="WORD">value</MajorVersion>
+				<MinorVersion type="WORD">value</MinorVersion>
+				<NumberOfNamedEntries type="WORD">value</NumberOfNamedEntries>
+				<NumberOfIdEntries type="WORD">value</NumberOfIdEntries>
+				<Name>value</Name>
+				<Id>value</Id>
+				<IMAGE_RESOURCE_DIRECTORY_ENTRY>
+					<Name type="DWORD">value</Name>
+					<OffsetToData type="DWORD">value</OffsetToData>
+					<Name type="DWORD">value</Name>
+					<Id type="DWORD">value</Id>
+					<lang>value</lang>
+					<sublang>value</sublang>
+					<IMAGE_RESOURCE_DATA_ENTRY>
+						<OffsetToData type="DWORD">value</OffsetToData>
+						<Size type="DWORD">value</Size>
+						<CodePage type="DWORD">value</CodePage>
+						<Reserved type="DWORD">value</Reserved>
+						<VERSION>
+							<VS_VERSIONINFO>
+								<Length>value</Length>
+								<ValueLength>value</ValueLength>
+								<Type>value</Type>
+							</VS_VERSIONINFO>
+							<VS_FIXEDFILEINFO>
+								<Signature>value</Signature>
+								<StrucVersion>value</StrucVersion>
+								<FileVersionMS>value</FileVersionMS>
+								<FileVersionLS>value</FileVersionLS>
+								<ProductVersionMS>value</ProductVersionMS>
+								<ProductVersionLS>value</ProductVersionLS>
+								<FileFlagsMask>value</FileFlagsMask>
+								<FileFlags>value</FileFlags>
+								<FileOS>value</FileOS>
+								<FileType>value</FileType>
+								<FileSubtype>value</FileSubtype>
+								<FileDateMS>value</FileDateMS>
+								<FileDateLS>value</FileDateLS>
+							</VS_FIXEDFILEINFO>
+							<StringFileInfo>
+								<Length>value</Length>
+								<ValueLength>value</ValueLength>
+								<Type>value</Type>
+								<StringTable>
+									<Length>value</Length>
+									<ValueLength>value</ValueLength>
+									<Type>value</Type>
+									<LangID>value</LangID>
+									<String_entry>
+										value
+										<Key>value</Key>
+										<Value>value</Value>
+									</String_entry>
+								</StringTable>
+							</StringFileInfo>
+							<VarFileInfo>
+								<Length>value</Length>
+								<ValueLength>value</ValueLength>
+								<Type>value</Type>
+								<Var>
+									<Length>value</Length>
+									<ValueLength>value</ValueLength>
+									<Type>value</Type>
+									<var_entry>
+										<Key>value</Key>
+										<Value>value</Value>
+									</var_entry>
+								</Var>
+							</VarFileInfo>
+						</VERSION>
+					</IMAGE_RESOURCE_DATA_ENTRY>
+				</IMAGE_RESOURCE_DIRECTORY_ENTRY>
+			</IMAGE_RESOURCE_DIRECTORY>
+		</IMAGE_DIRECTORY_ENTRY_RESOURCE>
+		<IMAGE_DIRECTORY_ENTRY_EXCEPTION/>
+		<IMAGE_DIRECTORY_ENTRY_SECURITY/>
+		<IMAGE_DIRECTORY_ENTRY_BASERELOC>
+			<IMAGE_BASE_RELOCATION>
+				<VirtualAddress type="DWORD">value</VirtualAddress>
+				<SizeOfBlock type="DWORD">value</SizeOfBlock>
+				<RVA>value</RVA>
+				<type>value</type>
+			</IMAGE_BASE_RELOCATION>
+		</IMAGE_DIRECTORY_ENTRY_BASERELOC>
+		<IMAGE_DIRECTORY_ENTRY_DEBUG>
+			<IMAGE_DEBUG_DIRECTORY>
+				<Characteristics type="DWORD">value</Characteristics>
+				<TimeDateStamp type="DWORD">value</TimeDateStamp>
+				<MajorVersion type="WORD">value</MajorVersion>
+				<MinorVersion type="WORD">value</MinorVersion>
+				<Type type="DWORD">value</Type>
+				<SizeOfData type="DWORD">value</SizeOfData>
+				<AddressOfRawData type="DWORD">value</AddressOfRawData>
+				<PointerToRawData type="DWORD">value</PointerToRawData>
+			</IMAGE_DEBUG_DIRECTORY>
+		</IMAGE_DIRECTORY_ENTRY_DEBUG>
+		<IMAGE_DIRECTORY_ENTRY_COPYRIGHT/>
+		<IMAGE_DIRECTORY_ENTRY_GLOBALPTR/>
+		<IMAGE_DIRECTORY_ENTRY_TLS>
+			<IMAGE_TLS_DIRECTORY>
+				<StartAddressOfRawData type="DWORD">value</StartAddressOfRawData>
+				<EndAddressOfRawData type="DWORD">value</EndAddressOfRawData>
+				<AddressOfIndex type="LPDWORD">value</AddressOfIndex>
+				<AddressOfCallBacks>value</AddressOfCallBacks>
+				<SizeOfZeroFill type="DWORD">value</SizeOfZeroFill>
+				<Characteristics type="DWORD">value</Characteristics>
+			</IMAGE_TLS_DIRECTORY>
+		</IMAGE_DIRECTORY_ENTRY_TLS>
+		<IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG/>
+		<IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT>
+			<IMAGE_BOUND_IMPORT_DESCRIPTOR>
+				<TimeDateStamp>value</TimeDateStamp>
+				<OffsetModuleName>value</OffsetModuleName>
+				<NumberOfModuleForwarderRefs>value</NumberOfModuleForwarderRefs>
+				<DLL>value</DLL>
+				<IMAGE_BOUND_FORWARDER_REF>
+					<TimeDateStamp>value</TimeDateStamp>
+					<OffsetModuleName>value</OffsetModuleName>
+					<Reserved>value</Reserved>
+					<DLL>value</DLL>
+				</IMAGE_BOUND_FORWARDER_REF>
+			</IMAGE_BOUND_IMPORT_DESCRIPTOR>
+		</IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT>
+		<IMAGE_DIRECTORY_ENTRY_IAT/>
+		<IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT>
+			<IMAGE_DELAY_IMPORT_DESCRIPTOR>
+				<grAttrs type="DWORD">value</grAttrs>
+				<szName type="DWORD">value</szName>
+				<phmod type="DWORD">value</phmod>
+				<pIAT type="DWORD">value</pIAT>
+				<pINT type="DWORD">value</pINT>
+				<pBoundIAT type="DWORD">value</pBoundIAT>
+				<pUnloadIAT type="DWORD">value</pUnloadIAT>
+				<dwTimeStamp type="DWORD">value</dwTimeStamp>
+				<import>
+					<dll>value</dll>
+					<symbol>value</symbol>
+					<ordinal>value</ordinal>
+					<Bound>value</Bound>
+				</import>
+			</IMAGE_DELAY_IMPORT_DESCRIPTOR>
+		</IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT>
+		<IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR/>
+		<IMAGE_DIRECTORY_ENTRY_RESERVED/>
+	</Directories>
+</PE>

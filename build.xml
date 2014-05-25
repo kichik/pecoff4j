@@ -1,0 +1,36 @@
+<project name="PECOFF4J" default="build">
+	
+	<property name="release.dir" value="F:/Development/Releases/"/>
+	<property name="release.name" value="pecoff4j"/>
+	<property name="release.version" value="0.0.1"/>
+	<property name="deploy.dir" value="${release.dir}/${release.name}-${release.version}"/>
+	
+	<target name="build">
+		<mkdir dir="${deploy.dir}"/>
+		<copy todir="${deploy.dir}" file="cpl-v10.html"/>
+		<mkdir dir="build"/>
+		<mkdir dir="build/org/boris/${release.name}"/>
+		<javac srcdir="java/src" destdir="build" source="5">
+			<classpath>
+				<pathelement location="build"/>
+			</classpath>
+		</javac>
+		<jar destfile="${deploy.dir}/${release.name}-${release.version}.jar">
+			<fileset dir="build">
+				<include name="**/*.class"/>
+			</fileset>
+		</jar>
+		<jar destfile="${deploy.dir}/${release.name}-${release.version}-src.zip">
+			<fileset dir="java/src">
+				<include name="**/*.java"/>
+			</fileset>
+		</jar>
+		<delete dir="build"/>
+		<zip destfile="${release.dir}/${release.name}-${release.version}.zip">
+			<fileset dir="${release.dir}/${release.name}-${release.version}">
+				<include name="**/*"/>
+			</fileset>
+		</zip>
+		<delete dir="${release.dir}/${release.name}-${release.version}"/>
+	</target>
+</project>

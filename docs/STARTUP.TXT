@@ -1,0 +1,138 @@
+
+Windows Application Startup
+
+This topic describes the startup requirements of applications 
+for the Windows operating system. It also discusses the steps 
+needed to initialize an application before its entry-point 
+function, WinMain, can be called. 
+
+Startup Requirements
+
+When Windows starts an application, it calls a startup 
+routine supplied with the application rather than the 
+application's WinMain function. The startup routine is 
+responsible for initializing the application, calling WinMain
+, and exiting the application when WinMain returns control. 
+When Windows first calls the startup routine, the processor 
+registers have the following values: 
+
+Register Value
+
+AX       Contains zero. 
+BX       Specifies the size, in bytes, of the stack. 
+CX       Specifies the size, in bytes, of the heap. 
+DI       Contains a handle identifying the new application 
+         instance. 
+SI       Contains a handle identifying the previous 
+         application instance. 
+BP       Contains zero. 
+ES       Contains the segment address of the program segment 
+         prefix (PSP). 
+DS       Contains the segment address of the automatic data 
+         segment for the application. 
+SS       Same as the DS register. 
+SP       Contains the offset to the first byte of the 
+         application stack. 
+To initialize and exit a Windows application, the startup 
+routine must follow these steps: 
+1 Initialize the task by using the InitTask function. InitTask
+   also returns values that the startup routine passes to the 
+   WinMain function. 
+2 Clear the event that started the task by calling the 
+  WaitEvent function. 
+3 Initialize the queue and support routines for the 
+  application by calling the InitApp function with the 
+  instance handle returned by the InitTask function. 
+4 Call the entry point for the application, the WinMain
+  function. 
+5 Exit the application by calling the MS-DOS End Program 
+  function (Interrupt 21h Function 4Ch) when WinMain returns. 
+Although the startup routine is essentially the same for all 
+Windows applications, a variety of startup routines may need 
+to be developed to accommodate the different memory models and 
+high-level language run-time libraries used by Windows 
+applications. If a Windows application uses functions and 
+variables provided by run-time libraries, the startup routine 
+may need to be customized to initialize the library at the 
+same time as the application. Customizing the startup routine 
+for run-time library initialization is entirely dependent on 
+the library and is, therefore, beyond the scope of this topic. 
+
+Example of a Startup Routine
+
+A startup routine initializes and exits a Windows 
+application. The routine in the following example, the 
+__astart function, shows the code needed for startup, which 
+includes Cmacros defined in the CMACROS.INC header file. When 
+assembled, this code is suitable for small-model Windows 
+applications that do not use run-time libraries: 
+.xlist
+memS = 1    ; small memory model
+?DF = 1     ; Do not generate default segment definitions.
+?PLM = 1;
+?WIN = 1;
+include cmacros.inc
+.list
+STACKSLOP = 256
+createSeg   _TEXT,CODE,PARA,PUBLIC,CODE
+createSeg NULL, NULL, PARA,PUBLIC,BEGDATA,DGROUP
+createSeg _DATA,DATA, PARA,PUBLIC,DATA,   DGROUP
+defGrp      DGROUP,DATA
+assumes DS,DATA
+sBegin      NULL
+            DD  0
+labelW      <PUBLIC,rsrvptrs>
+maxRsrvPtrs = 5
+            DW  maxRsrvPtrs
+            DW  maxRsrvPtrs DUP (0)
+sEnd        NULL
+sBegin  DATA
+staticW hPrev,0             ; Save WinMain parameters.
+staticW hInstance,0
+staticD lpszCmdline,0
+staticW cmdShow,0
+sEnd    DATA
+externFP   <INITTASK>
+externFP   <WAITEVENT>
+externFP   <INITAPP>
+externFP   <DOS3CALL>
+externP    <WINMAIN>
+sBegin  CODE
+assumes CS,CODE
+labelNP <PUBLIC,__astart>
+        xor     bp,bp                   ; zero bp
+        push    bp
+        cCall   INITTASK                ; Initialize the task.
+        or      ax,ax
+        jz      noinit
+        add     cx,STACKSLOP            ; Add in stack slop space.
+        jc      noinit                  ; If overflow, return error.
+        mov     hPrev,si
+        mov     hInstance,di
+        mov     word ptr lpszCmdline,bx
+        mov     word ptr lpszCmdline+2,es
+        mov     cmdShow,dx
+        xor     ax,ax                   ; Clear initial event that
+        cCall   WAITEVENT,<ax>          ;   started this task.
+        cCall   INITAPP,<hInstance>     ; Initialize the queue.
+        or      ax,ax
+        jz      noinit
+        cCall   WINMAIN,<hInstance,hPrev,lpszCmdline,cmdShow>
+ix:
+        mov     ah,4Ch
+        cCall   DOS3CALL                ; Exit with return code from app.
+noinit:
+        mov     al,0FFh                 ; Exit with error code.
+        jmp short ix
+sEnd     CODE
+        end __astart                    ; start address
+Windows requires the null segment (containing the rsrvptrs 
+array), which is defined at the beginning of this sample. The 
+InitTask function copies the top, minimum, and bottom address 
+offsets of the stack into the third, fourth, and fifth 
+elements of the rsrvptrs array. Applications can use these 
+offsets to check the amount of space available on the stack. 
+The debugging version of Windows also uses these offsets to 
+check the stack. Applications must, therefore, not change 
+these offsets, since doing so can cause a system debugging 
+error (RIP). 

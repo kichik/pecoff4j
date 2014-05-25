@@ -1,0 +1,148 @@
+
+Self-Loading Windows Applications Overview (3.1)
+
+This topic describes the contents of a unique segment that is 
+found only in self-loading applications for the Windows 
+operating system. This segment contains six functions: three 
+that the application developer supplies and three that the 
+Windows kernel supplies. The segment also contains a table of 
+pointers to these functions and loader code. 
+This topic contains references to the Windows (new-style) 
+header and the data tables in a Windows executable file. 
+
+Loader Functions
+
+The Windows kernel provides a loader function that places 
+applications into memory and passes execution to a specified 
+entry point. Some Windows applications, however, must bypass 
+this kernel function and load themselves in order to be 
+executed correctly. For example, a compiler for Windows might 
+contain two floating-point modules: one requiring a math 
+coprocessor and one emulating the coprocessor. The standard 
+loader function in the Windows kernel does not provide a 
+method of specifying that code in one module should be loaded 
+in place of code in another; this means that the compiler 
+needs to load the appropriate code itself in order to run 
+efficiently and correctly. Likewise, the code for a Windows 
+application might be compressed with a special compression 
+algorithm in order to fit on a certain number of disks, but 
+the standard loader function does not provide a method for 
+dealing with a compressed file format. The application, 
+therefore, must load itself in order to be executed 
+correctly. 
+To indicate that a Windows application is self-loading, the 
+16-bit flag value in the executable file's Windows header 
+must contain the value 0x0800 (that is, bit 11 must be set). 
+Otherwise, Windows ignores the private loader code and 
+installs the application by using the standard loader 
+functions in the Windows kernel. 
+
+Loader Data Table
+
+In addition to the loader functions, the first segment of a 
+self-loading Windows application contains a loader data table 
+with far pointers to each of the loader functions. The format 
+of this table follows: 
+
+Location Description
+
+0x00     Specifies the version number (this value must be 
+         0xA0). 
+0x02     Reserved. 
+0x04     Points to a startup procedure, which the application 
+         developer provides. 
+0x08     Points to a reloading procedure, which the 
+         application developer provides. 
+0x0C     Reserved. 
+0x10     Points to a memory-allocation procedure, which the 
+         kernel provides. 
+0x14     Points to an entry-number procedure, which the kernel 
+         provides. 
+0x18     Points to an exit procedure, which the application 
+         developer provides. 
+0x1C     Reserved. 
+0x1E     Reserved. 
+0x20     Reserved. 
+0x22     Reserved. 
+0x24     Points to a set-owner procedure, which the kernel 
+         provides. 
+All of the pointers in this table must point to locations 
+within the first segment. There can be no fixups outside this 
+segment. 
+After the segment table for an executable file is loaded into 
+memory, each entry contains an additional 16-bit value. This 
+value is a segment selector (or handle) that the loader 
+created. 
+
+Loader Code
+
+The first segment of a self-loading Windows application 
+contains loader code for the six required loader functions. 
+The code loads and reloads segments and resets hardware. 
+
+Loading Segments
+
+The kernel calls the BootApp function supplied by the 
+application developer, instead of loading the application in 
+the normal manner, if the 16-bit value in the information 
+block for the Windows header contains the value 0x0800 (that 
+is, bit 11 is set). The BootApp function allocates memory for 
+all segments by calling the kernel-supplied MyAlloc function. 
+If the segment is identified as a PRELOAD or FIXED type, 
+BootApp also calls the LoadAppSeg function (another function 
+supplied by the application developer). The BootApp function 
+also calls SetOwner, a kernel-supplied function, to associate 
+the correct information block with each segment handle. 
+The first segment that the BootApp function should allocate 
+is the application's automatic data segment. This data 
+segment contains the application's stack. The automatic data 
+segment must be allocated before the BootApp function calls 
+the Windows PatchCodeHandle function.
+
+Reloading Segments
+
+In addition to loading segments, the LoadAppSeg function 
+reloads segments that the Windows kernel has discarded. 
+Because the LoadAppSeg function is responsible for reloading 
+segments, it must update bits 1 and 2 of the 16-bit flag 
+value in the segment table. (Only self-loading applications 
+should alter the Windows header or the data tables that 
+follow it.) Bit 1 specifies whether memory is allocated for 
+the segment, and bit 2 specifies whether the segment is 
+currently loaded. For a complete description of the segment 
+table, see Executable-File Format. 
+If the loader allocates memory for a segment but the segment 
+is not loaded (that is, bit 1 is set and bit 2 is not), the 
+LoadAppSeg function should call the Windows GlobalHandle 
+function to determine whether memory is allocated for the 
+segment. If memory is not allocated, the LoadAppSeg function 
+should call the Windows GlobalReAlloc function to reallocate 
+memory for the segment. 
+Once memory is allocated, the LoadAppSeg function should read 
+the segment from the executable file and call the 
+PatchCodeHandle function to correct each function prolog that 
+occurs in the segment. Once the function prologs are altered, 
+the LoadAppSeg function should resolve any far pointers that 
+occur in the segment. If the pointer is specified by an 
+ordinal value, the LoadAppSeg function should call the 
+kernel-supplied EntryAddrProc function to resolve the 
+address. 
+
+Resetting Hardware
+
+When closing a self-loading application, the kernel calls the 
+ExitProc function, supplied by the application developer, to 
+reset any hardware that a dynamic-link library may have 
+accessed. However, the ExitProc function does not need to 
+free memory or close files. 
+
+Function Reference
+
+This section provides information about the functions 
+supplied by the application developer and by the kernel for 
+self-loading Windows applications. 
+
+See Also
+
+BootApp, EntryAddrProc, ExitProc, MyAlloc, PatchCodeHandle, 
+LoadAppSeg, SetOwner 
