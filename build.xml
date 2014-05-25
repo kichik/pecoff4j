@@ -1,6 +1,6 @@
 <project name="PECOFF4J" default="build">
 	
-	<property name="release.dir" value="F:/Development/Releases/"/>
+	<property name="release.dir" value="releases"/>
 	<property name="release.name" value="pecoff4j"/>
 	<property name="release.version" value="0.0.1"/>
 	<property name="deploy.dir" value="${release.dir}/${release.name}-${release.version}"/>
