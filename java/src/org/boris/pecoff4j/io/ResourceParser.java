@@ -191,7 +191,7 @@ public class ResourceParser
         sp.setType(dr.readWord());
         sp.setKey(dr.readUnicode());
         sp.setPadding(alignDataReader(dr));
-        sp.setValue(dr.readUnicode());
+       	sp.setValue(dr.readUnicode(sp.getValueLength()));
         alignDataReader(dr);
         return sp;
     }

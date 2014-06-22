@@ -27,6 +27,7 @@ public class VersionStringsTest {
     public static void main(String[] args) throws IOException {
     	testVersionStrings("C:/windows/system32/notepad.exe");
         testVersionStrings("C:/windows/system32/ieframe.dll");
+        testVersionStrings("C:/windows/system32/igfxtray.exe");
     }
 
 	public static void testVersionStrings(String path) throws IOException {
