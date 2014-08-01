@@ -9,7 +9,6 @@
  *******************************************************************************/
 package org.boris.pecoff4j.io;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -95,12 +94,7 @@ public class PEParser
         }
 
         // Read any trailing data
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        int read = -1;
-        while ((read = dr.readByte()) != -1) {
-            bos.write(read);
-        }
-        byte[] tb = bos.toByteArray();
+        byte[] tb = dr.readAll();
         if (tb.length > 0) {
             pe.getImageData().setTrailingData(tb);
         }
@@ -489,7 +483,7 @@ public class PEParser
             byte[] b) throws IOException {
         DataReader dr = new DataReader(b);
         BoundImportDirectoryTable bidt = new BoundImportDirectoryTable();
-        List<BoundImport> imports = new ArrayList();
+        List<BoundImport> imports = new ArrayList<BoundImport>();
         BoundImport bi = null;
         while ((bi = readBoundImport(dr)) != null) {
             bidt.add(bi);

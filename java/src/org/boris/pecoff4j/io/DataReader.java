@@ -11,6 +11,7 @@ package org.boris.pecoff4j.io;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -38,12 +39,12 @@ public class DataReader implements IDataReader
 
     public int readByte() throws IOException {
         position += 1;
-        return dis.read();
+        return safeRead();
     }
 
     public int readWord() throws IOException {
         position += 2;
-        return dis.read() | dis.read() << 8;
+        return safeRead() | safeRead() << 8;
     }
 
     public long readLong() throws IOException {
@@ -53,8 +54,8 @@ public class DataReader implements IDataReader
 
     public int readDoubleWord() throws IOException {
         position += 4;
-        return dis.read() | dis.read() << 8 | dis.read() << 16 |
-                dis.read() << 24;
+        return safeRead() | safeRead() << 8 | safeRead() << 16 |
+                safeRead() << 24;
     }
 
     public int getPosition() {
@@ -73,7 +74,7 @@ public class DataReader implements IDataReader
     public void skipBytes(int numBytes) throws IOException {
         position += numBytes;
         for (int i = 0; i < numBytes; i++) {
-            dis.read();
+            safeRead();
         }
     }
 
@@ -83,13 +84,13 @@ public class DataReader implements IDataReader
 
     public void read(byte[] b) throws IOException {
         position += b.length;
-        dis.read(b);
+        safeRead(b);
     }
 
     public String readUtf(int size) throws IOException {
         position += size;
         byte b[] = new byte[size];
-        dis.read(b);
+        safeRead(b);
         int i = 0;
         for (; i < b.length; i++) {
             if (b[i] == 0)
@@ -128,4 +129,23 @@ public class DataReader implements IDataReader
         }
         return sb.toString();
     }
+    
+    public byte[] readAll() throws IOException {
+    	byte[] all = new byte[dis.available()];
+        read(all);
+        return all;
+    }
+    
+    private int safeRead() throws IOException {
+		int b = dis.read();
+		if (b == -1)
+			throw new EOFException("Expected to read bytes from the stream");
+		return b;
+	}
+    
+    private void safeRead(byte[] b) throws IOException {
+		int read = dis.read(b);
+		if (read != b.length)
+			throw new EOFException("Expected to read bytes from the stream");
+	}
 }

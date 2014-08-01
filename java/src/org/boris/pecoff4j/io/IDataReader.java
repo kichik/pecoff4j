@@ -38,4 +38,6 @@ public interface IDataReader
     public abstract String readUnicode() throws IOException;
 
     public abstract String readUnicode(int size) throws IOException;
+
+	public abstract byte[] readAll() throws IOException;
 }
