@@ -9,57 +9,56 @@
  *******************************************************************************/
 package org.boris.pecoff4j.resources;
 
-public class IconImage
-{
-    private BitmapInfoHeader header;
-    private RGBQuad[] colors;
-    private byte[] xorMask;
-    private byte[] andMask;
-    private byte[] pngData;
+public class IconImage {
+	private BitmapInfoHeader header;
+	private RGBQuad[] colors;
+	private byte[] xorMask;
+	private byte[] andMask;
+	private byte[] pngData;
 
-    public BitmapInfoHeader getHeader() {
-        return header;
-    }
+	public BitmapInfoHeader getHeader() {
+		return header;
+	}
 
-    public RGBQuad[] getColors() {
-        return colors;
-    }
+	public RGBQuad[] getColors() {
+		return colors;
+	}
 
-    public byte[] getXorMask() {
-        return xorMask;
-    }
+	public byte[] getXorMask() {
+		return xorMask;
+	}
 
-    public byte[] getAndMask() {
-        return andMask;
-    }
+	public byte[] getAndMask() {
+		return andMask;
+	}
 
-    public byte[] getPNG() {
-        return pngData;
-    }
+	public byte[] getPNG() {
+		return pngData;
+	}
 
-    public void setHeader(BitmapInfoHeader header) {
-        this.header = header;
-    }
+	public void setHeader(BitmapInfoHeader header) {
+		this.header = header;
+	}
 
-    public void setColors(RGBQuad[] colors) {
-        this.colors = colors;
-    }
+	public void setColors(RGBQuad[] colors) {
+		this.colors = colors;
+	}
 
-    public void setXorMask(byte[] xorMask) {
-        this.xorMask = xorMask;
-    }
+	public void setXorMask(byte[] xorMask) {
+		this.xorMask = xorMask;
+	}
 
-    public void setAndMask(byte[] andMask) {
-        this.andMask = andMask;
-    }
+	public void setAndMask(byte[] andMask) {
+		this.andMask = andMask;
+	}
 
-    public void setPngData(byte[] pngData) {
-        this.pngData = pngData;
-    }
+	public void setPngData(byte[] pngData) {
+		this.pngData = pngData;
+	}
 
-    public int sizeOf() {
-        return header == null ? pngData.length : header.getSize() +
-                (colors == null ? 0 : colors.length * 4) + xorMask.length +
-                andMask.length;
-    }
+	public int sizeOf() {
+		return header == null ? pngData.length : header.getSize()
+				+ (colors == null ? 0 : colors.length * 4) + xorMask.length
+				+ andMask.length;
+	}
 }

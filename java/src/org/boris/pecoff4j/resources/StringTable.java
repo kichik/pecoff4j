@@ -15,71 +15,70 @@ import java.util.List;
 
 import org.boris.pecoff4j.util.Strings;
 
-public class StringTable
-{
-    private int length;
-    private int valueLength;
-    private int type;
-    private String key;
-    private int padding;
-    private List<StringPair> strings = new ArrayList<StringPair>();
-    
-    public void add(StringPair string) {
-    	strings.add(string);
-    }
-    
-    public int getCount() {
-    	return strings.size();
-    }
-    
-    public StringPair getString(int index) {
-    	return strings.get(index);
-    }
+public class StringTable {
+	private int length;
+	private int valueLength;
+	private int type;
+	private String key;
+	private int padding;
+	private List<StringPair> strings = new ArrayList<StringPair>();
 
-    public int getLength() {
-        return length;
-    }
+	public void add(StringPair string) {
+		strings.add(string);
+	}
 
-    public int getValueLength() {
-        return valueLength;
-    }
+	public int getCount() {
+		return strings.size();
+	}
 
-    public int getType() {
-        return type;
-    }
+	public StringPair getString(int index) {
+		return strings.get(index);
+	}
 
-    public int getPadding() {
-        return padding;
-    }
+	public int getLength() {
+		return length;
+	}
 
-    public String getKey() {
-        return key;
-    }
+	public int getValueLength() {
+		return valueLength;
+	}
 
-    public void setKey(String key) {
-        this.key = key;
-    }
+	public int getType() {
+		return type;
+	}
 
-    public void setLength(int length) {
-        this.length = length;
-    }
+	public int getPadding() {
+		return padding;
+	}
 
-    public void setValueLength(int valueLength) {
-        this.valueLength = valueLength;
-    }
+	public String getKey() {
+		return key;
+	}
 
-    public void setType(int type) {
-        this.type = type;
-    }
+	public void setKey(String key) {
+		this.key = key;
+	}
 
-    public void setPadding(int padding) {
-        this.padding = padding;
-    }
-    
+	public void setLength(int length) {
+		this.length = length;
+	}
+
+	public void setValueLength(int valueLength) {
+		this.valueLength = valueLength;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public void setPadding(int padding) {
+		this.padding = padding;
+	}
+
 	public int sizeOf() {
 		int actualLength = 6 + padding + Strings.getUtf16Length(key);
-    	for (StringPair s : strings)
-    		actualLength += s.sizeOf();
+		for (StringPair s : strings)
+			actualLength += s.sizeOf();
 		return actualLength;
 	}
 }

@@ -11,19 +11,18 @@ package org.boris.pecoff4j;
 
 import java.util.ArrayList;
 
-public class ImportDirectoryTable
-{
-    private ArrayList imports = new ArrayList();
+public class ImportDirectoryTable {
+	private ArrayList imports = new ArrayList();
 
-    public void add(ImportEntry entry) {
-        imports.add(entry);
-    }
+	public void add(ImportEntry entry) {
+		imports.add(entry);
+	}
 
-    public int size() {
-        return imports.size();
-    }
+	public int size() {
+		return imports.size();
+	}
 
-    public ImportEntry getEntry(int index) {
-        return (ImportEntry) imports.get(index);
-    }
+	public ImportEntry getEntry(int index) {
+		return (ImportEntry) imports.get(index);
+	}
 }

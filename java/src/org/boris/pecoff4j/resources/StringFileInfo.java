@@ -15,72 +15,70 @@ import java.util.List;
 
 import org.boris.pecoff4j.util.Strings;
 
-
-public class StringFileInfo
-{
+public class StringFileInfo {
 	private int length;
 	private int valueLength;
 	private int type;
-    private String key;
-    private int padding;
-    private List<StringTable> tables = new ArrayList<StringTable>();
-    
-    public void add(StringTable table) {
-    	tables.add(table);
-    }
-    
-    public int getCount() {
-    	return tables.size();
-    }
-    
-    public StringTable getTable(int index) {
-    	return tables.get(index);
-    }
-    
-    public int getLength() {
+	private String key;
+	private int padding;
+	private List<StringTable> tables = new ArrayList<StringTable>();
+
+	public void add(StringTable table) {
+		tables.add(table);
+	}
+
+	public int getCount() {
+		return tables.size();
+	}
+
+	public StringTable getTable(int index) {
+		return tables.get(index);
+	}
+
+	public int getLength() {
 		return length;
 	}
 
 	public void setLength(int length) {
 		this.length = length;
 	}
-	
+
 	public int getValueLength() {
 		return valueLength;
 	}
-	
+
 	public void setValueLength(int valueLength) {
 		this.valueLength = valueLength;
 	}
-	
+
 	public int getType() {
 		return type;
 	}
-	
+
 	public void setType(int type) {
 		this.type = type;
 	}
 
-    public String getKey() {
-        return key;
-    }
+	public String getKey() {
+		return key;
+	}
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-    
-    public int getPadding() {
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public int getPadding() {
 		return padding;
 	}
-    
-    public void setPadding(int padding) {
+
+	public void setPadding(int padding) {
 		this.padding = padding;
 	}
-    
+
 	public int sizeOf() {
 		int actualLength = 6 + padding + Strings.getUtf16Length(key);
-    	for (StringTable t : tables)
-    		actualLength += t.sizeOf();
+		for (StringTable t : tables)
+			actualLength += t.sizeOf();
 		return actualLength;
 	}
 }

@@ -9,24 +9,23 @@
  *******************************************************************************/
 package org.boris.pecoff4j;
 
-public class ImageDataDirectory
-{
-    private int virtualAddress;
-    private int size;
+public class ImageDataDirectory {
+	private int virtualAddress;
+	private int size;
 
-    public int getVirtualAddress() {
-        return virtualAddress;
-    }
+	public int getVirtualAddress() {
+		return virtualAddress;
+	}
 
-    public int getSize() {
-        return size;
-    }
+	public int getSize() {
+		return size;
+	}
 
-    public void setVirtualAddress(int virtualAddress) {
-        this.virtualAddress = virtualAddress;
-    }
+	public void setVirtualAddress(int virtualAddress) {
+		this.virtualAddress = virtualAddress;
+	}
 
-    public void setSize(int size) {
-        this.size = size;
-    }
+	public void setSize(int size) {
+		this.size = size;
+	}
 }

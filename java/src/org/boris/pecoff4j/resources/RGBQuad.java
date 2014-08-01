@@ -9,42 +9,41 @@
  *******************************************************************************/
 package org.boris.pecoff4j.resources;
 
-public class RGBQuad
-{
-    private int blue;
-    private int green;
-    private int red;
-    private int reserved;
+public class RGBQuad {
+	private int blue;
+	private int green;
+	private int red;
+	private int reserved;
 
-    public int getBlue() {
-        return blue;
-    }
+	public int getBlue() {
+		return blue;
+	}
 
-    public int getGreen() {
-        return green;
-    }
+	public int getGreen() {
+		return green;
+	}
 
-    public int getRed() {
-        return red;
-    }
+	public int getRed() {
+		return red;
+	}
 
-    public int getReserved() {
-        return reserved;
-    }
+	public int getReserved() {
+		return reserved;
+	}
 
-    public void setBlue(int blue) {
-        this.blue = blue;
-    }
+	public void setBlue(int blue) {
+		this.blue = blue;
+	}
 
-    public void setGreen(int green) {
-        this.green = green;
-    }
+	public void setGreen(int green) {
+		this.green = green;
+	}
 
-    public void setRed(int red) {
-        this.red = red;
-    }
+	public void setRed(int red) {
+		this.red = red;
+	}
 
-    public void setReserved(int reserved) {
-        this.reserved = reserved;
-    }
+	public void setReserved(int reserved) {
+		this.reserved = reserved;
+	}
 }

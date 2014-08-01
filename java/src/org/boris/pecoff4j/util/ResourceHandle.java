@@ -13,6 +13,5 @@ package org.boris.pecoff4j.util;
 //   - how to handle named and id entries
 //   - or the general case of a resource directory vs the
 //     specific type,name,lang structure that is prevalent.
-public class ResourceHandle
-{
+public class ResourceHandle {
 }

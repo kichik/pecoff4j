@@ -9,15 +9,14 @@
  *******************************************************************************/
 package org.boris.pecoff4j.resources;
 
-public class Manifest
-{
-    private String str;
+public class Manifest {
+	private String str;
 
-    public String get() {
-        return str;
-    }
+	public String get() {
+		return str;
+	}
 
-    public void set(String str) {
-        this.str = str;
-    }
+	public void set(String str) {
+		this.str = str;
+	}
 }

@@ -14,9 +14,8 @@ import java.io.File;
 import org.boris.pecoff4j.PE;
 import org.boris.pecoff4j.io.PEParser;
 
-public class ResourceStripper
-{
-    public static void remove(File pecoff, File output) throws Exception {
-        PE pe = PEParser.parse(pecoff);
-    }
+public class ResourceStripper {
+	public static void remove(File pecoff, File output) throws Exception {
+		PE pe = PEParser.parse(pecoff);
+	}
 }

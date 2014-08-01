@@ -9,71 +9,70 @@
  *******************************************************************************/
 package org.boris.pecoff4j;
 
-public class PE
-{
-    private DOSHeader dosHeader;
-    private DOSStub stub;
-    private PESignature signature;
-    private COFFHeader coffHeader;
-    private OptionalHeader optionalHeader;
-    private ImageData imageData;
-    private SectionTable sectionTable;
+public class PE {
+	private DOSHeader dosHeader;
+	private DOSStub stub;
+	private PESignature signature;
+	private COFFHeader coffHeader;
+	private OptionalHeader optionalHeader;
+	private ImageData imageData;
+	private SectionTable sectionTable;
 
-    public DOSHeader getDosHeader() {
-        return dosHeader;
-    }
+	public DOSHeader getDosHeader() {
+		return dosHeader;
+	}
 
-    public DOSStub getStub() {
-        return stub;
-    }
+	public DOSStub getStub() {
+		return stub;
+	}
 
-    public PESignature getSignature() {
-        return signature;
-    }
+	public PESignature getSignature() {
+		return signature;
+	}
 
-    public COFFHeader getCoffHeader() {
-        return coffHeader;
-    }
+	public COFFHeader getCoffHeader() {
+		return coffHeader;
+	}
 
-    public OptionalHeader getOptionalHeader() {
-        return optionalHeader;
-    }
+	public OptionalHeader getOptionalHeader() {
+		return optionalHeader;
+	}
 
-    public SectionTable getSectionTable() {
-        return sectionTable;
-    }
+	public SectionTable getSectionTable() {
+		return sectionTable;
+	}
 
-    public void setDosHeader(DOSHeader dosHeader) {
-        this.dosHeader = dosHeader;
-    }
+	public void setDosHeader(DOSHeader dosHeader) {
+		this.dosHeader = dosHeader;
+	}
 
-    public void setStub(DOSStub stub) {
-        this.stub = stub;
-    }
+	public void setStub(DOSStub stub) {
+		this.stub = stub;
+	}
 
-    public void setSignature(PESignature signature) {
-        this.signature = signature;
-    }
+	public void setSignature(PESignature signature) {
+		this.signature = signature;
+	}
 
-    public void setCoffHeader(COFFHeader coffHeader) {
-        this.coffHeader = coffHeader;
-    }
+	public void setCoffHeader(COFFHeader coffHeader) {
+		this.coffHeader = coffHeader;
+	}
 
-    public void setOptionalHeader(OptionalHeader optionalHeader) {
-        this.optionalHeader = optionalHeader;
-    }
+	public void setOptionalHeader(OptionalHeader optionalHeader) {
+		this.optionalHeader = optionalHeader;
+	}
 
-    public void setSectionTable(SectionTable sectionTable) {
-        this.sectionTable = sectionTable;
-    }
+	public void setSectionTable(SectionTable sectionTable) {
+		this.sectionTable = sectionTable;
+	}
 
-    public ImageData getImageData() {
-        if (imageData == null)
-            imageData = new ImageData();
-        return imageData;
-    }
+	public ImageData getImageData() {
+		if (imageData == null)
+			imageData = new ImageData();
+		return imageData;
+	}
 
-    public void setImageData(ImageData imageData) {
-        this.imageData = imageData;
-    }
+	public void setImageData(ImageData imageData) {
+		this.imageData = imageData;
+	}
 }

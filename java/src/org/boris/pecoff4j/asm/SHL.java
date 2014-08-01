@@ -9,18 +9,19 @@
  *******************************************************************************/
 package org.boris.pecoff4j.asm;
 
-public class SHL extends AbstractInstruction
-{
-    private ModRM modrm;
-    private byte imm8;
+public class SHL extends AbstractInstruction {
+	private ModRM modrm;
+	private byte imm8;
 
-    public SHL(ModRM modrm, byte imm8) {
-        this.modrm = modrm;
-        this.imm8 = imm8;
-        this.code = toCode(0xc1, modrm, imm8);
-    }
+	public SHL(ModRM modrm, byte imm8) {
+		this.modrm = modrm;
+		this.imm8 = imm8;
+		this.code = toCode(0xc1, modrm, imm8);
+	}
 
-    public String toIntelAssembly() {
-        return "shl  " + Register.to32(modrm.reg1) + ", " + toHexString(imm8, false);
-    }
+	@Override
+	public String toIntelAssembly() {
+		return "shl  " + Register.to32(modrm.reg1) + ", "
+				+ toHexString(imm8, false);
+	}
 }

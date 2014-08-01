@@ -11,11 +11,10 @@ package org.boris.pecoff4j;
 
 import org.boris.pecoff4j.io.PEParser;
 
-public class WinRun4JTest1
-{
-    public static void main(String[] args) throws Exception {
-        PE pe = PEParser.parse(WinRun4JTest1.class
-                .getResourceAsStream("WinRun4J.exe"));
+public class WinRun4JTest1 {
+	public static void main(String[] args) throws Exception {
+		PE pe = PEParser.parse(WinRun4JTest1.class
+				.getResourceAsStream("WinRun4J.exe"));
 
-    }
+	}
 }

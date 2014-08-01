@@ -9,16 +9,16 @@
  *******************************************************************************/
 package org.boris.pecoff4j.asm;
 
-public class JGE extends AbstractInstruction
-{
-    private byte imm8;
+public class JGE extends AbstractInstruction {
+	private byte imm8;
 
-    public JGE(byte imm8) {
-        this.imm8 = imm8;
-        this.code = toCode(0x7d, imm8);
-    }
+	public JGE(byte imm8) {
+		this.imm8 = imm8;
+		this.code = toCode(0x7d, imm8);
+	}
 
-    public String toIntelAssembly() {
-        return "jge  " + toHexString(imm8, true);
-    }
+	@Override
+	public String toIntelAssembly() {
+		return "jge  " + toHexString(imm8, true);
+	}
 }

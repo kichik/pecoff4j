@@ -9,43 +9,41 @@
  *******************************************************************************/
 package org.boris.pecoff4j.resources;
 
+public class Bitmap {
+	private BitmapFileHeader fileHeader;
+	private BitmapInfoHeader infoHeader;
+	private byte[] colors;
+	private byte[] bitmapBits;
 
-public class Bitmap
-{
-    private BitmapFileHeader fileHeader;
-    private BitmapInfoHeader infoHeader;
-    private byte[] colors;
-    private byte[] bitmapBits;
+	public BitmapFileHeader getFileHeader() {
+		return fileHeader;
+	}
 
-    public BitmapFileHeader getFileHeader() {
-        return fileHeader;
-    }
+	public BitmapInfoHeader getInfoHeader() {
+		return infoHeader;
+	}
 
-    public BitmapInfoHeader getInfoHeader() {
-        return infoHeader;
-    }
+	public byte[] getColors() {
+		return colors;
+	}
 
-    public byte[] getColors() {
-        return colors;
-    }
+	public byte[] getBitmapBits() {
+		return bitmapBits;
+	}
 
-    public byte[] getBitmapBits() {
-        return bitmapBits;
-    }
+	public void setFileHeader(BitmapFileHeader fileHeader) {
+		this.fileHeader = fileHeader;
+	}
 
-    public void setFileHeader(BitmapFileHeader fileHeader) {
-        this.fileHeader = fileHeader;
-    }
+	public void setInfoHeader(BitmapInfoHeader infoHeader) {
+		this.infoHeader = infoHeader;
+	}
 
-    public void setInfoHeader(BitmapInfoHeader infoHeader) {
-        this.infoHeader = infoHeader;
-    }
+	public void setColors(byte[] colors) {
+		this.colors = colors;
+	}
 
-    public void setColors(byte[] colors) {
-        this.colors = colors;
-    }
-
-    public void setBitmapBits(byte[] bitmapBits) {
-        this.bitmapBits = bitmapBits;
-    }
+	public void setBitmapBits(byte[] bitmapBits) {
+		this.bitmapBits = bitmapBits;
+	}
 }

@@ -15,69 +15,68 @@ import org.boris.pecoff4j.util.DataObject;
  * Encapsulates the Debug Directory (Image Only). Section 6.1.1 of the PE/COFF
  * spec v8.
  */
-public class DebugDirectory extends DataObject
-{
-    private int characteristics;
-    private int timeDateStamp;
-    private int majorVersion;
-    private int type;
-    private int sizeOfData;
-    private int addressOfRawData;
-    private int pointerToRawData;
+public class DebugDirectory extends DataObject {
+	private int characteristics;
+	private int timeDateStamp;
+	private int majorVersion;
+	private int type;
+	private int sizeOfData;
+	private int addressOfRawData;
+	private int pointerToRawData;
 
-    public int getCharacteristics() {
-        return characteristics;
-    }
+	public int getCharacteristics() {
+		return characteristics;
+	}
 
-    public int getTimeDateStamp() {
-        return timeDateStamp;
-    }
+	public int getTimeDateStamp() {
+		return timeDateStamp;
+	}
 
-    public int getMajorVersion() {
-        return majorVersion;
-    }
+	public int getMajorVersion() {
+		return majorVersion;
+	}
 
-    public int getType() {
-        return type;
-    }
+	public int getType() {
+		return type;
+	}
 
-    public int getSizeOfData() {
-        return sizeOfData;
-    }
+	public int getSizeOfData() {
+		return sizeOfData;
+	}
 
-    public int getAddressOfRawData() {
-        return addressOfRawData;
-    }
+	public int getAddressOfRawData() {
+		return addressOfRawData;
+	}
 
-    public int getPointerToRawData() {
-        return pointerToRawData;
-    }
+	public int getPointerToRawData() {
+		return pointerToRawData;
+	}
 
-    public void setCharacteristics(int characteristics) {
-        this.characteristics = characteristics;
-    }
+	public void setCharacteristics(int characteristics) {
+		this.characteristics = characteristics;
+	}
 
-    public void setTimeDateStamp(int timeDateStamp) {
-        this.timeDateStamp = timeDateStamp;
-    }
+	public void setTimeDateStamp(int timeDateStamp) {
+		this.timeDateStamp = timeDateStamp;
+	}
 
-    public void setMajorVersion(int majorVersion) {
-        this.majorVersion = majorVersion;
-    }
+	public void setMajorVersion(int majorVersion) {
+		this.majorVersion = majorVersion;
+	}
 
-    public void setType(int type) {
-        this.type = type;
-    }
+	public void setType(int type) {
+		this.type = type;
+	}
 
-    public void setSizeOfData(int sizeOfData) {
-        this.sizeOfData = sizeOfData;
-    }
+	public void setSizeOfData(int sizeOfData) {
+		this.sizeOfData = sizeOfData;
+	}
 
-    public void setAddressOfRawData(int addressOfRawData) {
-        this.addressOfRawData = addressOfRawData;
-    }
+	public void setAddressOfRawData(int addressOfRawData) {
+		this.addressOfRawData = addressOfRawData;
+	}
 
-    public void setPointerToRawData(int pointerToRawData) {
-        this.pointerToRawData = pointerToRawData;
-    }
+	public void setPointerToRawData(int pointerToRawData) {
+		this.pointerToRawData = pointerToRawData;
+	}
 }

@@ -9,13 +9,13 @@
  *******************************************************************************/
 package org.boris.pecoff4j.asm;
 
-public class RET extends AbstractInstruction
-{
-    public RET() {
-        this.code = toCode(0xc3);
-    }
+public class RET extends AbstractInstruction {
+	public RET() {
+		this.code = toCode(0xc3);
+	}
 
-    public String toIntelAssembly() {
-        return "ret";
-    }
+	@Override
+	public String toIntelAssembly() {
+		return "ret";
+	}
 }

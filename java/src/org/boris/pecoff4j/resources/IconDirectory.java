@@ -11,41 +11,40 @@ package org.boris.pecoff4j.resources;
 
 import java.util.ArrayList;
 
-public class IconDirectory
-{
-    private int reserved;
-    private int type;
-    private ArrayList entries = new ArrayList();
+public class IconDirectory {
+	private int reserved;
+	private int type;
+	private ArrayList entries = new ArrayList();
 
-    public void add(IconDirectoryEntry entry) {
-        entries.add(entry);
-    }
+	public void add(IconDirectoryEntry entry) {
+		entries.add(entry);
+	}
 
-    public int getCount() {
-        return entries.size();
-    }
+	public int getCount() {
+		return entries.size();
+	}
 
-    public IconDirectoryEntry getEntry(int index) {
-        return (IconDirectoryEntry) entries.get(index);
-    }
+	public IconDirectoryEntry getEntry(int index) {
+		return (IconDirectoryEntry) entries.get(index);
+	}
 
-    public void setReserved(int reserved) {
-        this.reserved = reserved;
-    }
+	public void setReserved(int reserved) {
+		this.reserved = reserved;
+	}
 
-    public void setType(int type) {
-        this.type = type;
-    }
+	public void setType(int type) {
+		this.type = type;
+	}
 
-    public int getReserved() {
-        return reserved;
-    }
+	public int getReserved() {
+		return reserved;
+	}
 
-    public int getType() {
-        return type;
-    }
+	public int getType() {
+		return type;
+	}
 
-    public int sizeOf() {
-        return 6 + entries.size() * IconDirectoryEntry.sizeOf();
-    }
+	public int sizeOf() {
+		return 6 + entries.size() * IconDirectoryEntry.sizeOf();
+	}
 }

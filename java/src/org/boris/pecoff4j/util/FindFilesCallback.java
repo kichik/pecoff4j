@@ -11,7 +11,6 @@ package org.boris.pecoff4j.util;
 
 import java.io.File;
 
-public interface FindFilesCallback
-{
-    void fileFound(File fs);
+public interface FindFilesCallback {
+	void fileFound(File fs);
 }

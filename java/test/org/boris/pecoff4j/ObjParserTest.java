@@ -12,10 +12,10 @@ package org.boris.pecoff4j;
 import org.boris.pecoff4j.io.PEParser;
 import org.boris.pecoff4j.util.Reflection;
 
-public class ObjParserTest
-{
-    public static void main(String[] args) throws Exception {
-        PE p = PEParser.parse("F:\\eclipse\\workspace\\WinRun4J\\build\\WinRun4J-Debug\\win32.obj");
-        Reflection.println(p);
-    }
+public class ObjParserTest {
+	public static void main(String[] args) throws Exception {
+		PE p = PEParser
+				.parse("F:\\eclipse\\workspace\\WinRun4J\\build\\WinRun4J-Debug\\win32.obj");
+		Reflection.println(p);
+	}
 }

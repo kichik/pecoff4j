@@ -9,22 +9,21 @@
  *******************************************************************************/
 package org.boris.elf;
 
-public class ELFHeader
-{
-    private byte[] magic;
-    private int fileClass;
-    private int fileData;
-    private int fileVersion;
-    private int type;
-    private int machine;
-    private int version;
-    private int entry;
-    private int phoff;
-    private int shoff;
-    private int words;
-    private int ehSize;
-    private int phEntSize;
-    private int phNum;
-    private int shEntSize;
-    private int shStrndx;
+public class ELFHeader {
+	private byte[] magic;
+	private int fileClass;
+	private int fileData;
+	private int fileVersion;
+	private int type;
+	private int machine;
+	private int version;
+	private int entry;
+	private int phoff;
+	private int shoff;
+	private int words;
+	private int ehSize;
+	private int phEntSize;
+	private int phNum;
+	private int shEntSize;
+	private int shStrndx;
 }

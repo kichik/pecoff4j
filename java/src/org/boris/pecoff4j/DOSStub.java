@@ -12,15 +12,14 @@ package org.boris.pecoff4j;
 /**
  * Used to store the stub program.
  */
-public class DOSStub
-{
-    private byte[] stub;
+public class DOSStub {
+	private byte[] stub;
 
-    public byte[] getStub() {
-        return stub;
-    }
+	public byte[] getStub() {
+		return stub;
+	}
 
-    public void setStub(byte[] stub) {
-        this.stub = stub;
-    }
+	public void setStub(byte[] stub) {
+		this.stub = stub;
+	}
 }

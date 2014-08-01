@@ -9,7 +9,6 @@
  *******************************************************************************/
 package org.boris.pecoff4j.io;
 
-public class SectionAssembler
-{
+public class SectionAssembler {
 
 }

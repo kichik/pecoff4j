@@ -9,11 +9,10 @@
  *******************************************************************************/
 package org.boris.pecoff4j.asm;
 
-public interface Instruction
-{
-    int size();
+public interface Instruction {
+	int size();
 
-    byte[] toCode();
+	byte[] toCode();
 
-    String toIntelAssembly();
+	String toIntelAssembly();
 }

@@ -9,24 +9,23 @@
  *******************************************************************************/
 package org.boris.pecoff4j;
 
-public class SectionData
-{
-    private byte[] data;
-    private byte[] preamble;
+public class SectionData {
+	private byte[] data;
+	private byte[] preamble;
 
-    public byte[] getPreamble() {
-        return preamble;
-    }
+	public byte[] getPreamble() {
+		return preamble;
+	}
 
-    public void setPreamble(byte[] preamble) {
-        this.preamble = preamble;
-    }
+	public void setPreamble(byte[] preamble) {
+		this.preamble = preamble;
+	}
 
-    public byte[] getData() {
-        return data;
-    }
+	public byte[] getData() {
+		return data;
+	}
 
-    public void setData(byte[] data) {
-        this.data = data;
-    }
+	public void setData(byte[] data) {
+		this.data = data;
+	}
 }

@@ -9,60 +9,59 @@
  *******************************************************************************/
 package org.boris.pecoff4j;
 
-public class ResourceDirectoryTable
-{
-    private int characteristics;
-    private int timeDateStamp;
-    private int majorVersion;
-    private int minVersion;
-    private int numNameEntries;
-    private int numIdEntries;
+public class ResourceDirectoryTable {
+	private int characteristics;
+	private int timeDateStamp;
+	private int majorVersion;
+	private int minVersion;
+	private int numNameEntries;
+	private int numIdEntries;
 
-    public int getCharacteristics() {
-        return characteristics;
-    }
+	public int getCharacteristics() {
+		return characteristics;
+	}
 
-    public void setCharacteristics(int characteristics) {
-        this.characteristics = characteristics;
-    }
+	public void setCharacteristics(int characteristics) {
+		this.characteristics = characteristics;
+	}
 
-    public int getTimeDateStamp() {
-        return timeDateStamp;
-    }
+	public int getTimeDateStamp() {
+		return timeDateStamp;
+	}
 
-    public void setTimeDateStamp(int timeDateStamp) {
-        this.timeDateStamp = timeDateStamp;
-    }
+	public void setTimeDateStamp(int timeDateStamp) {
+		this.timeDateStamp = timeDateStamp;
+	}
 
-    public int getMajorVersion() {
-        return majorVersion;
-    }
+	public int getMajorVersion() {
+		return majorVersion;
+	}
 
-    public void setMajorVersion(int majorVersion) {
-        this.majorVersion = majorVersion;
-    }
+	public void setMajorVersion(int majorVersion) {
+		this.majorVersion = majorVersion;
+	}
 
-    public int getMinVersion() {
-        return minVersion;
-    }
+	public int getMinVersion() {
+		return minVersion;
+	}
 
-    public void setMinVersion(int minVersion) {
-        this.minVersion = minVersion;
-    }
+	public void setMinVersion(int minVersion) {
+		this.minVersion = minVersion;
+	}
 
-    public int getNumNameEntries() {
-        return numNameEntries;
-    }
+	public int getNumNameEntries() {
+		return numNameEntries;
+	}
 
-    public void setNumNameEntries(int numNameEntries) {
-        this.numNameEntries = numNameEntries;
-    }
+	public void setNumNameEntries(int numNameEntries) {
+		this.numNameEntries = numNameEntries;
+	}
 
-    public int getNumIdEntries() {
-        return numIdEntries;
-    }
+	public int getNumIdEntries() {
+		return numIdEntries;
+	}
 
-    public void setNumIdEntries(int numIdEntries) {
-        this.numIdEntries = numIdEntries;
-    }
+	public void setNumIdEntries(int numIdEntries) {
+		this.numIdEntries = numIdEntries;
+	}
 }

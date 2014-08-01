@@ -9,60 +9,59 @@
  *******************************************************************************/
 package org.boris.pecoff4j;
 
-public class ResourceEntry
-{
-    private int id;
-    private String name;
-    private byte[] data;
-    private ResourceDirectory directory;
-    private int codePage;
-    private int reserved;
+public class ResourceEntry {
+	private int id;
+	private String name;
+	private byte[] data;
+	private ResourceDirectory directory;
+	private int codePage;
+	private int reserved;
 
-    public int getId() {
-        return id;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public byte[] getData() {
-        return data;
-    }
+	public byte[] getData() {
+		return data;
+	}
 
-    public void setData(byte[] data) {
-        this.data = data;
-    }
+	public void setData(byte[] data) {
+		this.data = data;
+	}
 
-    public ResourceDirectory getDirectory() {
-        return directory;
-    }
+	public ResourceDirectory getDirectory() {
+		return directory;
+	}
 
-    public void setDirectory(ResourceDirectory directory) {
-        this.directory = directory;
-    }
+	public void setDirectory(ResourceDirectory directory) {
+		this.directory = directory;
+	}
 
-    public int getCodePage() {
-        return codePage;
-    }
+	public int getCodePage() {
+		return codePage;
+	}
 
-    public void setCodePage(int codePage) {
-        this.codePage = codePage;
-    }
+	public void setCodePage(int codePage) {
+		this.codePage = codePage;
+	}
 
-    public int getReserved() {
-        return reserved;
-    }
+	public int getReserved() {
+		return reserved;
+	}
 
-    public void setReserved(int reserved) {
-        this.reserved = reserved;
-    }
+	public void setReserved(int reserved) {
+		this.reserved = reserved;
+	}
 }

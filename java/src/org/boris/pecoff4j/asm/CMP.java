@@ -9,18 +9,19 @@
  *******************************************************************************/
 package org.boris.pecoff4j.asm;
 
-public class CMP extends AbstractInstruction
-{
-    private ModRM modrm;
-    private byte imm8;
+public class CMP extends AbstractInstruction {
+	private ModRM modrm;
+	private byte imm8;
 
-    public CMP(ModRM modrm, byte imm8) {
-        this.modrm = modrm;
-        this.imm8 = imm8;
-        this.code = toCode(0x3b, modrm, imm8);
-    }
+	public CMP(ModRM modrm, byte imm8) {
+		this.modrm = modrm;
+		this.imm8 = imm8;
+		this.code = toCode(0x3b, modrm, imm8);
+	}
 
-    public String toIntelAssembly() {
-        return "cmp  " + Register.to32(modrm.reg2) + ", [" + Register.to32(modrm.reg1) + toHexString(imm8, true) + "]";
-    }
+	@Override
+	public String toIntelAssembly() {
+		return "cmp  " + Register.to32(modrm.reg2) + ", ["
+				+ Register.to32(modrm.reg1) + toHexString(imm8, true) + "]";
+	}
 }

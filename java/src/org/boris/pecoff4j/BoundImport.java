@@ -9,42 +9,41 @@
  *******************************************************************************/
 package org.boris.pecoff4j;
 
-public class BoundImport
-{
-    private long timestamp;
-    private int offsetToModuleName;
-    private String moduleName;
-    private int numModuleForwarderRefs;
+public class BoundImport {
+	private long timestamp;
+	private int offsetToModuleName;
+	private String moduleName;
+	private int numModuleForwarderRefs;
 
-    public long getTimestamp() {
-        return timestamp;
-    }
+	public long getTimestamp() {
+		return timestamp;
+	}
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
 
-    public String getModuleName() {
-        return moduleName;
-    }
+	public String getModuleName() {
+		return moduleName;
+	}
 
-    public void setModuleName(String moduleName) {
-        this.moduleName = moduleName;
-    }
+	public void setModuleName(String moduleName) {
+		this.moduleName = moduleName;
+	}
 
-    public int getNumberOfModuleForwarderRefs() {
-        return numModuleForwarderRefs;
-    }
+	public int getNumberOfModuleForwarderRefs() {
+		return numModuleForwarderRefs;
+	}
 
-    public void setNumberOfModuleForwarderRefs(int numModuleForwarderRefs) {
-        this.numModuleForwarderRefs = numModuleForwarderRefs;
-    }
+	public void setNumberOfModuleForwarderRefs(int numModuleForwarderRefs) {
+		this.numModuleForwarderRefs = numModuleForwarderRefs;
+	}
 
-    public int getOffsetToModuleName() {
-        return offsetToModuleName;
-    }
+	public int getOffsetToModuleName() {
+		return offsetToModuleName;
+	}
 
-    public void setOffsetToModuleName(int offsetToModuleName) {
-        this.offsetToModuleName = offsetToModuleName;
-    }
+	public void setOffsetToModuleName(int offsetToModuleName) {
+		this.offsetToModuleName = offsetToModuleName;
+	}
 }

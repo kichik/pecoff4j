@@ -14,28 +14,27 @@ import java.util.List;
 
 import org.boris.pecoff4j.util.DataObject;
 
-public class ResourceDirectory extends DataObject
-{
-    private ResourceDirectoryTable table;
-    private List<ResourceEntry> entries = new ArrayList();
+public class ResourceDirectory extends DataObject {
+	private ResourceDirectoryTable table;
+	private List<ResourceEntry> entries = new ArrayList();
 
-    public ResourceDirectoryTable getTable() {
-        return table;
-    }
+	public ResourceDirectoryTable getTable() {
+		return table;
+	}
 
-    public void setTable(ResourceDirectoryTable table) {
-        this.table = table;
-    }
+	public void setTable(ResourceDirectoryTable table) {
+		this.table = table;
+	}
 
-    public void add(ResourceEntry entry) {
-        this.entries.add(entry);
-    }
+	public void add(ResourceEntry entry) {
+		this.entries.add(entry);
+	}
 
-    public ResourceEntry get(int index) {
-        return entries.get(index);
-    }
+	public ResourceEntry get(int index) {
+		return entries.get(index);
+	}
 
-    public int size() {
-        return entries.size();
-    }
+	public int size() {
+		return entries.size();
+	}
 }

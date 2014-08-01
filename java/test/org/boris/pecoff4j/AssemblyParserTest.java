@@ -17,15 +17,15 @@ import org.boris.pecoff4j.asm.AssemblyFormatter;
 import org.boris.pecoff4j.asm.AssemblyParser;
 import org.boris.pecoff4j.io.PEParser;
 
-public class AssemblyParserTest
-{
-    public static void main(String[] args) throws Exception {
-        File f = new File("F:/eclipse/platform3.5/eclipse.exe");
-        PE pe = PEParser.parse(f);
-        SectionHeader sh = pe.getSectionTable().findHeader(".text");
-        SectionData sd = pe.getSectionTable().findSection(".text");
-        ByteArrayInputStream bis = new ByteArrayInputStream(sd.getData());
-        AbstractInstruction[] inst = AssemblyParser.parseAll(0x400000 + sh.getVirtualAddress(), bis);
-        AssemblyFormatter.format(inst, System.out);
-    }
+public class AssemblyParserTest {
+	public static void main(String[] args) throws Exception {
+		File f = new File("F:/eclipse/platform3.5/eclipse.exe");
+		PE pe = PEParser.parse(f);
+		SectionHeader sh = pe.getSectionTable().findHeader(".text");
+		SectionData sd = pe.getSectionTable().findSection(".text");
+		ByteArrayInputStream bis = new ByteArrayInputStream(sd.getData());
+		AbstractInstruction[] inst = AssemblyParser.parseAll(
+				0x400000 + sh.getVirtualAddress(), bis);
+		AssemblyFormatter.format(inst, System.out);
+	}
 }
