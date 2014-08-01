@@ -9,7 +9,9 @@
  *******************************************************************************/
 package org.boris.pecoff4j.io;
 
+import java.io.EOFException;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class ByteArrayDataReader implements IDataReader
 {
@@ -20,12 +22,18 @@ public class ByteArrayDataReader implements IDataReader
 
     public ByteArrayDataReader(byte[] data) {
         this.data = data;
+        this.length = data.length;
     }
 
     public ByteArrayDataReader(byte[] data, int offset, int length) {
         this.data = data;
         this.offset = offset;
         this.length = length;
+        
+        if (this.length + this.offset > data.length)
+			throw new IndexOutOfBoundsException("length [" + length
+					+ "] + offset [" + offset + "] > data.length ["
+					+ data.length + "]");
     }
 
     public void close() throws IOException {
@@ -47,8 +55,8 @@ public class ByteArrayDataReader implements IDataReader
     }
 
     public int readByte() throws IOException {
-        if (offset + position >= data.length)
-            return -1;
+        if (offset + position >= length)
+            throw new EOFException("End of stream");
         return (char) (data[offset + position++] & 0xff);
     }
 
@@ -104,5 +112,11 @@ public class ByteArrayDataReader implements IDataReader
             sb.append((char) readWord());
         }
         return sb.toString();
+    }
+    
+    public byte[] readAll() throws IOException {
+    	byte[] result = Arrays.copyOfRange(data, offset + position, offset + length);
+    	position = length;
+    	return result;
     }
 }
