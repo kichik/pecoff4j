@@ -21,6 +21,8 @@ public interface IDataReader {
 	public abstract long readLong() throws IOException;
 
 	public abstract int getPosition();
+	
+	public abstract boolean hasMore() throws IOException;
 
 	public abstract void jumpTo(int location) throws IOException;
 

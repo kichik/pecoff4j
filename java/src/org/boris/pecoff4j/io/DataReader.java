@@ -65,6 +65,12 @@ public class DataReader implements IDataReader {
 	public int getPosition() {
 		return position;
 	}
+	
+	@Override
+	public boolean hasMore() throws IOException
+	{
+	    return dis.available() > 0;
+	}
 
 	@Override
 	public void jumpTo(int location) throws IOException {

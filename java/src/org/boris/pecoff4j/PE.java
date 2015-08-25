@@ -17,6 +17,7 @@ public class PE {
 	private OptionalHeader optionalHeader;
 	private ImageData imageData;
 	private SectionTable sectionTable;
+	private boolean is64bit;
 
 	public DOSHeader getDosHeader() {
 		return dosHeader;
@@ -37,6 +38,11 @@ public class PE {
 	public OptionalHeader getOptionalHeader() {
 		return optionalHeader;
 	}
+	
+	public boolean is64()
+    {
+        return is64bit;
+    }
 
 	public SectionTable getSectionTable() {
 		return sectionTable;
@@ -61,6 +67,11 @@ public class PE {
 	public void setOptionalHeader(OptionalHeader optionalHeader) {
 		this.optionalHeader = optionalHeader;
 	}
+	
+	public void set64(boolean is64bit)
+    {
+        this.is64bit = is64bit;
+    }
 
 	public void setSectionTable(SectionTable sectionTable) {
 		this.sectionTable = sectionTable;

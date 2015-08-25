@@ -43,6 +43,12 @@ public class ByteArrayDataReader implements IDataReader {
 	public int getPosition() {
 		return position;
 	}
+	
+	@Override
+	public boolean hasMore() throws IOException
+	{
+	    return offset + position < length;
+	}
 
 	@Override
 	public void jumpTo(int location) throws IOException {
@@ -59,7 +65,7 @@ public class ByteArrayDataReader implements IDataReader {
 
 	@Override
 	public int readByte() throws IOException {
-		if (offset + position >= length)
+		if (!hasMore())
 			throw new EOFException("End of stream");
 		return (char) (data[offset + position++] & 0xff);
 	}

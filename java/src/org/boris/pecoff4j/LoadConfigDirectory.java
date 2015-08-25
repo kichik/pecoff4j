@@ -12,7 +12,7 @@ package org.boris.pecoff4j;
 import org.boris.pecoff4j.util.DataObject;
 
 public class LoadConfigDirectory extends DataObject {
-	private int characteristics;
+	private int size;
 	private int timeDateStamp;
 	private int majorVersion;
 	private int minorVersion;
@@ -29,12 +29,12 @@ public class LoadConfigDirectory extends DataObject {
 	private int csdVersion;
 	private int reserved;
 	private long editList;
-	private int securityCookie;
-	private int seHandlerTable;
-	private int seHandlerCount;
+	private long securityCookie;
+	private long seHandlerTable;
+	private long seHandlerCount;
 
-	public int getCharacteristics() {
-		return characteristics;
+	public int getSize() {
+		return size;
 	}
 
 	public int getTimeDateStamp() {
@@ -101,20 +101,20 @@ public class LoadConfigDirectory extends DataObject {
 		return editList;
 	}
 
-	public int getSecurityCookie() {
+	public long getSecurityCookie() {
 		return securityCookie;
 	}
 
-	public int getSeHandlerTable() {
+	public long getSeHandlerTable() {
 		return seHandlerTable;
 	}
 
-	public int getSeHandlerCount() {
+	public long getSeHandlerCount() {
 		return seHandlerCount;
 	}
 
-	public void setCharacteristics(int characteristics) {
-		this.characteristics = characteristics;
+	public void setSize(int characteristics) {
+		this.size = characteristics;
 	}
 
 	public void setTimeDateStamp(int timeDateStamp) {
@@ -182,15 +182,15 @@ public class LoadConfigDirectory extends DataObject {
 		this.editList = editList;
 	}
 
-	public void setSecurityCookie(int securityCookie) {
+	public void setSecurityCookie(long securityCookie) {
 		this.securityCookie = securityCookie;
 	}
 
-	public void setSeHandlerTable(int seHandlerTable) {
+	public void setSeHandlerTable(long seHandlerTable) {
 		this.seHandlerTable = seHandlerTable;
 	}
 
-	public void setSeHandlerCount(int seHandlerCount) {
+	public void setSeHandlerCount(long seHandlerCount) {
 		this.seHandlerCount = seHandlerCount;
 	}
 }

@@ -79,6 +79,8 @@ public class PEParser {
 		pe.setCoffHeader(readCOFF(dr));
 		pe.setOptionalHeader(readOptional(dr));
 		pe.setSectionTable(readSectionHeaders(pe, dr));
+		
+		pe.set64(pe.getOptionalHeader().isPE32plus());
 
 		// Now read the rest of the file
 		DataEntry entry = null;
@@ -387,7 +389,7 @@ public class PEParser {
 			id.setTlsTable(b);
 			break;
 		case ImageDataDirectoryType.LOAD_CONFIG_TABLE:
-			id.setLoadConfigTable(readLoadConfigDirectory(b));
+			id.setLoadConfigTable(readLoadConfigDirectory(pe, b));
 			break;
 		case ImageDataDirectoryType.BOUND_IMPORT:
 			id.setBoundImports(readBoundImportDirectoryTable(b));
@@ -615,31 +617,34 @@ public class PEParser {
 		return edt;
 	}
 
-	public static LoadConfigDirectory readLoadConfigDirectory(byte[] b)
+	public static LoadConfigDirectory readLoadConfigDirectory(PE pe, byte[] b)
 			throws IOException {
 		DataReader dr = new DataReader(b);
 		LoadConfigDirectory lcd = new LoadConfigDirectory();
 		lcd.set(b);
-		lcd.setCharacteristics(dr.readDoubleWord());
+		lcd.setSize(dr.readDoubleWord());
 		lcd.setTimeDateStamp(dr.readDoubleWord());
 		lcd.setMajorVersion(dr.readWord());
 		lcd.setMinorVersion(dr.readWord());
 		lcd.setGlobalFlagsClear(dr.readDoubleWord());
 		lcd.setGlobalFlagsSet(dr.readDoubleWord());
 		lcd.setCriticalSectionDefaultTimeout(dr.readDoubleWord());
-		lcd.setDeCommitFreeBlockThreshold(dr.readLong());
-		lcd.setDeCommitTotalFreeThreshold(dr.readLong());
-		lcd.setLockPrefixTable(dr.readLong());
-		lcd.setMaximumAllocationSize(dr.readLong());
-		lcd.setVirtualMemoryThreshold(dr.readLong());
-		lcd.setProcessAffinityMask(dr.readLong());
+		lcd.setDeCommitFreeBlockThreshold(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+		lcd.setDeCommitTotalFreeThreshold(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+		lcd.setLockPrefixTable(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+		lcd.setMaximumAllocationSize(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+		lcd.setVirtualMemoryThreshold(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+		lcd.setProcessAffinityMask(pe.is64() ? dr.readLong() : dr.readDoubleWord());
 		lcd.setProcessHeapFlags(dr.readDoubleWord());
 		lcd.setCsdVersion(dr.readWord());
 		lcd.setReserved(dr.readWord());
-		lcd.setEditList(dr.readLong());
-		lcd.setSecurityCookie(dr.readDoubleWord());
-		lcd.setSeHandlerTable(dr.readDoubleWord());
-		lcd.setSeHandlerCount(dr.readDoubleWord());
+		lcd.setEditList(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+		if (dr.hasMore()) // optional
+		    lcd.setSecurityCookie(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+		if (dr.hasMore()) // optional
+		    lcd.setSeHandlerTable(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+		if (dr.hasMore()) // optional
+		    lcd.setSeHandlerCount(pe.is64() ? dr.readLong() : dr.readDoubleWord());
 
 		return lcd;
 	}
