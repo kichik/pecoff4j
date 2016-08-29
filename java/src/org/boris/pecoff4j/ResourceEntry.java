@@ -12,8 +12,10 @@ package org.boris.pecoff4j;
 public class ResourceEntry {
 	private int id;
 	private String name;
+    private int offset;
 	private byte[] data;
 	private ResourceDirectory directory;
+    private int dataRVA;
 	private int codePage;
 	private int reserved;
 
@@ -33,6 +35,14 @@ public class ResourceEntry {
 		this.name = name;
 	}
 
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
 	public byte[] getData() {
 		return data;
 	}
@@ -48,6 +58,14 @@ public class ResourceEntry {
 	public void setDirectory(ResourceDirectory directory) {
 		this.directory = directory;
 	}
+
+    public int getDataRVA() {
+        return dataRVA;
+    }
+
+    public void setDataRVA(int dataRVA) {
+        this.dataRVA = dataRVA;
+    }
 
 	public int getCodePage() {
 		return codePage;
