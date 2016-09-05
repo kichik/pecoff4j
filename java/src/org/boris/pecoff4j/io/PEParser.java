@@ -693,6 +693,7 @@ public class PEParser {
 		ResourceEntry re = new ResourceEntry();
 		int id = dr.readDoubleWord();
 		int offset = dr.readDoubleWord();
+        re.setOffset(offset);
 		int pos = dr.getPosition();
 		if ((id & 0x80000000) != 0) {
 			dr.jumpTo(id & 0x7fffffff);
@@ -709,6 +710,7 @@ public class PEParser {
 			int size = dr.readDoubleWord();
 			int cp = dr.readDoubleWord();
 			int res = dr.readDoubleWord();
+            re.setDataRVA(rva);
 			re.setCodePage(cp);
 			re.setReserved(res);
 			dr.jumpTo(rva - baseAddress);

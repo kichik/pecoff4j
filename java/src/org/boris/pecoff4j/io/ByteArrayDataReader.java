@@ -47,7 +47,7 @@ public class ByteArrayDataReader implements IDataReader {
 	@Override
 	public boolean hasMore() throws IOException
 	{
-	    return offset + position < length;
+	    return position < length;
 	}
 
 	@Override
