@@ -5,17 +5,17 @@
  * http://www.eclipse.org/legal/cpl-v10.html
  * 
  * Contributors:
- *     Peter Smith
+ *	 Peter Smith
  *******************************************************************************/
 package org.boris.pecoff4j;
 
 public class ResourceEntry {
 	private int id;
 	private String name;
-    private int offset;
+	private int offset;
 	private byte[] data;
 	private ResourceDirectory directory;
-    private int dataRVA;
+	private int dataRVA;
 	private int codePage;
 	private int reserved;
 
@@ -35,13 +35,13 @@ public class ResourceEntry {
 		this.name = name;
 	}
 
-    public int getOffset() {
-        return offset;
-    }
+	public int getOffset() {
+		return offset;
+	}
 
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
 
 	public byte[] getData() {
 		return data;
@@ -59,13 +59,13 @@ public class ResourceEntry {
 		this.directory = directory;
 	}
 
-    public int getDataRVA() {
-        return dataRVA;
-    }
+	public int getDataRVA() {
+		return dataRVA;
+	}
 
-    public void setDataRVA(int dataRVA) {
-        this.dataRVA = dataRVA;
-    }
+	public void setDataRVA(int dataRVA) {
+		this.dataRVA = dataRVA;
+	}
 
 	public int getCodePage() {
 		return codePage;

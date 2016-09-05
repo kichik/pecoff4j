@@ -5,7 +5,7 @@
  * http://www.eclipse.org/legal/cpl-v10.html
  * 
  * Contributors:
- *     Peter Smith
+ *	 Peter Smith
  *******************************************************************************/
 package org.boris.pecoff4j.io;
 
@@ -640,11 +640,11 @@ public class PEParser {
 		lcd.setReserved(dr.readWord());
 		lcd.setEditList(pe.is64() ? dr.readLong() : dr.readDoubleWord());
 		if (dr.hasMore()) // optional
-		    lcd.setSecurityCookie(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+			lcd.setSecurityCookie(pe.is64() ? dr.readLong() : dr.readDoubleWord());
 		if (dr.hasMore()) // optional
-		    lcd.setSeHandlerTable(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+			lcd.setSeHandlerTable(pe.is64() ? dr.readLong() : dr.readDoubleWord());
 		if (dr.hasMore()) // optional
-		    lcd.setSeHandlerCount(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+			lcd.setSeHandlerCount(pe.is64() ? dr.readLong() : dr.readDoubleWord());
 
 		return lcd;
 	}
@@ -693,7 +693,7 @@ public class PEParser {
 		ResourceEntry re = new ResourceEntry();
 		int id = dr.readDoubleWord();
 		int offset = dr.readDoubleWord();
-        re.setOffset(offset);
+		re.setOffset(offset);
 		int pos = dr.getPosition();
 		if ((id & 0x80000000) != 0) {
 			dr.jumpTo(id & 0x7fffffff);
@@ -710,7 +710,7 @@ public class PEParser {
 			int size = dr.readDoubleWord();
 			int cp = dr.readDoubleWord();
 			int res = dr.readDoubleWord();
-            re.setDataRVA(rva);
+			re.setDataRVA(rva);
 			re.setCodePage(cp);
 			re.setReserved(res);
 			dr.jumpTo(rva - baseAddress);
