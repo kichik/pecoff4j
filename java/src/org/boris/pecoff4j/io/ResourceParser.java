@@ -144,10 +144,46 @@ public class ResourceParser {
 		vi.setKey(dr.readUnicode());
 		alignDataReader(dr);
 		vi.setFixedFileInfo(ResourceParser.readFixedFileInfo(dr));
-		vi.setStringFileInfo(readStringFileInfo(dr));
-		// TODO read VarFileInfo
+		
+		
+		while (true) {
+			int padding = alignDataReader(dr);
+			int initialPos = dr.getPosition();
+	
+			int length = dr.readWord();
+			if (length == 0) {
+				break;
+			}
+			int valueLength = dr.readWord();
+			int type = dr.readWord();
+			String key = dr.readUnicode();
+			if ("VarFileInfo".equals(key)) {
+				//We may or may not find the varFileInfo...
+				vi.setVarFileInfo(readVarFileInfo(dr, initialPos, length, valueLength, type, key, padding));
+			} else if ("StringFileInfo".equals(key)) {
+				vi.setStringFileInfo(readStringFileInfo(dr, initialPos, length, valueLength, type, key, padding));
+				break;
+			} else {
+				dr.jumpTo(initialPos + length);
+				break;
+			}
+		}
 
 		return vi;
+	}
+	
+	public static VarFileInfo readVarFileInfo(IDataReader dr, int initialPos, int length, int valueLength, int type, String key, int padding) throws IOException {
+		VarFileInfo vfi = new VarFileInfo();
+		vfi.setKey(key);
+		String name = null;
+		while ((name = dr.readUnicode()) != null) {
+			if (name.length() == 2) {
+				name = dr.readUnicode();
+			}
+			vfi.add(name, dr.readUnicode());
+		}
+		dr.jumpTo(initialPos + length - 2);
+		return vfi;
 	}
 
 	public static VarFileInfo readVarFileInfo(IDataReader dr)
@@ -190,7 +226,7 @@ public class ResourceParser {
 		sp.setType(dr.readWord());
 		sp.setKey(dr.readUnicode());
 		sp.setPadding(alignDataReader(dr));
-		sp.setValue(dr.readUnicode(sp.getValueLength()));
+		sp.setValue(dr.readUnicode(sp.getValueLength()).trim());
 		alignDataReader(dr);
 		return sp;
 	}
@@ -209,6 +245,20 @@ public class ResourceParser {
 		r.setRed(dr.readByte());
 		r.setReserved(dr.readByte());
 		return r;
+	}
+	
+	public static StringFileInfo readStringFileInfo(IDataReader dr, int initialPos, int length, int valueLength, int type, String key, int padding) throws IOException {
+		StringFileInfo sfi = new StringFileInfo();
+
+		sfi.setLength(length);
+		sfi.setValueLength(valueLength);
+		sfi.setType(type);
+		sfi.setKey(key);
+		sfi.setPadding(padding);
+		while (dr.getPosition() - initialPos < sfi.getLength()) {
+			sfi.add(readStringTable(dr));
+		}
+		return sfi;
 	}
 
 	public static StringFileInfo readStringFileInfo(IDataReader dr)
