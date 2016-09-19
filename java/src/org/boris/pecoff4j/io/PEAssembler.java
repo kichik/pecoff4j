@@ -250,7 +250,7 @@ public class PEAssembler {
 			dw.writeBytes(id.getExceptionTable());
 			break;
 		case ImageDataDirectoryType.CERTIFICATE_TABLE:
-			dw.writeBytes(id.getCertificateTable());
+			dw.writeBytes(id.getCertificateTable().get());
 			break;
 		case ImageDataDirectoryType.BASE_RELOCATION_TABLE:
 			dw.writeBytes(id.getBaseRelocationTable());
