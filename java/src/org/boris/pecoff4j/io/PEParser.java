@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.boris.pecoff4j.AttributeCertificateTable;
 import org.boris.pecoff4j.BoundImport;
 import org.boris.pecoff4j.BoundImportDirectoryTable;
 import org.boris.pecoff4j.COFFHeader;
@@ -371,7 +372,7 @@ public class PEParser {
 			id.setExceptionTable(b);
 			break;
 		case ImageDataDirectoryType.CERTIFICATE_TABLE:
-			id.setCertificateTable(b);
+			id.setCertificateTable(readAttributeCertificateTable(b));
 			break;
 		case ImageDataDirectoryType.BASE_RELOCATION_TABLE:
 			id.setBaseRelocationTable(b);
@@ -734,4 +735,23 @@ public class PEParser {
 
 		return t;
 	}
+
+	public static AttributeCertificateTable readAttributeCertificateTable(byte[] b)
+			throws IOException {
+		return readAttributeCertificateTable(b, new DataReader(b));
+	}
+
+	public static AttributeCertificateTable readAttributeCertificateTable(byte[] b, IDataReader dr)
+			throws IOException {
+		AttributeCertificateTable dd = new AttributeCertificateTable();
+		dd.set(b);
+		dd.setLength(dr.readDoubleWord());
+		dd.setRevision(dr.readWord());
+		dd.setCertificateType(dr.readWord());
+		byte[] certificate = new byte[dd.getLength() - 8];
+		dr.read(certificate);
+		dd.setCertificate(certificate);
+		return dd;
+	}
+
 }

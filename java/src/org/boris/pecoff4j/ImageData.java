@@ -19,7 +19,7 @@ public class ImageData {
 	private ImportDirectory importTable;
 	private ResourceDirectory resourceTable;
 	private byte[] exceptionTable;
-	private byte[] certificateTable;
+	private AttributeCertificateTable certificateTable;
 	private byte[] baseRelocationTable;
 	private DebugDirectory debug;
 	private byte[] architecture;
@@ -90,11 +90,11 @@ public class ImageData {
 		this.exceptionTable = exceptionTable;
 	}
 
-	public byte[] getCertificateTable() {
+	public AttributeCertificateTable getCertificateTable() {
 		return certificateTable;
 	}
 
-	public void setCertificateTable(byte[] certificateTable) {
+	public void setCertificateTable(AttributeCertificateTable certificateTable) {
 		this.certificateTable = certificateTable;
 	}
 
