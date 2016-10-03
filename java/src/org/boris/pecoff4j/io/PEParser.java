@@ -698,7 +698,7 @@ public class PEParser {
 		int pos = dr.getPosition();
 		if ((id & 0x80000000) != 0) {
 			dr.jumpTo(id & 0x7fffffff);
-			re.setName(dr.readUnicode());
+			re.setName(dr.readUnicode(dr.readWord()));
 		} else {
 			re.setId(id);
 		}
