@@ -142,7 +142,7 @@ public class DataReader implements IDataReader {
 	@Override
 	public String readUnicode(int size) throws IOException {
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < size / 2; i++) {
 			sb.append((char) readWord());
 		}
 		return sb.toString();
