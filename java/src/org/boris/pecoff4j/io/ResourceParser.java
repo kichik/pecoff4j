@@ -226,7 +226,10 @@ public class ResourceParser {
 		sp.setType(dr.readWord());
 		sp.setKey(dr.readUnicode());
 		sp.setPadding(alignDataReader(dr));
-		sp.setValue(dr.readUnicode(sp.getValueLength()).trim());
+		int valueLength = sp.getValueLength();
+		if (sp.getType() == 0) // 0 = binary, 1 = text, other = invalid
+			valueLength /= 2;
+		sp.setValue(dr.readUnicode(valueLength).trim());
 		alignDataReader(dr);
 		return sp;
 	}
