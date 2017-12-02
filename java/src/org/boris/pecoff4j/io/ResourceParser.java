@@ -220,18 +220,27 @@ public class ResourceParser {
 	}
 
 	public static StringPair readStringPair(IDataReader dr) throws IOException {
-		StringPair sp = new StringPair();
-		sp.setLength(dr.readWord());
-		sp.setValueLength(dr.readWord());
-		sp.setType(dr.readWord());
-		sp.setKey(dr.readUnicode());
-		sp.setPadding(alignDataReader(dr));
-		int valueLength = sp.getValueLength();
-		if (sp.getType() == 0) // 0 = binary, 1 = text, other = invalid
-			valueLength /= 2;
-		sp.setValue(dr.readUnicode(valueLength).trim());
-		alignDataReader(dr);
-		return sp;
+        int initialPos = dr.getPosition();
+
+        StringPair sp = new StringPair();
+        sp.setLength(dr.readWord());
+        sp.setValueLength(dr.readWord());
+        sp.setType(dr.readWord());
+        sp.setKey(dr.readUnicode());
+        sp.setPadding(alignDataReader(dr));
+
+        int remainingWords = (sp.getLength() - (dr.getPosition() - initialPos)) / 2;
+        int valueLength = sp.getValueLength();
+        if (sp.getType() == 0) // wType == 0 => binary; wLength is in bytes
+            valueLength /= 2;
+        if (valueLength > remainingWords)
+            valueLength = remainingWords;
+        sp.setValue(dr.readUnicode(valueLength).trim());
+
+        int remainingBytes = (sp.getLength() - (dr.getPosition() - initialPos));
+        dr.skipBytes(remainingBytes);
+        alignDataReader(dr);
+        return sp;
 	}
 
 	public static Manifest readManifest(IDataReader dr, int length)
