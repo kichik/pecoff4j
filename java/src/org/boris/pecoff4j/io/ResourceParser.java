@@ -321,7 +321,11 @@ public class ResourceParser {
 
 	private static int alignDataReader(IDataReader dr) throws IOException {
 		int off = (4 - (dr.getPosition() % 4)) % 4;
-		dr.skipBytes(off);
+		for (int i = 0; i < off; i++) {
+			if (!dr.hasMore())
+				break;
+			dr.skipBytes(1);
+		}
 		return off;
 	}
 }
