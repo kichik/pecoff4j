@@ -10,7 +10,7 @@
 		<copy todir="${deploy.dir}" file="cpl-v10.html"/>
 		<mkdir dir="build"/>
 		<mkdir dir="build/org/boris/${release.name}"/>
-		<javac srcdir="java/src" destdir="build" source="5">
+		<javac srcdir="java/src" destdir="build" source="7">
 			<classpath>
 				<pathelement location="build"/>
 			</classpath>
