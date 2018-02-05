@@ -3,7 +3,7 @@
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at 
  * http://www.eclipse.org/legal/cpl-v10.html
- * 
+ *
  * Contributors:
  *	 Peter Smith
  *******************************************************************************/
@@ -48,7 +48,9 @@ import org.boris.pecoff4j.util.IntMap;
 
 public class PEParser {
 	public static PE parse(InputStream is) throws IOException {
-		return read(new DataReader(is));
+		try (DataReader dr = new DataReader(is)) {
+			return read(dr);
+		}
 	}
 
 	public static PE parse(String filename) throws IOException {
@@ -56,7 +58,10 @@ public class PEParser {
 	}
 
 	public static PE parse(File file) throws IOException {
-		return read(new DataReader(new FileInputStream(file)));
+		try (FileInputStream is = new FileInputStream(file);
+				DataReader dr = new DataReader(is)) {
+			return read(dr);
+		}
 	}
 
 	public static PE read(IDataReader dr) throws IOException {
@@ -80,7 +85,7 @@ public class PEParser {
 		pe.setCoffHeader(readCOFF(dr));
 		pe.setOptionalHeader(readOptional(dr));
 		pe.setSectionTable(readSectionHeaders(pe, dr));
-		
+
 		pe.set64(pe.getOptionalHeader().isPE32plus());
 
 		// Now read the rest of the file
