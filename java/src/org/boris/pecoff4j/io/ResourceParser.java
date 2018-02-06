@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.boris.pecoff4j.io;
 
+import java.io.EOFException;
 import java.io.IOException;
 
 import org.boris.pecoff4j.resources.Bitmap;
@@ -321,7 +322,11 @@ public class ResourceParser {
 
 	private static int alignDataReader(IDataReader dr) throws IOException {
 		int off = (4 - (dr.getPosition() % 4)) % 4;
-		dr.skipBytes(off);
+		try {
+			dr.skipBytes(off);
+		} catch (EOFException ignored) {
+			// no need to align when it's at the end of its data
+		}
 		return off;
 	}
 }

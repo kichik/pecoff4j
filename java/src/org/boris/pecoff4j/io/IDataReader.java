@@ -11,7 +11,7 @@ package org.boris.pecoff4j.io;
 
 import java.io.IOException;
 
-public interface IDataReader {
+public interface IDataReader extends AutoCloseable {
 	public abstract int readByte() throws IOException;
 
 	public abstract int readWord() throws IOException;
