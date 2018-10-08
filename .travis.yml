@@ -1,5 +1,5 @@
 language: java
-script: ant build
+script: ant build -Drelease.version=$TRAVIS_TAG
 jdk:
 - oraclejdk8
 - oraclejdk9
