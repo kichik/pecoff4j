@@ -9,9 +9,9 @@ deploy:
   skip_cleanup: true
   api_key:
     secure: GbbY8zG0vuNJD3wJ5u2msyIUvEamZ5Htf5krzPDWD6yFhTJzLFryLjmOAl5fM+z98vZwumz+zv5ZeS08pBXHKqpS1RnKQPvGRPIUfXT2J70hFCuuG+4mTOnaul98IZQyS9vJric8BJfwMvOtpWoKHXnqi0HmE0SB4ZxdsELP75s=
-  file:
-  - releases/pecoff4j-*/pecoff4j-*.jar
-  - releases/pecoff4j-*/pecoff4j-*-src.zip
+  file_glob: true
+  file: releases/pecoff4j-*/pecoff4j-*.jar
   on:
     repo: kichik/pecoff4j
     tags: true
+    jdk: openjdk7
