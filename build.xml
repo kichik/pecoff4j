@@ -31,6 +31,5 @@
 				<include name="**/*"/>
 			</fileset>
 		</zip>
-		<delete dir="${release.dir}/${release.name}-${release.version}"/>
 	</target>
 </project>
