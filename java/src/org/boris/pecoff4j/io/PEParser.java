@@ -753,6 +753,17 @@ public class PEParser {
 		dd.setLength(dr.readDoubleWord());
 		dd.setRevision(dr.readWord());
 		dd.setCertificateType(dr.readWord());
+
+		if(dd.getLength() >= 65534 || dd.getLength() <= 8)
+		{
+			//System.out.println("dd.getLength() : " + dd.getLength());
+			byte[]certificate = new byte[16];
+			certificate[0] = 'e';certificate[1] = 'r';certificate[2] = 'r';certificate[3] = 'o';certificate[4] = 'r';
+			dd.setCertificate(certificate);
+			return dd;
+		}
+		
+		//System.out.println("dd.getLength() : " + dd.getLength());
 		byte[] certificate = new byte[dd.getLength() - 8];
 		dr.read(certificate);
 		dd.setCertificate(certificate);
