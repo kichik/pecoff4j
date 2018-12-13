@@ -712,6 +712,7 @@ public class PEParser {
 			re.setDirectory(readResourceDirectory(dr, baseAddress));
 		} else {
 			dr.jumpTo(offset);
+			if(dr.getPosition() < 0) return null;
 			int rva = dr.readDoubleWord();
 			int size = dr.readDoubleWord();
 			int cp = dr.readDoubleWord();
@@ -720,6 +721,7 @@ public class PEParser {
 			re.setCodePage(cp);
 			re.setReserved(res);
 			dr.jumpTo(rva - baseAddress);
+			if(dr.getPosition() < 0) return null;
 			byte[] b = new byte[size];
 			dr.read(b);
 			re.setData(b);
