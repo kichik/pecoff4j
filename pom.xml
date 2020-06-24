@@ -13,4 +13,16 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
+
+    <scm>
+        <url>https://github.com/kichik/pecoff4j</url>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub kichik Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/kichik/pecoff4j</url>
+        </repository>
+    </distributionManagement>
 </project>
