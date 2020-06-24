@@ -10,11 +10,26 @@ This is a fork of http://sourceforge.net/projects/pecoff4j/
 
 Imported from CVS on May 24th, 2014
 
-[![Build Status](https://travis-ci.org/kichik/pecoff4j.svg?branch=master)](https://travis-ci.org/kichik/pecoff4j)
+[![Actions Status](https://github.com/kichik/pecoff4j/workflows/Build/badge.svg)](https://github.com/kichik/pecoff4j)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.kichik/pecoff4j/pecoff4j/badge.svg)](https://search.maven.org/artifact/com.kichik.pecoff4j/pecoff4j)
 
 ## Downloads
 
 https://drone.io/github.com/kichik/pecoff4j/files
+
+## Installation
+
+This fork of PECOFF4J is available on [Maven Central](https://search.maven.org/artifact/com.kichik.pecoff4j/pecoff4j).
+
+```xml
+<dependency>
+  <groupId>com.kichik.pecoff4j</groupId>
+  <artifactId>pecoff4j</artifactId>
+</dependency>
+```
+
+See [Maven Central](https://search.maven.org/artifact/com.kichik.pecoff4j/pecoff4j) for more installation options like
+Gradle, SBT, Ivy, etc.
 
 ## License
 
