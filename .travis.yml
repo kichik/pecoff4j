@@ -1,5 +1,5 @@
 language: java
-script: ant build -Drelease.version=$TRAVIS_TAG
+script: mvn versions:set -DnewVersion=$TRAVIS_TAG &&  mvn package
 jdk:
 - oraclejdk8
 - oraclejdk9
@@ -9,7 +9,7 @@ deploy:
   skip_cleanup: true
   api_key:
     secure: GbbY8zG0vuNJD3wJ5u2msyIUvEamZ5Htf5krzPDWD6yFhTJzLFryLjmOAl5fM+z98vZwumz+zv5ZeS08pBXHKqpS1RnKQPvGRPIUfXT2J70hFCuuG+4mTOnaul98IZQyS9vJric8BJfwMvOtpWoKHXnqi0HmE0SB4ZxdsELP75s=
-  file: $TRAVIS_BUILD_DIR/releases/pecoff4j-$TRAVIS_TAG/pecoff4j-$TRAVIS_TAG.jar
+  file: $TRAVIS_BUILD_DIR/target/pecoff4j-$TRAVIS_TAG.jar
   on:
     repo: kichik/pecoff4j
     tags: true

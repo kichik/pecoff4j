@@ -29,16 +29,16 @@ The project was forked to implement version string parsing for a [StackOverflow 
 ```java
 import java.io.IOException;
 
-import org.boris.pecoff4j.PE;
-import org.boris.pecoff4j.ResourceDirectory;
-import org.boris.pecoff4j.ResourceEntry;
-import org.boris.pecoff4j.constant.ResourceType;
-import org.boris.pecoff4j.io.PEParser;
-import org.boris.pecoff4j.io.ResourceParser;
-import org.boris.pecoff4j.resources.StringFileInfo;
-import org.boris.pecoff4j.resources.StringTable;
-import org.boris.pecoff4j.resources.VersionInfo;
-import org.boris.pecoff4j.util.ResourceHelper;
+import com.kichik.pecoff4j.PE;
+import com.kichik.pecoff4j.ResourceDirectory;
+import com.kichik.pecoff4j.ResourceEntry;
+import com.kichik.pecoff4j.constant.ResourceType;
+import com.kichik.pecoff4j.io.PEParser;
+import com.kichik.pecoff4j.io.ResourceParser;
+import com.kichik.pecoff4j.resources.StringFileInfo;
+import com.kichik.pecoff4j.resources.StringTable;
+import com.kichik.pecoff4j.resources.VersionInfo;
+import com.kichik.pecoff4j.util.ResourceHelper;
 
 public class Main {
 
