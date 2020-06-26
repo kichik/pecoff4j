@@ -12,6 +12,7 @@ Imported from CVS on May 24th, 2014
 
 [![Actions Status](https://github.com/kichik/pecoff4j/workflows/Build/badge.svg)](https://github.com/kichik/pecoff4j)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.kichik/pecoff4j/pecoff4j/badge.svg)](https://search.maven.org/artifact/com.kichik.pecoff4j/pecoff4j)
+[![Maven Central](https://img.shields.io/maven-central/v/com.kichik.pecoff4j/pecoff4j.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.kichik.pecoff4j%22%20AND%20a:%22pecoff4j%22)
 
 ## Installation
 
