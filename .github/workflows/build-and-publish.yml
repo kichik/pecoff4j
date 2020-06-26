@@ -19,11 +19,13 @@ jobs:
     runs-on: ubuntu-latest
     #if: startsWith(github.event.ref, 'refs/tags')
     name: Publish to GitHub Packages
+    needs:
+      - build
     steps:
       - uses: actions/checkout@v2
       - name: Import GPG key
         run: |
-          apt install -y gpg
+          sudo apt-get install -y gpg
           echo ${{ secrets.GPG_PRIVATE_KEY }} > gpg --import --batch --yes
       - uses: actions/setup-java@v1
         with:
