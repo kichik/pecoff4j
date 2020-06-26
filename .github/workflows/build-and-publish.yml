@@ -24,9 +24,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Import GPG key
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
         run: |
           sudo apt-get install -y gpg
-          echo ${{ secrets.GPG_PRIVATE_KEY }} | gpg --import --batch --yes
+          echo "${GPG_PRIVATE_KEY}" | gpg --import --batch --yes
       - uses: actions/setup-java@v1
         with:
           java-version: 1.8
@@ -36,7 +38,7 @@ jobs:
       - name: Publish package
         run: |
           mvn versions:set -DnewVersion=0.3.0
-          mvn -B javadoc:jar source:jar package gpg:sign deploy -Dgpg.passphrase=${{ secrets.GPG_PASSWORD }}
+          mvn -B javadoc:jar source:jar package gpg:sign deploy nexus-staging:close -Dgpg.passphrase=${{ secrets.GPG_PASSWORD }}
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
