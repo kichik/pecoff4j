@@ -26,7 +26,7 @@ jobs:
       - name: Import GPG key
         run: |
           sudo apt-get install -y gpg
-          echo ${{ secrets.GPG_PRIVATE_KEY }} > gpg --import --batch --yes
+          echo ${{ secrets.GPG_PRIVATE_KEY }} | gpg --import --batch --yes
       - uses: actions/setup-java@v1
         with:
           java-version: 1.8
