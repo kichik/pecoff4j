@@ -8,13 +8,72 @@
     <artifactId>pecoff4j</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <scm>
-        <url>https://github.com/kichik/pecoff4j</url>
-    </scm>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>Library for parsing portable (PE) executables, the format used by Windows.</description>
+    <url>https://github.com/kichik/pecoff4j</url>
+
+    <developers>
+        <developer>
+            <id>kichik</id>
+            <name>Amir Szekely</name>
+            <url>https://github.com/kichik</url>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>Common Public 1.0</name>
+            <url>https://github.com/kichik/pecoff4j/blob/master/cpl-v10.html</url>
+        </license>
+    </licenses>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
+
+    <scm>
+        <connection>scm:git:git://github.com/kichik/pecoff4j.git</connection>
+        <developerConnection>scm:git:ssh://github.com:kichik/pecoff4j.git</developerConnection>
+        <url>https://github.com/kichik/pecoff4j</url>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+    </distributionManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <configuration>
+                    <gpgArguments>
+                        <arg>--pinentry-mode</arg>
+                        <arg>loopback</arg>
+                    </gpgArguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
