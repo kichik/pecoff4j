@@ -36,7 +36,7 @@ jobs:
       - name: Publish package
         run: |
           mvn versions:set -DnewVersion=0.3.0
-          mvn -B deploy -Dpassed.gpg.passphrase=${{ secrets.GPG_PASSWORD }}
+          mvn -B javadoc:jar source:jar package gpg:sign deploy -Dgpg.passphrase=${{ secrets.GPG_PASSWORD }}
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
