@@ -39,7 +39,7 @@ jobs:
       - name: Publish package
         run: |
           mvn -B versions:set -DnewVersion=${{ steps.get_version.outputs.VERSION }}
-          mvn -B compile javadoc:jar source:jar package gpg:sign deploy -Dgpg.passphrase=${{ secrets.GPG_PASSWORD }}
+          mvn -B -Dmaven.compiler.useIncrementalCompilation=false javadoc:jar source:jar package gpg:sign deploy -Dgpg.passphrase=${{ secrets.GPG_PASSWORD }}
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
