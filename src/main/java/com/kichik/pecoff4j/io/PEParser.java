@@ -6,17 +6,9 @@
  *
  * Contributors:
  *	 Peter Smith
+ *	 Matt Coley
  *******************************************************************************/
 package com.kichik.pecoff4j.io;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 import com.kichik.pecoff4j.AttributeCertificateTable;
 import com.kichik.pecoff4j.BoundImport;
@@ -44,27 +36,33 @@ import com.kichik.pecoff4j.SectionData;
 import com.kichik.pecoff4j.SectionHeader;
 import com.kichik.pecoff4j.SectionTable;
 import com.kichik.pecoff4j.constant.ImageDataDirectoryType;
+import com.kichik.pecoff4j.util.IO;
 import com.kichik.pecoff4j.util.IntMap;
 
-public class PEParser {
-	public static PE parse(InputStream is) throws IOException {
-		try (DataReader dr = new DataReader(is)) {
-			return read(dr);
-		}
-	}
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
+public class PEParser {
 	public static PE parse(String filename) throws IOException {
 		return parse(new File(filename));
 	}
 
 	public static PE parse(File file) throws IOException {
-		try (FileInputStream is = new FileInputStream(file);
-				DataReader dr = new DataReader(is)) {
-			return read(dr);
-		}
+		return parse(new FileInputStream(file));
 	}
 
-	public static PE read(IDataReader dr) throws IOException {
+	public static PE parse(InputStream is) throws IOException {
+		return read(IO.toBytes(is));
+	}
+
+	public static PE read(byte[] raw) throws IOException {
+		IDataReader dr = new ByteArrayDataReader(raw);
+
 		PE pe = new PE();
 		pe.setDosHeader(readDos(dr));
 
@@ -368,7 +366,7 @@ public class PEParser {
 			id.setExportTable(readExportDirectory(b));
 			break;
 		case ImageDataDirectoryType.IMPORT_TABLE:
-			id.setImportTable(readImportDirectory(b, entry.baseAddress));
+			id.setImportTable(readImportDirectory(dr, b, entry.baseAddress));
 			break;
 		case ImageDataDirectoryType.RESOURCE_TABLE:
 			id.setResourceTable(readResourceDirectory(b, entry.baseAddress));
@@ -421,8 +419,10 @@ public class PEParser {
 			byte[] pa = new byte[pointer - dr.getPosition()];
 			dr.read(pa);
 			boolean zeroes = true;
-			for (int i = 0; i < pa.length; i++) {
-				if (pa[i] != 0) {
+			for (byte b : pa)
+			{
+				if (b != 0)
+				{
 					zeroes = false;
 					break;
 				}
@@ -478,7 +478,7 @@ public class PEParser {
 				if (dad >= vad && dad < vex) {
 					int off = dad - vad;
 					IDataReader idr = new ByteArrayDataReader(b, off,
-							idd.getSize());
+							idd.getSize()).withParent(dr);
 					DataEntry de = new DataEntry(i, 0);
 					de.baseAddress = sh.getVirtualAddress();
 					readImageData(pe, de, idr);
@@ -491,24 +491,21 @@ public class PEParser {
 			byte[] b) throws IOException {
 		DataReader dr = new DataReader(b);
 		BoundImportDirectoryTable bidt = new BoundImportDirectoryTable();
-		List<BoundImport> imports = new ArrayList<BoundImport>();
+		List<BoundImport> imports = new ArrayList<>();
 		BoundImport bi = null;
 		while ((bi = readBoundImport(dr)) != null) {
 			bidt.add(bi);
 			imports.add(bi);
 		}
-		Collections.sort(imports, new Comparator<BoundImport>() {
-			@Override
-			public int compare(BoundImport o1, BoundImport o2) {
-				return o1.getOffsetToModuleName() - o2.getOffsetToModuleName();
-			}
-		});
+		imports.sort(Comparator.comparingInt(BoundImport::getOffsetToModuleName));
 		IntMap names = new IntMap();
-		for (int i = 0; i < imports.size(); i++) {
-			bi = imports.get(i);
+		for (BoundImport anImport : imports)
+		{
+			bi = anImport;
 			int offset = bi.getOffsetToModuleName();
 			String n = (String) names.get(offset);
-			if (n == null) {
+			if (n == null)
+			{
 				dr.jumpTo(offset);
 				n = dr.readUtf();
 				names.put(offset, n);
@@ -532,26 +529,29 @@ public class PEParser {
 		return bi;
 	}
 
-	public static ImportDirectory readImportDirectory(byte[] b, int baseAddress)
+	public static ImportDirectory readImportDirectory(IDataReader parent, byte[] b, int baseAddress)
 			throws IOException {
-		DataReader dr = new DataReader(b);
+		IDataReader dr = new DataReader(b).withParent(parent);
 		ImportDirectory id = new ImportDirectory();
 		ImportDirectoryEntry ide = null;
 		while ((ide = readImportDirectoryEntry(dr)) != null) {
 			id.add(ide);
 		}
 
-		/*
-		 * FIXME - name table refer to data outside image directory for (int i =
-		 * 0; i < id.size(); i++) { ImportDirectoryEntry e = id.getEntry(i);
-		 * dr.jumpTo(e.getNameRVA() - baseAddress); String name = dr.readUtf();
-		 * dr.jumpTo(e.getImportLookupTableRVA() - baseAddress);
-		 * ImportDirectoryTable nt = readImportDirectoryTable(dr, baseAddress);
-		 * dr.jumpTo(e.getImportAddressTableRVA() - baseAddress);
-		 * ImportDirectoryTable at = null; // readImportDirectoryTable(dr, //
-		 * baseAddress); id.add(name, nt, at); }
-		 */
-
+		// Get top-most data reader so we can read data from anywhere, even outside the current section
+		while (dr.getParent() != null)
+			dr = dr.getParent();
+		dr = dr.copy();
+        for (int i = 0; i < id.size(); i++) {
+			ImportDirectoryEntry e = id.getEntry(i);
+			dr.jumpTo(e.getNameRVA());
+			String name = dr.readUtf();
+			dr.jumpTo(e.getImportLookupTableRVA());
+			ImportDirectoryTable nt = readImportDirectoryTable(dr);
+			dr.jumpTo(e.getImportAddressTableRVA());
+			ImportDirectoryTable at = readImportDirectoryTable(dr);
+			id.add(name, nt, at);
+        }
 		return id;
 	}
 
@@ -564,7 +564,7 @@ public class PEParser {
 		id.setNameRVA(dr.readDoubleWord());
 		id.setImportAddressTableRVA(dr.readDoubleWord());
 
-		// The last entry is null
+		// The last entry contains only values of "zero" to indicate it is the last entry
 		if (id.getImportLookupTableRVA() == 0) {
 			return null;
 		}
@@ -572,8 +572,7 @@ public class PEParser {
 		return id;
 	}
 
-	public static ImportDirectoryTable readImportDirectoryTable(IDataReader dr,
-			int baseAddress) throws IOException {
+	public static ImportDirectoryTable readImportDirectoryTable(IDataReader dr) throws IOException {
 		ImportDirectoryTable idt = new ImportDirectoryTable();
 		ImportEntry ie = null;
 		while ((ie = readImportEntry(dr)) != null) {
@@ -585,7 +584,7 @@ public class PEParser {
 			if ((iee.getVal() & 0x80000000) != 0) {
 				iee.setOrdinal(iee.getVal() & 0x7fffffff);
 			} else {
-				dr.jumpTo(iee.getVal() - baseAddress);
+				dr.jumpTo(iee.getVal());
 				dr.readWord(); // FIXME this is an index into the export table
 				iee.setName(dr.readUtf());
 			}
