@@ -10,7 +10,7 @@
 package com.kichik.pecoff4j.asm;
 
 public class ADD extends AbstractInstruction {
-	private ModRM modrm;
+	private final ModRM modrm;
 	private byte imm8;
 	private int imm32;
 

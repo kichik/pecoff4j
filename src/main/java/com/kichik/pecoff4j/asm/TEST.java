@@ -10,7 +10,7 @@
 package com.kichik.pecoff4j.asm;
 
 public class TEST extends AbstractInstruction {
-	private ModRM modrm;
+	private final ModRM modrm;
 
 	public TEST(ModRM modrm) {
 		this.modrm = modrm;

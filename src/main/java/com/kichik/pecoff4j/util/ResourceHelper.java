@@ -27,7 +27,7 @@ public class ResourceHelper {
 
 	public static ResourceEntry[] findResources(ResourceDirectory rd, int type,
 			int name, int lang) {
-		List<ResourceEntry> entries = new ArrayList<ResourceEntry>();
+		List<ResourceEntry> entries = new ArrayList<>();
 		if (rd != null) {
 			findResources(rd, type, name, lang, entries);
 		}

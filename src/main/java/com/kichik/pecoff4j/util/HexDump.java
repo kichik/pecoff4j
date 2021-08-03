@@ -45,7 +45,7 @@ public class HexDump {
 		for (int i = 0; i < length; i++) {
 			byte b = data[start + i];
 			if (Character.isLetterOrDigit(b)) {
-				sb.append(String.valueOf((char) b));
+				sb.append((char) b);
 			} else {
 				sb.append(".");
 			}

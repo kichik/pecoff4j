@@ -16,8 +16,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class DataReader implements IDataReader {
-	private InputStream dis;
+	private final InputStream dis;
 	private int position = 0;
+	private IDataReader parent;
 
 	public DataReader(byte[] buffer) {
 		this.dis = new BufferedInputStream(new ByteArrayInputStream(buffer));
@@ -50,8 +51,8 @@ public class DataReader implements IDataReader {
 
 	@Override
 	public long readLong() throws IOException {
-		return (readDoubleWord() & 0x00000000ffffffffl)
-				| ((long) readDoubleWord() << 32l);
+		return (readDoubleWord() & 0x00000000ffffffffL)
+				| ((long) readDoubleWord() << 32L);
 	}
 
 	@Override
@@ -104,7 +105,7 @@ public class DataReader implements IDataReader {
 	@Override
 	public String readUtf(int size) throws IOException {
 		position += size;
-		byte b[] = new byte[size];
+		byte[] b = new byte[size];
 		safeRead(b);
 		int i = 0;
 		for (; i < b.length; i++) {
@@ -153,6 +154,22 @@ public class DataReader implements IDataReader {
 		byte[] all = new byte[dis.available()];
 		read(all);
 		return all;
+	}
+
+	@Override
+	public IDataReader withParent(IDataReader reader) {
+		parent = reader;
+		return this;
+	}
+
+	@Override
+	public IDataReader getParent() {
+		return parent;
+	}
+
+	@Override
+	public IDataReader copy() {
+		throw new UnsupportedOperationException("DataReader does not support copy()");
 	}
 
 	private int safeRead() throws IOException {

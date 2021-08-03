@@ -15,10 +15,10 @@ import java.util.List;
 import com.kichik.pecoff4j.util.DataObject;
 
 public class ImportDirectory extends DataObject {
-	private List<ImportDirectoryEntry> entries = new ArrayList();
-	private List<String> names = new ArrayList();
-	private List<ImportDirectoryTable> nameTables = new ArrayList();
-	private List<ImportDirectoryTable> addressTables = new ArrayList();
+	private final List<ImportDirectoryEntry> entries = new ArrayList<>();
+	private final List<String> names = new ArrayList<>();
+	private final List<ImportDirectoryTable> nameTables = new ArrayList<>();
+	private final List<ImportDirectoryTable> addressTables = new ArrayList<>();
 
 	public void add(ImportDirectoryEntry entry) {
 		entries.add(entry);

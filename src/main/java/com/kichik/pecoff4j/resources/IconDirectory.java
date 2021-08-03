@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class IconDirectory {
 	private int reserved;
 	private int type;
-	private ArrayList entries = new ArrayList();
+	private final ArrayList<IconDirectoryEntry> entries = new ArrayList<>();
 
 	public void add(IconDirectoryEntry entry) {
 		entries.add(entry);
@@ -25,7 +25,7 @@ public class IconDirectory {
 	}
 
 	public IconDirectoryEntry getEntry(int index) {
-		return (IconDirectoryEntry) entries.get(index);
+		return entries.get(index);
 	}
 
 	public void setReserved(int reserved) {

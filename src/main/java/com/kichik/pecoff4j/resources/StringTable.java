@@ -21,7 +21,7 @@ public class StringTable {
 	private int type;
 	private String key;
 	private int padding;
-	private List<StringPair> strings = new ArrayList<StringPair>();
+	private final List<StringPair> strings = new ArrayList<>();
 
 	public void add(StringPair string) {
 		strings.add(string);

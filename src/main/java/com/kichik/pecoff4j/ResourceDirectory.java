@@ -16,7 +16,7 @@ import com.kichik.pecoff4j.util.DataObject;
 
 public class ResourceDirectory extends DataObject {
 	private ResourceDirectoryTable table;
-	private List<ResourceEntry> entries = new ArrayList();
+	private final List<ResourceEntry> entries = new ArrayList<>();
 
 	public ResourceDirectoryTable getTable() {
 		return table;

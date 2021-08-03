@@ -10,8 +10,8 @@
 package com.kichik.pecoff4j.asm;
 
 public class JumpIfInstruction extends AbstractInstruction {
-	private int op;
-	private int imm32;
+	private final int op;
+	private final int imm32;
 
 	public JumpIfInstruction(int op, int imm32) {
 		this.op = op;

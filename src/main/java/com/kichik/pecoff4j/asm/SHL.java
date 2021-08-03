@@ -10,8 +10,8 @@
 package com.kichik.pecoff4j.asm;
 
 public class SHL extends AbstractInstruction {
-	private ModRM modrm;
-	private byte imm8;
+	private final ModRM modrm;
+	private final byte imm8;
 
 	public SHL(ModRM modrm, byte imm8) {
 		this.modrm = modrm;

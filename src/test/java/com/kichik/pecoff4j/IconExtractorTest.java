@@ -8,7 +8,7 @@ import com.kichik.pecoff4j.util.IconExtractor;
 import com.kichik.pecoff4j.util.PEFilenameFilter;
 
 public class IconExtractorTest implements FindFilesCallback {
-	private static File outdir = new File("F:/Development/icons/extracted");
+	private static final File outdir = new File("F:/Development/icons/extracted");
 
 	public static void main(String[] args) throws Exception {
 		IO.findFiles(new File("F:/Program Files/"), new PEFilenameFilter(),

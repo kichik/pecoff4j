@@ -10,8 +10,8 @@
 package com.kichik.pecoff4j;
 
 public class RVAConverter {
-	private int[] virtualAddress;
-	private int[] pointerToRawData;
+	private final int[] virtualAddress;
+	private final int[] pointerToRawData;
 
 	public RVAConverter(int[] virtualAddress, int[] pointerToRawData) {
 		this.virtualAddress = virtualAddress;

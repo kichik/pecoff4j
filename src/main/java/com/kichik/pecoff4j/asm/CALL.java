@@ -10,7 +10,7 @@
 package com.kichik.pecoff4j.asm;
 
 public class CALL extends AbstractInstruction {
-	private int imm32;
+	private final int imm32;
 
 	public CALL(ModRM modrm, int imm32) {
 		this.imm32 = imm32;

@@ -14,10 +14,11 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class ByteArrayDataReader implements IDataReader {
-	private byte[] data;
+	private final byte[] data;
 	private int position;
 	private int offset;
-	private int length;
+	private final int length;
+	private IDataReader parent;
 
 	public ByteArrayDataReader(byte[] data) {
 		this.data = data;
@@ -138,5 +139,21 @@ public class ByteArrayDataReader implements IDataReader {
 				+ length);
 		position = length;
 		return result;
+	}
+
+	@Override
+	public IDataReader withParent(IDataReader reader) {
+		parent = reader;
+		return this;
+	}
+
+	@Override
+	public IDataReader getParent() {
+		return parent;
+	}
+
+	@Override
+	public IDataReader copy() {
+		return new ByteArrayDataReader(data);
 	}
 }

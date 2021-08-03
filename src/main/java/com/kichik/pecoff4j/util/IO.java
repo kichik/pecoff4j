@@ -48,7 +48,7 @@ public class IO {
 	}
 
 	public static File[] findFiles(File dir, FilenameFilter filter) {
-		Set<File> files = new HashSet();
+		Set<File> files = new HashSet<>();
 		findFiles(dir, filter, files);
 		return files.toArray(new File[0]);
 	}

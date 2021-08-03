@@ -14,8 +14,8 @@ import java.util.List;
 
 public class VarFileInfo {
 	private String key;
-	private List<String> names = new ArrayList();
-	private List<String> values = new ArrayList();
+	private final List<String> names = new ArrayList<>();
+	private final List<String> values = new ArrayList<>();
 
 	public String getKey() {
 		return key;

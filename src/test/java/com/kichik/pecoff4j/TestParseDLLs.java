@@ -11,21 +11,17 @@ public class TestParseDLLs {
 
 	public static void main(String[] args) throws Exception {
 		File[] files = findPEs();
-		for (int i = 0; i < files.length; i++) {
-			System.out.println(files[i]);
-			PE pe = PEParser.parse(files[i]);
-			System.out.println(Reflection.toString(pe));
-		}
+        for (File file : files)
+        {
+            System.out.println(file);
+            PE pe = PEParser.parse(file);
+            System.out.println(Reflection.toString(pe));
+        }
 	}
 
 	public static File[] findPEs() {
-		FilenameFilter ff = new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String name) {
-				return (name.endsWith(".dll") || name.endsWith(".exe"))
-						&& name.indexOf("dllcache") == -1;
-			}
-		};
+		FilenameFilter ff = (dir, name) -> (name.endsWith(".dll") || name.endsWith(".exe"))
+				&& !name.contains("dllcache");
 		File[] files = IO.findFiles(new File("F:/Program Files/"), ff);
 		// File[] files = IO.findFiles(new File("C:/Program Files/"), ff);
 		// File[] files = IO.findFiles(new File("C:/windows/system32"), ff);

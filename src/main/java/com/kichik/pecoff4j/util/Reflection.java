@@ -27,12 +27,12 @@ public class Reflection {
 				if (val instanceof Integer) {
 					sb.append(f.get(o));
 					sb.append(" (0x");
-					sb.append(Integer.toHexString(((Integer) val).intValue()));
+					sb.append(Integer.toHexString((Integer) val));
 					sb.append(")");
 				} else if (val instanceof Long) {
 					sb.append(f.get(o));
 					sb.append(" (0x");
-					sb.append(Long.toHexString(((Long) val).longValue()));
+					sb.append(Long.toHexString((Long) val));
 					sb.append(")");
 				} else if (val != null && val.getClass().isArray()) {
 					if (val instanceof int[]) {
@@ -68,15 +68,17 @@ public class Reflection {
 		return sb.toString();
 	}
 
-	public static String getConstantName(Class clazz, int value)
+	public static String getConstantName(Class<?> clazz, int value)
 			throws Exception {
 		Field[] fields = clazz.getDeclaredFields();
-		Integer valObj = Integer.valueOf(value);
-		for (int i = 0; i < fields.length; i++) {
-			Field f = fields[i];
+		Integer valObj = value;
+		for (Field f : fields)
+		{
 			if (Modifier.isStatic(f.getModifiers())
-					&& Modifier.isPublic(f.getModifiers())) {
-				if (f.get(null).equals(valObj)) {
+					&& Modifier.isPublic(f.getModifiers()))
+			{
+				if (f.get(null).equals(valObj))
+				{
 					return f.getName();
 				}
 			}

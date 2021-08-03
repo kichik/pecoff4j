@@ -52,9 +52,10 @@ public class IconFile {
 			offset += images[i].sizeOf();
 		}
 		ResourceAssembler.write(directory, dw);
-		for (int i = 0; i < images.length; i++) {
-			ResourceAssembler.write(images[i], dw);
-		}
+        for (IconImage image : images)
+        {
+            ResourceAssembler.write(image, dw);
+        }
 	}
 
 	public IconDirectory getDirectory() {

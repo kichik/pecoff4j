@@ -37,7 +37,7 @@ public class ImageData {
 	private byte[] debugRawData;
 
 	// Any image data preambes
-	private IntMap preambles = new IntMap();
+	private final IntMap preambles = new IntMap();
 
 	// Any trailing data
 	private byte[] trailingData;

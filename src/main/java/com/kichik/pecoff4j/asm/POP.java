@@ -10,7 +10,7 @@
 package com.kichik.pecoff4j.asm;
 
 public class POP extends AbstractInstruction {
-	private int register;
+	private final int register;
 
 	public POP(int register) {
 		this.register = register;

@@ -28,5 +28,5 @@ public interface IDataWriter {
 
 	void writeUtf(String s, int len) throws IOException;
 
-	public abstract int getPosition();
+	int getPosition();
 }

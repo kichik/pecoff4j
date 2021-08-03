@@ -21,7 +21,7 @@ public class StringFileInfo {
 	private int type;
 	private String key;
 	private int padding;
-	private List<StringTable> tables = new ArrayList<StringTable>();
+	private final List<StringTable> tables = new ArrayList<>();
 
 	public void add(StringTable table) {
 		tables.add(table);

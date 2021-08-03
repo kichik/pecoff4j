@@ -36,18 +36,20 @@ public class VersionStringsTest {
 
 		ResourceEntry[] entries = ResourceHelper.findResources(rd,
 				ResourceType.VERSION_INFO);
-		for (int i = 0; i < entries.length; i++) {
-			byte[] data = entries[i].getData();
-			VersionInfo version = ResourceParser.readVersionInfo(data);
+        for (ResourceEntry entry : entries)
+        {
+            byte[] data = entry.getData();
+            VersionInfo version = ResourceParser.readVersionInfo(data);
 
-			StringFileInfo strings = version.getStringFileInfo();
-			StringTable table = strings.getTable(0);
-			for (int j = 0; j < table.getCount(); j++) {
-				String key = table.getString(j).getKey();
-				String value = table.getString(j).getValue();
-				System.out.println(key + " = " + value);
-			}
-		}
+            StringFileInfo strings = version.getStringFileInfo();
+            StringTable table = strings.getTable(0);
+            for (int j = 0; j < table.getCount(); j++)
+            {
+                String key = table.getString(j).getKey();
+                String value = table.getString(j).getValue();
+                System.out.println(key + " = " + value);
+            }
+        }
 	}
 
 }

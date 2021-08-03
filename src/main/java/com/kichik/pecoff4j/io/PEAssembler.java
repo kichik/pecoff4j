@@ -15,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -100,14 +99,16 @@ public class PEAssembler {
 		dw.writeWord(dh.getAddressOfRelocationTable());
 		dw.writeWord(dh.getOverlayNumber());
 		int[] res = dh.getReserved();
-		for (int i = 0; i < res.length; i++) {
-			dw.writeWord(res[i]);
+		for (int re : res)
+		{
+			dw.writeWord(re);
 		}
 		dw.writeWord(dh.getOemId());
 		dw.writeWord(dh.getOemInfo());
 		int[] res2 = dh.getReserved2();
-		for (int i = 0; i < res2.length; i++) {
-			dw.writeWord(res2[i]);
+		for (int j : res2)
+		{
+			dw.writeWord(j);
 		}
 		dw.writeDoubleWord(dh.getAddressOfNewExeHeader());
 	}
@@ -321,7 +322,7 @@ public class PEAssembler {
 	private static void write(PE pe, BoundImportDirectoryTable bidt,
 			IDataWriter dw) throws IOException {
 		int pos = dw.getPosition();
-		List<BoundImport> bil = new ArrayList();
+		List<BoundImport> bil = new ArrayList<>();
 
 		for (int i = 0; i < bidt.size(); i++) {
 			BoundImport bi = bidt.get(i);
@@ -331,21 +332,17 @@ public class PEAssembler {
 			dw.writeWord(bi.getNumberOfModuleForwarderRefs());
 		}
 
-		Collections.sort(bil, new Comparator<BoundImport>() {
-			@Override
-			public int compare(BoundImport o1, BoundImport o2) {
-				return o1.getOffsetToModuleName() - o2.getOffsetToModuleName();
-			}
-		});
+		bil.sort(Comparator.comparingInt(BoundImport::getOffsetToModuleName));
 
 		// Now write out empty block
 		dw.writeDoubleWord(0);
 		dw.writeDoubleWord(0);
 
 		// Now write out module names
-		Set names = new HashSet();
-		for (int i = 0; i < bil.size(); i++) {
-			String s = bil.get(i).getModuleName();
+		Set<String> names = new HashSet<>();
+		for (BoundImport boundImport : bil)
+		{
+			String s = boundImport.getModuleName();
 			if (!names.contains(s))
 				dw.writeUtf(s);
 			names.add(s);

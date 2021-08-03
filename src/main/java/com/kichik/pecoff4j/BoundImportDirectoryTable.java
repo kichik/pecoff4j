@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BoundImportDirectoryTable {
-	private List<BoundImport> imports = new ArrayList();
+	private final List<BoundImport> imports = new ArrayList<>();
 
 	public void add(BoundImport bi) {
 		imports.add(bi);

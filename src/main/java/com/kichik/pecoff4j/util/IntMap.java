@@ -10,7 +10,7 @@
 package com.kichik.pecoff4j.util;
 
 public class IntMap {
-	private Entry[] hashtable;
+	private final Entry[] hashtable;
 	private int size;
 
 	public IntMap() {
@@ -85,13 +85,15 @@ public class IntMap {
 	public int[] keySet() {
 		int[] keys = new int[size];
 		int idx = 0;
-		for (int i = 0; i < hashtable.length; i++) {
-			Entry e = hashtable[i];
-			while (e != null) {
-				keys[idx++] = e.key;
-				e = e.next;
-			}
-		}
+        for (Entry entry : hashtable)
+        {
+            Entry e = entry;
+            while (e != null)
+            {
+                keys[idx++] = e.key;
+                e = e.next;
+            }
+        }
 		return keys;
 	}
 
@@ -99,8 +101,8 @@ public class IntMap {
 		return size;
 	}
 
-	private class Entry {
-		public int key;
+	private static class Entry {
+		public final int key;
 		public Object value;
 		public Entry next;
 

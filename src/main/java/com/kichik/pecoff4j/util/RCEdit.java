@@ -26,16 +26,21 @@ public class RCEdit {
 		assertArgCount(args, 2, 3);
 
 		String option = args[0].toUpperCase();
-		if ("/I".equals(option)) {
-			assertArgCount(args, 3, 3);
-			addIcon(args[1], args[2]);
-		} else if ("/N".equals(option)) {
-			assertArgCount(args, 3, 3);
-			setIni(args[1], args[2]);
-		} else if ("/S".equals(option)) {
-			assertArgCount(args, 3, 3);
-			setSplash(args[1], args[2]);
-		}
+        switch (option)
+        {
+            case "/I":
+                assertArgCount(args, 3, 3);
+                addIcon(args[1], args[2]);
+                break;
+            case "/N":
+                assertArgCount(args, 3, 3);
+                setIni(args[1], args[2]);
+                break;
+            case "/S":
+                assertArgCount(args, 3, 3);
+                setSplash(args[1], args[2]);
+                break;
+        }
 	}
 
 	private static void addIcon(String exe, String icon) throws IOException {

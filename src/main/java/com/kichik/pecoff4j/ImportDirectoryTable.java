@@ -12,7 +12,7 @@ package com.kichik.pecoff4j;
 import java.util.ArrayList;
 
 public class ImportDirectoryTable {
-	private ArrayList imports = new ArrayList();
+	private final ArrayList<ImportEntry> imports = new ArrayList<>();
 
 	public void add(ImportEntry entry) {
 		imports.add(entry);
@@ -23,6 +23,6 @@ public class ImportDirectoryTable {
 	}
 
 	public ImportEntry getEntry(int index) {
-		return (ImportEntry) imports.get(index);
+		return imports.get(index);
 	}
 }

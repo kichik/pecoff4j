@@ -10,9 +10,9 @@
 package com.kichik.pecoff4j.asm;
 
 public class LEA extends AbstractInstruction {
-	private ModRM modrm;
+	private final ModRM modrm;
 	private SIB sib;
-	private int imm32;
+	private final int imm32;
 
 	public LEA(ModRM modrm, int imm32) {
 		this.modrm = modrm;

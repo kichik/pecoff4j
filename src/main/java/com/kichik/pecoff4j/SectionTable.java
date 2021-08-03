@@ -24,8 +24,8 @@ public class SectionTable {
 	public static final String LOAD_CONFIG_TABLE = ".rdata";
 
 	// Data
-	private List<SectionHeader> headers = new ArrayList();
-	private IntMap sections = new IntMap();
+	private final List<SectionHeader> headers = new ArrayList<>();
+	private final IntMap sections = new IntMap();
 	private RVAConverter rvaConverter;
 
 	public void add(SectionHeader header) {
@@ -58,10 +58,11 @@ public class SectionTable {
 
 	public int getFirstSectionRawDataPointer() {
 		int pointer = 0;
-		for (int i = 0; i < headers.size(); i++) {
-			SectionHeader sh = headers.get(i);
+		for (SectionHeader sh : headers)
+		{
 			if (sh.getVirtualSize() > 0
-					&& (pointer == 0 || sh.getPointerToRawData() < pointer)) {
+					&& (pointer == 0 || sh.getPointerToRawData() < pointer))
+			{
 				pointer = sh.getPointerToRawData();
 			}
 		}
@@ -77,18 +78,13 @@ public class SectionTable {
 	}
 
 	public SectionHeader[] getHeadersPointerSorted() {
-		List<SectionHeader> headers = new ArrayList();
+		List<SectionHeader> headers = new ArrayList<>();
 		for (int i = 0; i < getNumberOfSections(); i++) {
 			headers.add(getHeader(i));
 		}
 
 		SectionHeader[] sorted = headers.toArray(new SectionHeader[0]);
-		Arrays.sort(sorted, new Comparator<SectionHeader>() {
-			@Override
-			public int compare(SectionHeader o1, SectionHeader o2) {
-				return o1.getVirtualAddress() - o2.getVirtualAddress();
-			}
-		});
+		Arrays.sort(sorted, Comparator.comparingInt(SectionHeader::getVirtualAddress));
 
 		return sorted;
 	}

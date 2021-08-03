@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class DataWriter implements IDataWriter {
-	private BufferedOutputStream out;
+	private final BufferedOutputStream out;
 	private int position;
 
 	public DataWriter(File output) throws FileNotFoundException {

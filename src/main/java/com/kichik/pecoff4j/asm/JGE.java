@@ -10,7 +10,7 @@
 package com.kichik.pecoff4j.asm;
 
 public class JGE extends AbstractInstruction {
-	private byte imm8;
+	private final byte imm8;
 
 	public JGE(byte imm8) {
 		this.imm8 = imm8;

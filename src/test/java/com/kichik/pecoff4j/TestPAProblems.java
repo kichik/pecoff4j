@@ -69,8 +69,8 @@ public class TestPAProblems {
 
 	public static void testAll() throws Exception {
 		Field[] fields = TestPAProblems.class.getDeclaredFields();
-		for (int i = 0; i < fields.length; i++) {
-			Field f = fields[i];
+		for (Field f : fields)
+		{
 			if (!Modifier.isStatic(f.getModifiers()))
 				continue;
 			String filename = (String) f.get(null);
@@ -113,10 +113,10 @@ public class TestPAProblems {
 		for (int i = 0; i < dc; i++) {
 			ImageDataDirectory idd = pe.getOptionalHeader().getDataDirectory(i);
 			if (idd.getSize() > 0) {
-				String n = Reflection.getConstantName(
-						ImageDataDirectoryType.class, i);
+				StringBuilder n = new StringBuilder(Reflection.getConstantName(
+						ImageDataDirectoryType.class, i));
 				while (n.length() < 20) {
-					n = n + " ";
+					n.append(" ");
 				}
 				System.out.println(n
 						+ "\t"
@@ -130,9 +130,11 @@ public class TestPAProblems {
 	}
 
 	private static String make4(String s) {
-		while (s.length() < 4) {
-			s = " " + s;
+		StringBuilder sBuilder = new StringBuilder(s);
+		while (sBuilder.length() < 4) {
+			sBuilder.insert(0, " ");
 		}
+		s = sBuilder.toString();
 		return s;
 	}
 }
