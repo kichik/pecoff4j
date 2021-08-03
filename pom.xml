@@ -31,7 +31,36 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- must be marked as 7 instead of 1.7; otherwise: "Fatal error compiling: release version 1.7 not supported" -->
         <maven.compiler.release>7</maven.compiler.release>
+        <junit.version>5.7.0</junit.version>
     </properties>
+
+    <dependencies>
+        <!--- Testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-surefire-provider</artifactId>
+            <version>1.3.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <scm>
         <connection>scm:git:git://github.com/kichik/pecoff4j.git</connection>
@@ -152,6 +181,16 @@
                             <Multi-Release>true</Multi-Release>
                         </manifestEntries>
                     </archive>
+                </configuration>
+            </plugin>
+            <!-- Run tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M4</version>
+                <configuration>
+                    <reuseForks>false</reuseForks>
+                    <forkCount>1</forkCount>
                 </configuration>
             </plugin>
             <plugin>
