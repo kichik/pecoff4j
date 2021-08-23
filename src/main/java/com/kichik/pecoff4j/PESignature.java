@@ -9,6 +9,8 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.util.Strings;
+
 import java.util.Arrays;
 
 public class PESignature {
@@ -27,5 +29,10 @@ public class PESignature {
 	public boolean isValid() {
 		return Arrays.equals(expected1, signature)
 				|| Arrays.equals(expected2, signature);
+	}
+
+	@Override
+	public String toString() {
+		return "PESignature: " + Strings.toHexString(signature);
 	}
 }

@@ -10,11 +10,12 @@
 package com.kichik.pecoff4j;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.kichik.pecoff4j.util.DataObject;
 
-public class ImportDirectory extends DataObject {
+public class ImportDirectory extends DataObject implements Iterable<ImportDirectoryEntry> {
 	private final List<ImportDirectoryEntry> entries = new ArrayList<>();
 	private final List<String> names = new ArrayList<>();
 	private final List<ImportDirectoryTable> nameTables = new ArrayList<>();
@@ -49,5 +50,10 @@ public class ImportDirectory extends DataObject {
 
 	public ImportDirectoryEntry getEntry(int index) {
 		return entries.get(index);
+	}
+
+	@Override
+	public Iterator<ImportDirectoryEntry> iterator() {
+		return entries.iterator();
 	}
 }

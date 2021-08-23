@@ -28,4 +28,12 @@ public class ImageDataDirectory {
 	public void setSize(int size) {
 		this.size = size;
 	}
+
+	@Override
+	public String toString() {
+		return "ImageDataDirectory{" +
+				"virtualAddress=" + Integer.toHexString(virtualAddress) +
+				", size=" + size +
+				'}';
+	}
 }
