@@ -419,10 +419,8 @@ public class PEParser {
 			byte[] pa = new byte[pointer - dr.getPosition()];
 			dr.read(pa);
 			boolean zeroes = true;
-			for (byte b : pa)
-			{
-				if (b != 0)
-				{
+			for (byte b : pa) {
+				if (b != 0) {
 					zeroes = false;
 					break;
 				}
@@ -499,13 +497,11 @@ public class PEParser {
 		}
 		imports.sort(Comparator.comparingInt(BoundImport::getOffsetToModuleName));
 		IntMap names = new IntMap();
-		for (BoundImport anImport : imports)
-		{
+		for (BoundImport anImport : imports) {
 			bi = anImport;
 			int offset = bi.getOffsetToModuleName();
 			String n = (String) names.get(offset);
-			if (n == null)
-			{
+			if (n == null) {
 				dr.jumpTo(offset);
 				n = dr.readUtf();
 				names.put(offset, n);
@@ -542,7 +538,7 @@ public class PEParser {
 		while (dr.getParent() != null)
 			dr = dr.getParent();
 		dr = dr.copy();
-        for (int i = 0; i < id.size(); i++) {
+		for (int i = 0; i < id.size(); i++) {
 			ImportDirectoryEntry e = id.getEntry(i);
 			dr.jumpTo(e.getNameRVA());
 			String name = dr.readUtf();
@@ -551,7 +547,7 @@ public class PEParser {
 			dr.jumpTo(e.getImportAddressTableRVA());
 			ImportDirectoryTable at = readImportDirectoryTable(dr);
 			id.add(name, nt, at);
-        }
+		}
 		return id;
 	}
 

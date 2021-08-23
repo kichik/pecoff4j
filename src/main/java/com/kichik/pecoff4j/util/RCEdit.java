@@ -26,8 +26,7 @@ public class RCEdit {
 		assertArgCount(args, 2, 3);
 
 		String option = args[0].toUpperCase();
-        switch (option)
-        {
+        switch (option) {
             case "/I":
                 assertArgCount(args, 3, 3);
                 addIcon(args[1], args[2]);

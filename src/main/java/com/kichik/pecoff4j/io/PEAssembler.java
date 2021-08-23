@@ -100,16 +100,12 @@ public class PEAssembler {
 		dw.writeWord(dh.getOverlayNumber());
 		int[] res = dh.getReserved();
 		for (int re : res)
-		{
 			dw.writeWord(re);
-		}
 		dw.writeWord(dh.getOemId());
 		dw.writeWord(dh.getOemInfo());
 		int[] res2 = dh.getReserved2();
 		for (int j : res2)
-		{
 			dw.writeWord(j);
-		}
 		dw.writeDoubleWord(dh.getAddressOfNewExeHeader());
 	}
 
@@ -340,8 +336,7 @@ public class PEAssembler {
 
 		// Now write out module names
 		Set<String> names = new HashSet<>();
-		for (BoundImport boundImport : bil)
-		{
+		for (BoundImport boundImport : bil) {
 			String s = boundImport.getModuleName();
 			if (!names.contains(s))
 				dw.writeUtf(s);

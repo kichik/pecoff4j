@@ -72,13 +72,10 @@ public class Reflection {
 			throws Exception {
 		Field[] fields = clazz.getDeclaredFields();
 		Integer valObj = value;
-		for (Field f : fields)
-		{
+		for (Field f : fields) {
 			if (Modifier.isStatic(f.getModifiers())
-					&& Modifier.isPublic(f.getModifiers()))
-			{
-				if (f.get(null).equals(valObj))
-				{
+					&& Modifier.isPublic(f.getModifiers())) {
+				if (f.get(null).equals(valObj)) {
 					return f.getName();
 				}
 			}

@@ -49,9 +49,7 @@ public class ResourceAssembler {
 			RGBQuad[] colors = ii.getColors();
 			if (colors != null) {
                 for (RGBQuad color : colors)
-                {
                     write(color, dw);
-                }
 			}
 			dw.writeBytes(ii.getXorMask());
 			dw.writeBytes(ii.getAndMask());

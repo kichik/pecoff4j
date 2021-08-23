@@ -85,11 +85,9 @@ public class IntMap {
 	public int[] keySet() {
 		int[] keys = new int[size];
 		int idx = 0;
-        for (Entry entry : hashtable)
-        {
+        for (Entry entry : hashtable)  {
             Entry e = entry;
-            while (e != null)
-            {
+            while (e != null) {
                 keys[idx++] = e.key;
                 e = e.next;
             }

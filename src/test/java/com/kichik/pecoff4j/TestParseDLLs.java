@@ -1,22 +1,21 @@
 package com.kichik.pecoff4j;
 
-import java.io.File;
-import java.io.FilenameFilter;
-
 import com.kichik.pecoff4j.io.PEParser;
 import com.kichik.pecoff4j.util.IO;
 import com.kichik.pecoff4j.util.Reflection;
+
+import java.io.File;
+import java.io.FilenameFilter;
 
 public class TestParseDLLs {
 
 	public static void main(String[] args) throws Exception {
 		File[] files = findPEs();
-        for (File file : files)
-        {
-            System.out.println(file);
-            PE pe = PEParser.parse(file);
-            System.out.println(Reflection.toString(pe));
-        }
+		for (File file : files) {
+			System.out.println(file);
+			PE pe = PEParser.parse(file);
+			System.out.println(Reflection.toString(pe));
+		}
 	}
 
 	public static File[] findPEs() {

@@ -69,8 +69,7 @@ public class TestPAProblems {
 
 	public static void testAll() throws Exception {
 		Field[] fields = TestPAProblems.class.getDeclaredFields();
-		for (Field f : fields)
-		{
+		for (Field f : fields) {
 			if (!Modifier.isStatic(f.getModifiers()))
 				continue;
 			String filename = (String) f.get(null);

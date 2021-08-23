@@ -9,12 +9,12 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.util.IntMap;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-
-import com.kichik.pecoff4j.util.IntMap;
 
 public class SectionTable {
 	// Known section names
@@ -58,11 +58,9 @@ public class SectionTable {
 
 	public int getFirstSectionRawDataPointer() {
 		int pointer = 0;
-		for (SectionHeader sh : headers)
-		{
+		for (SectionHeader sh : headers) {
 			if (sh.getVirtualSize() > 0
-					&& (pointer == 0 || sh.getPointerToRawData() < pointer))
-			{
+					&& (pointer == 0 || sh.getPointerToRawData() < pointer)) {
 				pointer = sh.getPointerToRawData();
 			}
 		}
