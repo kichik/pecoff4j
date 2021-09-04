@@ -279,7 +279,7 @@ public class PEAssembler {
 			dw.writeBytes(id.getDelayImportDescriptor());
 			break;
 		case ImageDataDirectoryType.CLR_RUNTIME_HEADER:
-			dw.writeBytes(id.getClrRuntimeHeader());
+			dw.writeBytes(id.getClrRuntimeHeader().get());
 			break;
 		case ImageDataDirectoryType.RESERVED:
 			dw.writeBytes(id.getReserved());
