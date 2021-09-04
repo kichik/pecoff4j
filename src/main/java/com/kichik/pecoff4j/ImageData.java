@@ -29,7 +29,7 @@ public class ImageData {
 	private BoundImportDirectoryTable boundImports;
 	private byte[] iat;
 	private byte[] delayImportDescriptor;
-	private byte[] clrRuntimeHeader;
+	private CLRRuntimeHeader clrRuntimeHeader;
 	private byte[] reserved;
 
 	// Debug type-specific data
@@ -170,11 +170,11 @@ public class ImageData {
 		this.delayImportDescriptor = delayImportDescriptor;
 	}
 
-	public byte[] getClrRuntimeHeader() {
+	public CLRRuntimeHeader getClrRuntimeHeader() {
 		return clrRuntimeHeader;
 	}
 
-	public void setClrRuntimeHeader(byte[] clrRuntimeHeader) {
+	public void setClrRuntimeHeader(CLRRuntimeHeader clrRuntimeHeader) {
 		this.clrRuntimeHeader = clrRuntimeHeader;
 	}
 

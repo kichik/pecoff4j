@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -21,6 +23,7 @@ import java.util.List;
 import com.kichik.pecoff4j.AttributeCertificateTable;
 import com.kichik.pecoff4j.BoundImport;
 import com.kichik.pecoff4j.BoundImportDirectoryTable;
+import com.kichik.pecoff4j.CLRRuntimeHeader;
 import com.kichik.pecoff4j.COFFHeader;
 import com.kichik.pecoff4j.DOSHeader;
 import com.kichik.pecoff4j.DOSStub;
@@ -60,6 +63,13 @@ public class PEParser {
 	public static PE parse(File file) throws IOException {
 		try (FileInputStream is = new FileInputStream(file);
 				DataReader dr = new DataReader(is)) {
+			return read(dr);
+		}
+	}
+
+	public static PE parse(Path path) throws IOException {
+		try (InputStream is = Files.newInputStream(path);
+			 DataReader dr = new DataReader(is)) {
 			return read(dr);
 		}
 	}
@@ -407,7 +417,7 @@ public class PEParser {
 			id.setDelayImportDescriptor(b);
 			break;
 		case ImageDataDirectoryType.CLR_RUNTIME_HEADER:
-			id.setClrRuntimeHeader(b);
+			id.setClrRuntimeHeader(readClrRuntimeHeader(b));
 			break;
 		case ImageDataDirectoryType.RESERVED:
 			id.setReserved(b);
@@ -485,6 +495,33 @@ public class PEParser {
 				}
 			}
 		}
+	}
+
+	private static CLRRuntimeHeader readClrRuntimeHeader(
+			byte[] b) throws IOException {
+		DataReader dr = new DataReader(b);
+		CLRRuntimeHeader clrrh = new CLRRuntimeHeader();
+		clrrh.set(b);
+		clrrh.setHeaderSize(dr.readDoubleWord());
+		clrrh.setMajorRuntimeVersion(dr.readWord());
+		clrrh.setMinorRuntimeVersion(dr.readWord());
+		clrrh.setMetaDataDirectoryAddress(dr.readDoubleWord());
+		clrrh.setMetaDataDirectorySize(dr.readDoubleWord());
+		clrrh.setFlags(dr.readDoubleWord());
+		clrrh.setEntryPointToken(dr.readDoubleWord());
+		clrrh.setResourcesDirectoryAddress(dr.readDoubleWord());
+		clrrh.setResourcesDirectorySize(dr.readDoubleWord());
+		clrrh.setStrongNameSignatureAddress(dr.readDoubleWord());
+		clrrh.setStrongNameSignatureSize(dr.readDoubleWord());
+		clrrh.setCodeManagerTableAddress(dr.readDoubleWord());
+		clrrh.setCodeManagerTableSize(dr.readDoubleWord());
+		clrrh.setvTableFixupsAddress(dr.readDoubleWord());
+		clrrh.setvTableFixupsSize(dr.readDoubleWord());
+		clrrh.setExportAddressTableJumpsAddress(dr.readDoubleWord());
+		clrrh.setExportAddressTableJumpsSize(dr.readDoubleWord());
+		clrrh.setManagedNativeHeaderAddress(dr.readDoubleWord());
+		clrrh.setManagedNativeHeaderSize(dr.readDoubleWord());
+		return clrrh;
 	}
 
 	private static BoundImportDirectoryTable readBoundImportDirectoryTable(
