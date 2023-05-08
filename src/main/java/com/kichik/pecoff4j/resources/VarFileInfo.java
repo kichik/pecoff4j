@@ -13,9 +13,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VarFileInfo {
+	private int length;
+	private int valueLength;
+	private int type;
 	private String key;
-	private List<String> names = new ArrayList();
-	private List<String> values = new ArrayList();
+	private final List<Var> vars = new ArrayList<>();
+
+	public void setLength(int length) {
+		this.length = length;
+	}
+
+	public int getLength() {
+		return length;
+	}
+
+	public void setValueLength(int valueLength) {
+		this.valueLength = valueLength;
+	}
+
+	public int getValueLength() {
+		return valueLength;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public int getType() {
+		return type;
+	}
 
 	public String getKey() {
 		return key;
@@ -25,25 +51,12 @@ public class VarFileInfo {
 		this.key = key;
 	}
 
-	public int size() {
-		return names.size();
+	public void addVar(Var v) {
+		vars.add(v);
 	}
 
-	public String getName(int index) {
-		return names.get(index);
+	public List<Var> getVars() {
+		return vars;
 	}
 
-	public String getValue(int index) {
-		return values.get(index);
-	}
-
-	public void add(String name, String value) {
-		names.add(name);
-		values.add(value);
-	}
-
-	public void clear() {
-		names.clear();
-		values.clear();
-	}
 }

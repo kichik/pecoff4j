@@ -25,6 +25,7 @@ import com.kichik.pecoff4j.resources.RGBQuad;
 import com.kichik.pecoff4j.resources.StringFileInfo;
 import com.kichik.pecoff4j.resources.StringPair;
 import com.kichik.pecoff4j.resources.StringTable;
+import com.kichik.pecoff4j.resources.Var;
 import com.kichik.pecoff4j.resources.VarFileInfo;
 import com.kichik.pecoff4j.resources.VersionInfo;
 
@@ -138,6 +139,7 @@ public class ResourceParser {
 
 	public static VersionInfo readVersionInfo(IDataReader dr)
 			throws IOException {
+		int versionInfoPos = dr.getPosition();
 		VersionInfo vi = new VersionInfo();
 		vi.setLength(dr.readWord());
 		vi.setValueLength(dr.readWord());
@@ -145,10 +147,9 @@ public class ResourceParser {
 		vi.setKey(dr.readUnicode());
 		alignDataReader(dr);
 		vi.setFixedFileInfo(ResourceParser.readFixedFileInfo(dr));
-		
-		
-		while (true) {
-			int padding = alignDataReader(dr);
+		alignDataReader(dr);
+
+		while (dr.getPosition() < versionInfoPos + vi.getLength()) {
 			int initialPos = dr.getPosition();
 	
 			int length = dr.readWord();
@@ -159,11 +160,9 @@ public class ResourceParser {
 			int type = dr.readWord();
 			String key = dr.readUnicode();
 			if ("VarFileInfo".equals(key)) {
-				//We may or may not find the varFileInfo...
-				vi.setVarFileInfo(readVarFileInfo(dr, initialPos, length, valueLength, type, key, padding));
+				vi.setVarFileInfo(readVarFileInfo(dr, initialPos, length, valueLength, type, key));
 			} else if ("StringFileInfo".equals(key)) {
-				vi.setStringFileInfo(readStringFileInfo(dr, initialPos, length, valueLength, type, key, padding));
-				break;
+				vi.setStringFileInfo(readStringFileInfo(dr, initialPos, length, valueLength, type, key));
 			} else {
 				dr.jumpTo(initialPos + length);
 				break;
@@ -173,31 +172,32 @@ public class ResourceParser {
 		return vi;
 	}
 	
-	public static VarFileInfo readVarFileInfo(IDataReader dr, int initialPos, int length, int valueLength, int type, String key, int padding) throws IOException {
+	public static VarFileInfo readVarFileInfo(IDataReader dr, int initialPos, int length, int valueLength, int type, String key) throws IOException {
 		VarFileInfo vfi = new VarFileInfo();
+		vfi.setLength(length);
+		vfi.setValueLength(valueLength);
+		vfi.setType(type);
 		vfi.setKey(key);
-		String name = null;
-		while ((name = dr.readUnicode()) != null) {
-			if (name.length() == 2) {
-				name = dr.readUnicode();
-			}
-			vfi.add(name, dr.readUnicode());
+		alignDataReader(dr);
+
+		while (dr.getPosition() < initialPos + length) {
+			vfi.addVar(readVar(dr));
 		}
-		dr.jumpTo(initialPos + length - 2);
 		return vfi;
 	}
 
-	public static VarFileInfo readVarFileInfo(IDataReader dr)
-			throws IOException {
-		VarFileInfo vfi = new VarFileInfo();
-		vfi.setKey(dr.readUnicode());
-		String name = null;
-		while ((name = dr.readUnicode()) != null) {
-			if (name.length() % 2 == 1)
-				dr.readWord();
-			vfi.add(name, dr.readUnicode());
+	public static Var readVar(IDataReader dr) throws IOException {
+		Var v = new Var();
+		int initialPos = dr.getPosition();
+		v.setLength(dr.readWord());
+		v.setValueLength(dr.readWord());
+		v.setType(dr.readWord());
+		v.setKey(dr.readUnicode());
+		alignDataReader(dr);
+		while (dr.getPosition() < initialPos + v.getLength()) {
+			v.addValue(dr.readDoubleWord());
 		}
-		return vfi;
+		return v;
 	}
 
 	public static StringTable readStringTable(IDataReader dr)
@@ -260,14 +260,14 @@ public class ResourceParser {
 		return r;
 	}
 	
-	public static StringFileInfo readStringFileInfo(IDataReader dr, int initialPos, int length, int valueLength, int type, String key, int padding) throws IOException {
+	public static StringFileInfo readStringFileInfo(IDataReader dr, int initialPos, int length, int valueLength, int type, String key) throws IOException {
 		StringFileInfo sfi = new StringFileInfo();
 
 		sfi.setLength(length);
 		sfi.setValueLength(valueLength);
 		sfi.setType(type);
 		sfi.setKey(key);
-		sfi.setPadding(padding);
+		sfi.setPadding(alignDataReader(dr));
 		while (dr.getPosition() - initialPos < sfi.getLength()) {
 			sfi.add(readStringTable(dr));
 		}
