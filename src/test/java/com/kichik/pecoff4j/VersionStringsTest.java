@@ -11,43 +11,62 @@ package com.kichik.pecoff4j;
 
 import java.io.IOException;
 
-import com.kichik.pecoff4j.PE;
-import com.kichik.pecoff4j.ResourceDirectory;
-import com.kichik.pecoff4j.ResourceEntry;
 import com.kichik.pecoff4j.constant.ResourceType;
 import com.kichik.pecoff4j.io.PEParser;
 import com.kichik.pecoff4j.io.ResourceParser;
 import com.kichik.pecoff4j.resources.StringFileInfo;
+import com.kichik.pecoff4j.resources.StringPair;
 import com.kichik.pecoff4j.resources.StringTable;
+import com.kichik.pecoff4j.resources.Var;
+import com.kichik.pecoff4j.resources.VarFileInfo;
 import com.kichik.pecoff4j.resources.VersionInfo;
 import com.kichik.pecoff4j.util.ResourceHelper;
 
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class VersionStringsTest {
 
-	public static void main(String[] args) throws IOException {
-		testVersionStrings("C:/windows/system32/notepad.exe");
-		testVersionStrings("C:/windows/system32/ieframe.dll");
-		testVersionStrings("C:/windows/system32/igfxtray.exe");
-	}
-
-	public static void testVersionStrings(String path) throws IOException {
-		PE pe = PEParser.parse(path);
+	@Test
+	public void testVersionStrings() throws IOException {
+		PE pe = PEParser.parse(getClass().getResourceAsStream("/WinRun4J.exe"));
 		ResourceDirectory rd = pe.getImageData().getResourceTable();
 
-		ResourceEntry[] entries = ResourceHelper.findResources(rd,
-				ResourceType.VERSION_INFO);
-		for (int i = 0; i < entries.length; i++) {
-			byte[] data = entries[i].getData();
-			VersionInfo version = ResourceParser.readVersionInfo(data);
+		ResourceEntry[] entries = ResourceHelper.findResources(rd, ResourceType.VERSION_INFO);
+		assertEquals(1, entries.length);
 
-			StringFileInfo strings = version.getStringFileInfo();
-			StringTable table = strings.getTable(0);
-			for (int j = 0; j < table.getCount(); j++) {
-				String key = table.getString(j).getKey();
-				String value = table.getString(j).getValue();
-				System.out.println(key + " = " + value);
-			}
-		}
+		VersionInfo version = ResourceParser.readVersionInfo(entries[0].getData());
+
+		// check StringFileInfo structure
+		StringFileInfo strings = version.getStringFileInfo();
+		assertEquals("StringFileInfo", strings.getKey());
+		assertEquals(1, strings.getCount());
+		StringTable table = strings.getTable(0);
+
+		assertEquals(4, table.getCount());
+		assertKeyValue("FileDescription", "WinRun4J Application Launcher", table.getString(0));
+		assertKeyValue("FileVersion", "0, 0, 2, 0", table.getString(1));
+		assertKeyValue("OriginalFilename", "WinRun4J.exe", table.getString(2));
+		assertKeyValue("ProductVersion", "0, 0, 2, 0", table.getString(3));
+
+		// check VarFileInfo structure
+		VarFileInfo varFileInfo = version.getVarFileInfo();
+		assertEquals("VarFileInfo", varFileInfo.getKey());
+
+		assertEquals(1, varFileInfo.getVars().size());
+		Var var1 = varFileInfo.getVars().get(0);
+		assertEquals("Translation", var1.getKey());
+		assertEquals(1, var1.getValues().size());
+		// code page 1200 is "utf-16"
+		assertEquals(1200, var1.getValues().get(0) >> 16);
+		// Microsoft language identifier 1033 is "English - United States"
+		assertEquals(1033, var1.getValues().get(0) & 0xFFFF);
+	}
+
+	private void assertKeyValue(String key, String value, StringPair actual) {
+		assertEquals(key, actual.getKey());
+		assertEquals(value, actual.getValue());
 	}
 
 }
