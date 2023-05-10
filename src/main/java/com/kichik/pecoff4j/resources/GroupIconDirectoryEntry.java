@@ -12,6 +12,7 @@ package com.kichik.pecoff4j.resources;
 import java.io.IOException;
 
 import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.Reflection;
 
 public class GroupIconDirectoryEntry {
@@ -78,5 +79,16 @@ public class GroupIconDirectoryEntry {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeByte(width);
+		dw.writeByte(height);
+		dw.writeByte(colorCount);
+		dw.writeByte(reserved);
+		dw.writeWord(planes);
+		dw.writeWord(bitCount);
+		dw.writeDoubleWord(bytesInRes);
+		dw.writeWord(id);
 	}
 }

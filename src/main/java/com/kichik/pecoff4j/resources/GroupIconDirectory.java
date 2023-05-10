@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import com.kichik.pecoff4j.io.DataReader;
 import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.Reflection;
 
 public class GroupIconDirectory {
@@ -57,5 +58,14 @@ public class GroupIconDirectory {
 		}
 
 		return gi;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeWord(reserved);
+		dw.writeWord(type);
+		dw.writeWord(count);
+		for (int i = 0; i < count; i++) {
+			entries[i].write(dw);
+		}
 	}
 }
