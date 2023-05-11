@@ -10,6 +10,8 @@
 package com.kichik.pecoff4j.resources;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.kichik.pecoff4j.io.DataReader;
 import com.kichik.pecoff4j.io.IDataReader;
@@ -19,23 +21,34 @@ import com.kichik.pecoff4j.util.Reflection;
 public class GroupIconDirectory {
 	private int reserved;
 	private int type;
-	private int count;
-	private GroupIconDirectoryEntry[] entries;
+	private List<GroupIconDirectoryEntry> entries = new ArrayList<>();
 
 	public int getReserved() {
 		return reserved;
+	}
+
+	public void setReserved(int reserved) {
+		this.reserved = reserved;
 	}
 
 	public int getType() {
 		return type;
 	}
 
+	public void setType(int type) {
+		this.type = type;
+	}
+
 	public int getCount() {
-		return count;
+		return entries.size();
 	}
 
 	public GroupIconDirectoryEntry getEntry(int index) {
-		return entries[index];
+		return entries.get(index);
+	}
+
+	public List<GroupIconDirectoryEntry> getEntries() {
+		return entries;
 	}
 
 	@Override
@@ -51,10 +64,9 @@ public class GroupIconDirectory {
 		GroupIconDirectory gi = new GroupIconDirectory();
 		gi.reserved = dr.readWord();
 		gi.type = dr.readWord();
-		gi.count = dr.readWord();
-		gi.entries = new GroupIconDirectoryEntry[gi.count];
-		for (int i = 0; i < gi.count; i++) {
-			gi.entries[i] = GroupIconDirectoryEntry.read(dr);
+		int count = dr.readWord();
+		for (int i = 0; i < count; i++) {
+			gi.entries.add(GroupIconDirectoryEntry.read(dr));
 		}
 
 		return gi;
@@ -63,9 +75,9 @@ public class GroupIconDirectory {
 	public void write(IDataWriter dw) throws IOException {
 		dw.writeWord(reserved);
 		dw.writeWord(type);
-		dw.writeWord(count);
-		for (int i = 0; i < count; i++) {
-			entries[i].write(dw);
+		dw.writeWord(entries.size());
+		for (GroupIconDirectoryEntry entry : entries) {
+			entry.write(dw);
 		}
 	}
 }
