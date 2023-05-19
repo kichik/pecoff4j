@@ -12,6 +12,7 @@ package com.kichik.pecoff4j.resources;
 import java.io.IOException;
 
 import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.Reflection;
 
 public class GroupIconDirectoryEntry {
@@ -48,28 +49,56 @@ public class GroupIconDirectoryEntry {
 		return width;
 	}
 
-	public int getHeight() {
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight(){
 		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
 	}
 
 	public int getColorCount() {
 		return colorCount;
 	}
 
+	public void setColorCount(int colorCount) {
+		this.colorCount = colorCount;
+	}
+
 	public int getReserved() {
 		return reserved;
+	}
+
+	public void setReserved(int reserved) {
+		this.reserved = reserved;
 	}
 
 	public int getPlanes() {
 		return planes;
 	}
 
+	public void setPlanes(int planes) {
+		this.planes = planes;
+	}
+
 	public int getBitCount() {
 		return bitCount;
 	}
 
+	public void setBitCount(int bitCount) {
+		this.bitCount = bitCount;
+	}
+
 	public int getBytesInRes() {
 		return bytesInRes;
+	}
+
+	public void setBytesInRes(int bytesInRes) {
+		this.bytesInRes = bytesInRes;
 	}
 
 	public int getId() {
@@ -78,5 +107,16 @@ public class GroupIconDirectoryEntry {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeByte(width);
+		dw.writeByte(height);
+		dw.writeByte(colorCount);
+		dw.writeByte(reserved);
+		dw.writeWord(planes);
+		dw.writeWord(bitCount);
+		dw.writeDoubleWord(bytesInRes);
+		dw.writeWord(id);
 	}
 }
