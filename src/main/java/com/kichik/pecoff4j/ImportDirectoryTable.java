@@ -9,10 +9,33 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.io.IDataReader;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ImportDirectoryTable {
 	private ArrayList imports = new ArrayList();
+
+	public static ImportDirectoryTable read(IDataReader dr, int baseAddress) throws IOException {
+		ImportDirectoryTable idt = new ImportDirectoryTable();
+		ImportEntry ie = null;
+		while ((ie = ImportEntry.read(dr)) != null) {
+			idt.add(ie);
+		}
+
+		for (int i = 0; i < idt.size(); i++) {
+			ImportEntry iee = idt.getEntry(i);
+			if ((iee.getVal() & 0x80000000) != 0) {
+				iee.setOrdinal(iee.getVal() & 0x7fffffff);
+			} else {
+				dr.jumpTo(iee.getVal() - baseAddress);
+				dr.readWord(); // FIXME this is an index into the export table
+				iee.setName(dr.readUtf());
+			}
+		}
+		return idt;
+	}
 
 	public void add(ImportEntry entry) {
 		imports.add(entry);

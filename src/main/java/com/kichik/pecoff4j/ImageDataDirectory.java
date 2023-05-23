@@ -9,9 +9,28 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
+
+import java.io.IOException;
+
 public class ImageDataDirectory {
 	private int virtualAddress;
 	private int size;
+
+	public static ImageDataDirectory read(IDataReader dr)
+			throws IOException {
+		ImageDataDirectory idd = new ImageDataDirectory();
+		idd.setVirtualAddress(dr.readDoubleWord());
+		idd.setSize(dr.readDoubleWord());
+		return idd;
+	}
+
+	public void write(IDataWriter dw)
+			throws IOException {
+		dw.writeDoubleWord(getVirtualAddress());
+		dw.writeDoubleWord(getSize());
+	}
 
 	public int getVirtualAddress() {
 		return virtualAddress;

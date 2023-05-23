@@ -9,6 +9,11 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
+
+import java.io.IOException;
+
 public class DOSHeader {
 	public static final int DOS_MAGIC = 0;
 
@@ -32,6 +37,75 @@ public class DOSHeader {
 	private int oemInfo;
 	private int addressOfNewExeHeader;
 	private int stubSize;
+
+	public static DOSHeader read(IDataReader dr) throws IOException {
+		DOSHeader dh = new DOSHeader();
+		dh.setMagic(dr.readWord());
+		dh.setUsedBytesInLastPage(dr.readWord());
+		dh.setFileSizeInPages(dr.readWord());
+		dh.setNumRelocationItems(dr.readWord());
+		dh.setHeaderSizeInParagraphs(dr.readWord());
+		dh.setMinExtraParagraphs(dr.readWord());
+		dh.setMaxExtraParagraphs(dr.readWord());
+		dh.setInitialSS(dr.readWord());
+		dh.setInitialSP(dr.readWord());
+		dh.setChecksum(dr.readWord());
+		dh.setInitialIP(dr.readWord());
+		dh.setInitialRelativeCS(dr.readWord());
+		dh.setAddressOfRelocationTable(dr.readWord());
+		dh.setOverlayNumber(dr.readWord());
+		int[] reserved = new int[4];
+		for (int i = 0; i < reserved.length; i++) {
+			reserved[i] = dr.readWord();
+		}
+		dh.setReserved(reserved);
+		dh.setOemId(dr.readWord());
+		dh.setOemInfo(dr.readWord());
+		int[] reserved2 = new int[10];
+		for (int i = 0; i < reserved2.length; i++) {
+			reserved2[i] = dr.readWord();
+		}
+		dh.setReserved2(reserved2);
+		dh.setAddressOfNewExeHeader(dr.readDoubleWord());
+
+		// calc stub size
+		int stubSize = dh.getFileSizeInPages() * 512
+				- (512 - dh.getUsedBytesInLastPage());
+		if (stubSize > dh.getAddressOfNewExeHeader())
+			stubSize = dh.getAddressOfNewExeHeader();
+		stubSize -= dh.getHeaderSizeInParagraphs() * 16;
+		dh.setStubSize(stubSize);
+
+		return dh;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeWord(getMagic());
+		dw.writeWord(getUsedBytesInLastPage());
+		dw.writeWord(getFileSizeInPages());
+		dw.writeWord(getNumRelocationItems());
+		dw.writeWord(getHeaderSizeInParagraphs());
+		dw.writeWord(getMinExtraParagraphs());
+		dw.writeWord(getMaxExtraParagraphs());
+		dw.writeWord(getInitialSS());
+		dw.writeWord(getInitialSP());
+		dw.writeWord(getChecksum());
+		dw.writeWord(getInitialIP());
+		dw.writeWord(getInitialRelativeCS());
+		dw.writeWord(getAddressOfRelocationTable());
+		dw.writeWord(getOverlayNumber());
+		int[] res = getReserved();
+		for (int i = 0; i < res.length; i++) {
+			dw.writeWord(res[i]);
+		}
+		dw.writeWord(getOemId());
+		dw.writeWord(getOemInfo());
+		int[] res2 = getReserved2();
+		for (int i = 0; i < res2.length; i++) {
+			dw.writeWord(res2[i]);
+		}
+		dw.writeDoubleWord(getAddressOfNewExeHeader());
+	}
 
 	public int getMagic() {
 		return magic;

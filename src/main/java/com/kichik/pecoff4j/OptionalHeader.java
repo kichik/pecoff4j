@@ -9,6 +9,11 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
+
+import java.io.IOException;
+
 public class OptionalHeader {
 	public static final int MAGIC_PE32 = 0x10b;
 	public static final int MAGIC_PE32plus = 0x20b;
@@ -47,6 +52,112 @@ public class OptionalHeader {
 
 	// The data directories
 	private ImageDataDirectory[] dataDirectories;
+
+	public static OptionalHeader read(IDataReader dr)
+			throws IOException {
+		OptionalHeader oh = new OptionalHeader();
+		oh.setMagic(dr.readWord());
+		boolean is64 = oh.isPE32plus();
+		oh.setMajorLinkerVersion(dr.readByte());
+		oh.setMinorLinkerVersion(dr.readByte());
+		oh.setSizeOfCode(dr.readDoubleWord());
+		oh.setSizeOfInitializedData(dr.readDoubleWord());
+		oh.setSizeOfUninitializedData(dr.readDoubleWord());
+		oh.setAddressOfEntryPoint(dr.readDoubleWord());
+		oh.setBaseOfCode(dr.readDoubleWord());
+
+		if (!is64)
+			oh.setBaseOfData(dr.readDoubleWord());
+
+		// NT additional fields.
+		oh.setImageBase(is64 ? dr.readLong() : dr.readDoubleWord());
+		oh.setSectionAlignment(dr.readDoubleWord());
+		oh.setFileAlignment(dr.readDoubleWord());
+		oh.setMajorOperatingSystemVersion(dr.readWord());
+		oh.setMinorOperatingSystemVersion(dr.readWord());
+		oh.setMajorImageVersion(dr.readWord());
+		oh.setMinorImageVersion(dr.readWord());
+		oh.setMajorSubsystemVersion(dr.readWord());
+		oh.setMinorSubsystemVersion(dr.readWord());
+		oh.setWin32VersionValue(dr.readDoubleWord());
+		oh.setSizeOfImage(dr.readDoubleWord());
+		oh.setSizeOfHeaders(dr.readDoubleWord());
+		oh.setCheckSum(dr.readDoubleWord());
+		oh.setSubsystem(dr.readWord());
+		oh.setDllCharacteristics(dr.readWord());
+		oh.setSizeOfStackReserve(is64 ? dr.readLong() : dr.readDoubleWord());
+		oh.setSizeOfStackCommit(is64 ? dr.readLong() : dr.readDoubleWord());
+		oh.setSizeOfHeapReserve(is64 ? dr.readLong() : dr.readDoubleWord());
+		oh.setSizeOfHeapCommit(is64 ? dr.readLong() : dr.readDoubleWord());
+		oh.setLoaderFlags(dr.readDoubleWord());
+		oh.setNumberOfRvaAndSizes(dr.readDoubleWord());
+
+		// Data directories
+		ImageDataDirectory[] dds = new ImageDataDirectory[16];
+		for (int i = 0; i < dds.length; i++) {
+			dds[i] = ImageDataDirectory.read(dr);
+		}
+		oh.setDataDirectories(dds);
+
+		return oh;
+	}
+
+	public void write(IDataWriter dw)
+			throws IOException {
+		boolean is64 = isPE32plus();
+
+		dw.writeWord(getMagic());
+		dw.writeByte(getMajorLinkerVersion());
+		dw.writeByte(getMinorLinkerVersion());
+		dw.writeDoubleWord(getSizeOfCode());
+		dw.writeDoubleWord(getSizeOfInitializedData());
+		dw.writeDoubleWord(getSizeOfUninitializedData());
+		dw.writeDoubleWord(getAddressOfEntryPoint());
+		dw.writeDoubleWord(getBaseOfCode());
+		if (!is64)
+			dw.writeDoubleWord(getBaseOfData());
+
+		// NT additional fields.
+		if (is64)
+			dw.writeLong(getImageBase());
+		else
+			dw.writeDoubleWord((int) getImageBase());
+
+		dw.writeDoubleWord(getSectionAlignment());
+		dw.writeDoubleWord(getFileAlignment());
+		dw.writeWord(getMajorOperatingSystemVersion());
+		dw.writeWord(getMinorOperatingSystemVersion());
+		dw.writeWord(getMajorImageVersion());
+		dw.writeWord(getMinorImageVersion());
+		dw.writeWord(getMajorSubsystemVersion());
+		dw.writeWord(getMinorSubsystemVersion());
+		dw.writeDoubleWord(getWin32VersionValue());
+		dw.writeDoubleWord(getSizeOfImage());
+		dw.writeDoubleWord(getSizeOfHeaders());
+		dw.writeDoubleWord(getCheckSum());
+		dw.writeWord(getSubsystem());
+		dw.writeWord(getDllCharacteristics());
+		if (is64) {
+			dw.writeLong(getSizeOfStackReserve());
+			dw.writeLong(getSizeOfStackCommit());
+			dw.writeLong(getSizeOfHeapReserve());
+			dw.writeLong(getSizeOfHeapCommit());
+		} else {
+			dw.writeDoubleWord((int) getSizeOfStackReserve());
+			dw.writeDoubleWord((int) getSizeOfStackCommit());
+			dw.writeDoubleWord((int) getSizeOfHeapReserve());
+			dw.writeDoubleWord((int) getSizeOfHeapCommit());
+		}
+
+		dw.writeDoubleWord(getLoaderFlags());
+		dw.writeDoubleWord(getNumberOfRvaAndSizes());
+
+		// Data directories
+		int ddc = getDataDirectoryCount();
+		for (int i = 0; i < ddc; i++) {
+			getDataDirectory(i).write(dw);
+		}
+	}
 
 	public int getMagic() {
 		return magic;

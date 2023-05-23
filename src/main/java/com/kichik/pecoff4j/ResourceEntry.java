@@ -9,6 +9,10 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.io.IDataReader;
+
+import java.io.IOException;
+
 public class ResourceEntry {
 	private int id;
 	private String name;
@@ -18,6 +22,39 @@ public class ResourceEntry {
 	private int dataRVA;
 	private int codePage;
 	private int reserved;
+
+	public static ResourceEntry read(IDataReader dr, int baseAddress) throws IOException {
+		ResourceEntry re = new ResourceEntry();
+		int id = dr.readDoubleWord();
+		int offset = dr.readDoubleWord();
+		re.setOffset(offset);
+		int pos = dr.getPosition();
+		if ((id & 0x80000000) != 0) {
+			dr.jumpTo(id & 0x7fffffff);
+			re.setName(dr.readUnicode(dr.readWord()));
+		} else {
+			re.setId(id);
+		}
+		if ((offset & 0x80000000) != 0) {
+			dr.jumpTo(offset & 0x7fffffff);
+			re.setDirectory(ResourceDirectory.read(dr, baseAddress));
+		} else {
+			dr.jumpTo(offset);
+			int rva = dr.readDoubleWord();
+			int size = dr.readDoubleWord();
+			int cp = dr.readDoubleWord();
+			int res = dr.readDoubleWord();
+			re.setDataRVA(rva);
+			re.setCodePage(cp);
+			re.setReserved(res);
+			dr.jumpTo(rva - baseAddress);
+			byte[] b = new byte[size];
+			dr.read(b);
+			re.setData(b);
+		}
+		dr.jumpTo(pos);
+		return re;
+	}
 
 	public int getId() {
 		return id;

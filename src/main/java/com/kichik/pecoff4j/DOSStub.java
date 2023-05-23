@@ -9,11 +9,31 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
+
+import java.io.IOException;
+
 /**
  * Used to store the stub program.
  */
 public class DOSStub {
 	private byte[] stub;
+
+	public static DOSStub read(DOSHeader header, IDataReader dr)
+			throws IOException {
+		DOSStub ds = new DOSStub();
+		int pos = dr.getPosition();
+		int add = header.getAddressOfNewExeHeader();
+		byte[] stub = new byte[add - pos];
+		dr.read(stub);
+		ds.setStub(stub);
+		return ds;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeBytes(getStub());
+	}
 
 	public byte[] getStub() {
 		return stub;

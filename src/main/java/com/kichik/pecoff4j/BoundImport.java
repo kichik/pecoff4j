@@ -9,11 +9,28 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.io.IDataReader;
+
+import java.io.IOException;
+
 public class BoundImport {
 	private long timestamp;
 	private int offsetToModuleName;
 	private String moduleName;
 	private int numModuleForwarderRefs;
+
+	public static BoundImport read(IDataReader dr) throws IOException {
+		BoundImport bi = new BoundImport();
+		bi.setTimestamp(dr.readDoubleWord());
+		bi.setOffsetToModuleName(dr.readWord());
+		bi.setNumberOfModuleForwarderRefs(dr.readWord());
+
+		if (bi.getTimestamp() == 0 && bi.getOffsetToModuleName() == 0
+				&& bi.getNumberOfModuleForwarderRefs() == 0)
+			return null;
+
+		return bi;
+	}
 
 	public long getTimestamp() {
 		return timestamp;

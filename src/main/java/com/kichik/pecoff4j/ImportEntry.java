@@ -9,10 +9,24 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.io.IDataReader;
+
+import java.io.IOException;
+
 public class ImportEntry {
 	private int val;
 	private int ordinal;
 	private String name;
+
+	public static ImportEntry read(IDataReader dr) throws IOException {
+		ImportEntry ie = new ImportEntry();
+		ie.setVal(dr.readDoubleWord());
+		if (ie.getVal() == 0) {
+			return null;
+		}
+
+		return ie;
+	}
 
 	public int getOrdinal() {
 		return ordinal;

@@ -1,6 +1,9 @@
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.io.DataReader;
 import com.kichik.pecoff4j.util.DataObject;
+
+import java.io.IOException;
 
 public class CLRRuntimeHeader extends DataObject {
     private int headerSize;
@@ -22,6 +25,32 @@ public class CLRRuntimeHeader extends DataObject {
     private int exportAddressTableJumpsSize;
     private int managedNativeHeaderAddress;
     private int managedNativeHeaderSize;
+
+    public static CLRRuntimeHeader read(byte[] b) throws IOException {
+        DataReader dr = new DataReader(b);
+        CLRRuntimeHeader clrrh = new CLRRuntimeHeader();
+        clrrh.set(b);
+        clrrh.setHeaderSize(dr.readDoubleWord());
+        clrrh.setMajorRuntimeVersion(dr.readWord());
+        clrrh.setMinorRuntimeVersion(dr.readWord());
+        clrrh.setMetaDataDirectoryAddress(dr.readDoubleWord());
+        clrrh.setMetaDataDirectorySize(dr.readDoubleWord());
+        clrrh.setFlags(dr.readDoubleWord());
+        clrrh.setEntryPointToken(dr.readDoubleWord());
+        clrrh.setResourcesDirectoryAddress(dr.readDoubleWord());
+        clrrh.setResourcesDirectorySize(dr.readDoubleWord());
+        clrrh.setStrongNameSignatureAddress(dr.readDoubleWord());
+        clrrh.setStrongNameSignatureSize(dr.readDoubleWord());
+        clrrh.setCodeManagerTableAddress(dr.readDoubleWord());
+        clrrh.setCodeManagerTableSize(dr.readDoubleWord());
+        clrrh.setvTableFixupsAddress(dr.readDoubleWord());
+        clrrh.setvTableFixupsSize(dr.readDoubleWord());
+        clrrh.setExportAddressTableJumpsAddress(dr.readDoubleWord());
+        clrrh.setExportAddressTableJumpsSize(dr.readDoubleWord());
+        clrrh.setManagedNativeHeaderAddress(dr.readDoubleWord());
+        clrrh.setManagedNativeHeaderSize(dr.readDoubleWord());
+        return clrrh;
+    }
 
     public int getHeaderSize() {
         return headerSize;

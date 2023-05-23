@@ -41,4 +41,25 @@ public interface IDataReader extends AutoCloseable {
 	public abstract String readUnicode(int size) throws IOException;
 
 	public abstract byte[] readAll() throws IOException;
+
+	/**
+	 * Read all bytes until the given position is reached. If all these bytes are zero, null is returned instead.
+	 */
+	default byte[] readNonZeroOrNull(int pointer) throws IOException {
+		if (pointer > getPosition()) {
+			byte[] pa = new byte[pointer - getPosition()];
+			read(pa);
+			boolean zeroes = true;
+			for (int i = 0; i < pa.length; i++) {
+				if (pa[i] != 0) {
+					zeroes = false;
+					break;
+				}
+			}
+			if (!zeroes)
+				return pa;
+		}
+
+		return null;
+	}
 }

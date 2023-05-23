@@ -9,8 +9,11 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.io.DataReader;
 import com.kichik.pecoff4j.util.DataObject;
 import com.kichik.pecoff4j.util.Reflection;
+
+import java.io.IOException;
 
 /**
  * The export directory table. See section 6.3.1 of the PE/COFF specification
@@ -28,6 +31,24 @@ public class ExportDirectory extends DataObject {
 	private long exportAddressTableRVA;
 	private long namePointerRVA;
 	private long ordinalTableRVA;
+
+	public static ExportDirectory read(byte[] b) throws IOException {
+		DataReader dr = new DataReader(b);
+		ExportDirectory edt = new ExportDirectory();
+		edt.set(b);
+		edt.setExportFlags(dr.readDoubleWord());
+		edt.setTimeDateStamp(dr.readDoubleWord());
+		edt.setMajorVersion(dr.readWord());
+		edt.setMinorVersion(dr.readWord());
+		edt.setNameRVA(dr.readDoubleWord());
+		edt.setOrdinalBase(dr.readDoubleWord());
+		edt.setAddressTableEntries(dr.readDoubleWord());
+		edt.setNumberOfNamePointers(dr.readDoubleWord());
+		edt.setExportAddressTableRVA(dr.readDoubleWord());
+		edt.setNamePointerRVA(dr.readDoubleWord());
+		edt.setOrdinalTableRVA(dr.readDoubleWord());
+		return edt;
+	}
 
 	public long getExportFlags() {
 		return exportFlags;
