@@ -9,6 +9,10 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
+import com.kichik.pecoff4j.io.IDataReader;
+
+import java.io.IOException;
+
 public class VersionInfo {
 	private int length;
 	private int valueLength;
@@ -17,6 +21,41 @@ public class VersionInfo {
 	private FixedFileInfo fixedFileInfo;
 	private StringFileInfo stringFileInfo;
 	private VarFileInfo varFileInfo;
+
+	public static VersionInfo read(IDataReader dr)
+			throws IOException {
+		int versionInfoPos = dr.getPosition();
+		VersionInfo vi = new VersionInfo();
+		vi.setLength(dr.readWord());
+		vi.setValueLength(dr.readWord());
+		vi.setType(dr.readWord());
+		vi.setKey(dr.readUnicode());
+		dr.align(4);
+		vi.setFixedFileInfo(FixedFileInfo.read(dr));
+		dr.align(4);
+
+		while (dr.getPosition() < versionInfoPos + vi.getLength()) {
+			int initialPos = dr.getPosition();
+
+			int length = dr.readWord();
+			if (length == 0) {
+				break;
+			}
+			int valueLength = dr.readWord();
+			int type = dr.readWord();
+			String key = dr.readUnicode();
+			if ("VarFileInfo".equals(key)) {
+				vi.setVarFileInfo(VarFileInfo.readPartial(dr, initialPos, length, valueLength, type, key));
+			} else if ("StringFileInfo".equals(key)) {
+				vi.setStringFileInfo(StringFileInfo.readPartial(dr, initialPos, length, valueLength, type, key));
+			} else {
+				dr.jumpTo(initialPos + length);
+				break;
+			}
+		}
+
+		return vi;
+	}
 
 	public int getLength() {
 		return length;

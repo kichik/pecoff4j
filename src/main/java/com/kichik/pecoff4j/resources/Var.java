@@ -1,5 +1,8 @@
 package com.kichik.pecoff4j.resources;
 
+import com.kichik.pecoff4j.io.IDataReader;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +17,20 @@ public class Var {
 	private int type;
 	private String key;
 	private final List<Integer> values = new ArrayList<>();
+
+	public static Var read(IDataReader dr) throws IOException {
+		Var v = new Var();
+		int initialPos = dr.getPosition();
+		v.setLength(dr.readWord());
+		v.setValueLength(dr.readWord());
+		v.setType(dr.readWord());
+		v.setKey(dr.readUnicode());
+		dr.align(4);
+		while (dr.getPosition() < initialPos + v.getLength()) {
+			v.addValue(dr.readDoubleWord());
+		}
+		return v;
+	}
 
 	public int getLength() {
 		return length;

@@ -9,11 +9,23 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
+import com.kichik.pecoff4j.io.IDataReader;
+
+import java.io.IOException;
+
 public class Bitmap {
 	private BitmapFileHeader fileHeader;
 	private BitmapInfoHeader infoHeader;
 	private byte[] colors;
 	private byte[] bitmapBits;
+
+	public static Bitmap read(IDataReader dr) throws IOException {
+		Bitmap bm = new Bitmap();
+		bm.setFileHeader(BitmapFileHeader.read(dr));
+		bm.setInfoHeader(BitmapInfoHeader.read(dr));
+
+		return bm;
+	}
 
 	public BitmapFileHeader getFileHeader() {
 		return fileHeader;

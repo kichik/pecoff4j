@@ -10,8 +10,11 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
+import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.util.Reflection;
 import com.kichik.pecoff4j.util.Strings;
+
+import java.io.IOException;
 
 public class StringPair {
 	private int length;
@@ -20,6 +23,30 @@ public class StringPair {
 	private String key;
 	private String value;
 	private int padding;
+
+	public static StringPair read(IDataReader dr) throws IOException {
+		int initialPos = dr.getPosition();
+
+		StringPair sp = new StringPair();
+		sp.setLength(dr.readWord());
+		sp.setValueLength(dr.readWord());
+		sp.setType(dr.readWord());
+		sp.setKey(dr.readUnicode());
+		sp.setPadding(dr.align(4));
+
+		int remainingWords = (sp.getLength() - (dr.getPosition() - initialPos)) / 2;
+		int valueLength = sp.getValueLength();
+		if (sp.getType() == 0) // wType == 0 => binary; wLength is in bytes
+			valueLength /= 2;
+		if (valueLength > remainingWords)
+			valueLength = remainingWords;
+		sp.setValue(dr.readUnicode(valueLength).trim());
+
+		int remainingBytes = (sp.getLength() - (dr.getPosition() - initialPos));
+		dr.skipBytes(remainingBytes);
+		dr.align(4);
+		return sp;
+	}
 
 	public int getLength() {
 		return length;

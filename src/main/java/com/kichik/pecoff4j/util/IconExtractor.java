@@ -20,7 +20,6 @@ import com.kichik.pecoff4j.constant.ResourceType;
 import com.kichik.pecoff4j.io.DataReader;
 import com.kichik.pecoff4j.io.DataWriter;
 import com.kichik.pecoff4j.io.PEParser;
-import com.kichik.pecoff4j.io.ResourceParser;
 import com.kichik.pecoff4j.resources.GroupIconDirectory;
 import com.kichik.pecoff4j.resources.GroupIconDirectoryEntry;
 import com.kichik.pecoff4j.resources.IconDirectory;
@@ -60,10 +59,10 @@ public class IconExtractor {
 				ide.setBytesInRes(d.length);
 				// Check for PNG data
 				if (gide.getWidth() == 0 && gide.getHeight() == 0) {
-					IconImage ii = ResourceParser.readPNG(d);
+					IconImage ii = IconImage.readPNG(d);
 					images[j] = ii;
 				} else {
-					IconImage ii = ResourceParser.readIconImage(new DataReader(
+					IconImage ii = IconImage.readIcon(new DataReader(
 							d), gide.getBytesInRes());
 					images[j] = ii;
 				}

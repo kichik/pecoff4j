@@ -12,8 +12,8 @@ package com.kichik.pecoff4j;
 import java.io.IOException;
 
 import com.kichik.pecoff4j.constant.ResourceType;
+import com.kichik.pecoff4j.io.DataReader;
 import com.kichik.pecoff4j.io.PEParser;
-import com.kichik.pecoff4j.io.ResourceParser;
 import com.kichik.pecoff4j.resources.StringFileInfo;
 import com.kichik.pecoff4j.resources.StringPair;
 import com.kichik.pecoff4j.resources.StringTable;
@@ -36,7 +36,7 @@ public class VersionStringsTest {
 		ResourceEntry[] entries = ResourceHelper.findResources(rd, ResourceType.VERSION_INFO);
 		assertEquals(1, entries.length);
 
-		VersionInfo version = ResourceParser.readVersionInfo(entries[0].getData());
+		VersionInfo version = VersionInfo.read(new DataReader(entries[0].getData()));
 
 		// check StringFileInfo structure
 		StringFileInfo strings = version.getStringFileInfo();

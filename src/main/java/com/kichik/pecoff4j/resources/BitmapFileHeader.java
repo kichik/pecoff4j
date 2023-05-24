@@ -11,7 +11,7 @@ package com.kichik.pecoff4j.resources;
 
 import java.io.IOException;
 
-import com.kichik.pecoff4j.io.DataReader;
+import com.kichik.pecoff4j.io.IDataReader;
 
 public class BitmapFileHeader {
 	private int type;
@@ -20,7 +20,7 @@ public class BitmapFileHeader {
 	private int reserved2;
 	private int offBits;
 
-	public static BitmapFileHeader read(DataReader dr) throws IOException {
+	public static BitmapFileHeader read(IDataReader dr) throws IOException {
 		BitmapFileHeader bfh = new BitmapFileHeader();
 		bfh.type = dr.readWord();
 		bfh.size = dr.readDoubleWord();

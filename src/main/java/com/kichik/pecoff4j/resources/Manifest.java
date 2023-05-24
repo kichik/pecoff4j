@@ -9,8 +9,19 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
+import com.kichik.pecoff4j.io.IDataReader;
+
+import java.io.IOException;
+
 public class Manifest {
 	private String str;
+
+	public static Manifest read(IDataReader dr, int length)
+			throws IOException {
+		Manifest mf = new Manifest();
+		mf.set(dr.readUtf(length));
+		return mf;
+	}
 
 	public String get() {
 		return str;

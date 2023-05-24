@@ -16,8 +16,6 @@ import java.io.IOException;
 import com.kichik.pecoff4j.io.DataReader;
 import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.io.IDataWriter;
-import com.kichik.pecoff4j.io.ResourceAssembler;
-import com.kichik.pecoff4j.io.ResourceParser;
 import com.kichik.pecoff4j.resources.IconDirectory;
 import com.kichik.pecoff4j.resources.IconImage;
 
@@ -35,11 +33,11 @@ public class IconFile {
 
 	public static IconFile read(IDataReader dr) throws IOException {
 		IconFile ic = new IconFile();
-		ic.directory = ResourceParser.readIconDirectory(dr);
+		ic.directory = IconDirectory.read(dr);
 		ic.images = new IconImage[ic.directory.getCount()];
 		for (int i = 0; i < ic.directory.getCount(); i++) {
 			dr.jumpTo(ic.directory.getEntry(i).getOffset());
-			ic.images[i] = ResourceParser.readIconImage(dr, ic.directory
+			ic.images[i] = IconImage.readIcon(dr, ic.directory
 					.getEntry(i).getBytesInRes());
 		}
 		return ic;
@@ -51,9 +49,9 @@ public class IconFile {
 			directory.getEntry(i).setOffset(offset);
 			offset += images[i].sizeOf();
 		}
-		ResourceAssembler.write(directory, dw);
+		directory.write(dw);
 		for (int i = 0; i < images.length; i++) {
-			ResourceAssembler.write(images[i], dw);
+			images[i].write(dw);
 		}
 	}
 
