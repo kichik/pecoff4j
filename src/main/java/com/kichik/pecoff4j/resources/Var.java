@@ -1,6 +1,7 @@
 package com.kichik.pecoff4j.resources;
 
 import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,6 +31,17 @@ public class Var {
 			v.addValue(dr.readDoubleWord());
 		}
 		return v;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeWord(getLength());
+		dw.writeWord(getValueLength());
+		dw.writeWord(getType());
+		dw.writeUnicode(getKey());
+		dw.align(4);
+		for (Integer value : getValues()) {
+			dw.writeDoubleWord(value);
+		}
 	}
 
 	public int getLength() {

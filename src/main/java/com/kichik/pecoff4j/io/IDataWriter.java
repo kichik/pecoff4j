@@ -9,6 +9,7 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.io;
 
+import java.io.EOFException;
 import java.io.IOException;
 
 public interface IDataWriter {
@@ -28,5 +29,16 @@ public interface IDataWriter {
 
 	void writeUtf(String s, int len) throws IOException;
 
-	public abstract int getPosition();
+	void writeUnicode(String s) throws IOException;
+
+	void writeUnicode(String s, int len) throws IOException;
+
+	int getPosition();
+
+	/**
+	 * Align the writer's position by writing zeros
+	 * @param alignment the alignment in bytes
+	 * @return the number of bytes that have been written
+	 */
+	int align(int alignment) throws IOException;
 }

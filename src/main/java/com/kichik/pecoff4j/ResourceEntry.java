@@ -10,6 +10,7 @@
 package com.kichik.pecoff4j;
 
 import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
 
 import java.io.IOException;
 
@@ -26,14 +27,13 @@ public class ResourceEntry {
 	public static ResourceEntry read(IDataReader dr, int baseAddress) throws IOException {
 		ResourceEntry re = new ResourceEntry();
 		int id = dr.readDoubleWord();
+		re.setId(id);
 		int offset = dr.readDoubleWord();
 		re.setOffset(offset);
 		int pos = dr.getPosition();
 		if ((id & 0x80000000) != 0) {
 			dr.jumpTo(id & 0x7fffffff);
 			re.setName(dr.readUnicode(dr.readWord()));
-		} else {
-			re.setId(id);
 		}
 		if ((offset & 0x80000000) != 0) {
 			dr.jumpTo(offset & 0x7fffffff);
@@ -54,6 +54,29 @@ public class ResourceEntry {
 		}
 		dr.jumpTo(pos);
 		return re;
+	}
+
+	public void writeNonLeaf(IDataWriter dw) throws IOException {
+		dw.writeDoubleWord(getId());
+		dw.writeDoubleWord(getOffset());
+	}
+
+	public void writeLeaf(IDataWriter dw) throws IOException {
+		dw.writeDoubleWord(getDataRVA());
+		dw.writeDoubleWord(getData().length);
+		dw.writeDoubleWord(getCodePage());
+		dw.writeDoubleWord(getReserved());
+	}
+
+	public void writeName(IDataWriter dw) throws IOException {
+		if (name != null) {
+			dw.writeWord(name.length());
+			dw.writeUnicode(name, name.length());
+		}
+	}
+
+	public void writeData(IDataWriter dw) throws IOException {
+		dw.writeBytes(getData());
 	}
 
 	public int getId() {

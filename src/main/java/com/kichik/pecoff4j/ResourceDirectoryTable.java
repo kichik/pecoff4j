@@ -10,6 +10,7 @@
 package com.kichik.pecoff4j;
 
 import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
 
 import java.io.IOException;
 
@@ -31,6 +32,15 @@ public class ResourceDirectoryTable {
 		t.setNumIdEntries(dr.readWord());
 
 		return t;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeDoubleWord(getCharacteristics());
+		dw.writeDoubleWord(getTimeDateStamp());
+		dw.writeWord(getMajorVersion());
+		dw.writeWord(getMinVersion());
+		dw.writeWord(getNumNameEntries());
+		dw.writeWord(getNumIdEntries());
 	}
 
 	public int getCharacteristics() {

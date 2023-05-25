@@ -11,6 +11,7 @@
 package com.kichik.pecoff4j.resources;
 
 import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.Reflection;
 import com.kichik.pecoff4j.util.Strings;
 
@@ -46,6 +47,28 @@ public class StringPair {
 		dr.skipBytes(remainingBytes);
 		dr.align(4);
 		return sp;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		int initialPos = dw.getPosition();
+
+		dw.writeWord(getLength());
+		dw.writeWord(getValueLength());
+		dw.writeWord(getType());
+		dw.writeUnicode(getKey());
+		dw.align(4);
+
+		int remainingWords = (getLength() - (dw.getPosition() - initialPos)) / 2;
+		int valueLength = getValueLength();
+		if (getType() == 0) // wType == 0 => binary; wLength is in bytes
+			valueLength /= 2;
+		if (valueLength > remainingWords)
+			valueLength = remainingWords;
+		dw.writeUnicode(getValue(), valueLength);
+
+		int remainingBytes = (getLength() - (dw.getPosition() - initialPos));
+		dw.writeByte(0, remainingBytes);
+		dw.align(4);
 	}
 
 	public int getLength() {

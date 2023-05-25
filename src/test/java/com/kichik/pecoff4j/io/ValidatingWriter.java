@@ -3,6 +3,7 @@ package com.kichik.pecoff4j.io;
 import org.junit.jupiter.api.Assertions;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * A {@link IDataWriter} that validates the data to write by comparing them
@@ -11,6 +12,8 @@ import java.io.IOException;
  * when a value is written that is not expected.
  */
 public class ValidatingWriter implements IDataWriter {
+
+	private static final byte[] PADDING = "PADDINGXXPADDING".getBytes(StandardCharsets.US_ASCII);
 
 	private final IDataReader expected;
 
@@ -69,7 +72,36 @@ public class ValidatingWriter implements IDataWriter {
 		Assertions.assertEquals(expected.readUtf(s.length()), s);
 	}
 
+	@Override
+	public void writeUnicode(String s) throws IOException {
+		Assertions.assertEquals(expected.readUnicode(), s);
+	}
+
+	@Override
+	public void writeUnicode(String s, int len) throws IOException {
+		Assertions.assertEquals(expected.readUnicode(len).trim(), s);
+	}
+
+	@Override
+	public int align(int alignment) throws IOException {
+		int off = (alignment - (getPosition() % alignment)) % alignment;
+		if (off != 0) {
+			for (int i = 0; i < off; i++) {
+				int value = expected.readByte();
+				if (value != 0 && value != PADDING[i % 16]) {
+					Assertions.fail("Padding unexpected");
+				}
+			}
+		}
+		return off;
+	}
+
 	public void assertEndOfStream() throws IOException {
 		Assertions.assertFalse(expected.hasMore());
+	}
+
+	@Override
+	public String toString() {
+		return "ValidatingWriter @ " + getPosition();
 	}
 }

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.Strings;
 
 public class StringTable {
@@ -42,6 +43,23 @@ public class StringTable {
 			vfi.add(StringPair.read(dr));
 
 		return vfi;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeWord(getLength());
+		if (getLength() == 0) {
+			return;
+		}
+
+		dw.writeWord(getValueLength());
+		dw.writeWord(getType());
+		dw.writeUnicode(getKey());
+		dw.align(4);
+
+		for (int i = 0; i < getCount(); i++) {
+			StringPair pair = getString(i);
+			pair.write(dw);
+		}
 	}
 
 	public void add(StringPair string) {

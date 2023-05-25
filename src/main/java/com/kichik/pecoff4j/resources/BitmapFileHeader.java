@@ -12,6 +12,7 @@ package com.kichik.pecoff4j.resources;
 import java.io.IOException;
 
 import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
 
 public class BitmapFileHeader {
 	private int type;
@@ -29,6 +30,14 @@ public class BitmapFileHeader {
 		bfh.offBits = dr.readDoubleWord();
 
 		return bfh;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeWord(getType());
+		dw.writeDoubleWord(getSize());
+		dw.writeWord(getReserved1());
+		dw.writeWord(getReserved2());
+		dw.writeDoubleWord(getOffBits());
 	}
 
 	public int getType() {

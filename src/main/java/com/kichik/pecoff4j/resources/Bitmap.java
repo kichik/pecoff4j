@@ -10,6 +10,7 @@
 package com.kichik.pecoff4j.resources;
 
 import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
 
 import java.io.IOException;
 
@@ -25,6 +26,11 @@ public class Bitmap {
 		bm.setInfoHeader(BitmapInfoHeader.read(dr));
 
 		return bm;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		getFileHeader().write(dw);
+		getInfoHeader().write(dw);
 	}
 
 	public BitmapFileHeader getFileHeader() {

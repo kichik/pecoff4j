@@ -10,6 +10,8 @@
 package com.kichik.pecoff4j.resources;
 
 import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
+import com.kichik.pecoff4j.io.ResourceAssembler;
 
 import java.io.IOException;
 
@@ -55,6 +57,24 @@ public class VersionInfo {
 		}
 
 		return vi;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeWord(getLength());
+		dw.writeWord(getValueLength());
+		dw.writeWord(getType());
+		dw.writeUnicode(getKey());
+		dw.align(4);
+		ResourceAssembler.write(getFixedFileInfo(), dw);
+
+		StringFileInfo stringFileInfo = getStringFileInfo();
+		if (stringFileInfo != null) {
+			stringFileInfo.write(dw);
+		}
+		VarFileInfo varFileInfo = getVarFileInfo();
+		if (varFileInfo != null) {
+			varFileInfo.write(dw);
+		}
 	}
 
 	public int getLength() {
