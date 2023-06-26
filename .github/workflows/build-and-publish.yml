@@ -15,6 +15,8 @@ jobs:
           java-version: ${{ matrix.java }}
       - name: Build
         run: mvn -B package
+      - name: Test
+        run: mvn -B test
   publish:
     runs-on: ubuntu-latest
     if: startsWith(github.event.ref, 'refs/tags')
