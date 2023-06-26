@@ -9,12 +9,32 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.io.IDataReader;
+
+import java.io.IOException;
+
 public class ImportDirectoryEntry {
 	private int importLookupTableRVA;
 	private int timeDateStamp;
 	private int forwarderChain;
 	private int nameRVA;
 	private int importAddressTableRVA;
+
+	public static ImportDirectoryEntry read(IDataReader dr) throws IOException {
+		ImportDirectoryEntry id = new ImportDirectoryEntry();
+		id.setImportLookupTableRVA(dr.readDoubleWord());
+		id.setTimeDateStamp(dr.readDoubleWord());
+		id.setForwarderChain(dr.readDoubleWord());
+		id.setNameRVA(dr.readDoubleWord());
+		id.setImportAddressTableRVA(dr.readDoubleWord());
+
+		// The last entry is null
+		if (id.getImportLookupTableRVA() == 0) {
+			return null;
+		}
+
+		return id;
+	}
 
 	public int getImportLookupTableRVA() {
 		return importLookupTableRVA;

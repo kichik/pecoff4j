@@ -9,7 +9,10 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.io.DataReader;
 import com.kichik.pecoff4j.util.DataObject;
+
+import java.io.IOException;
 
 /**
  * Encapsulates the Attribute Certificate Table (Image Only). Section 5.7 of the PE/COFF
@@ -20,6 +23,19 @@ public class AttributeCertificateTable extends DataObject {
 	private int revision;
 	private int certificateType;
 	private byte[] certificate;
+
+	public static AttributeCertificateTable read(byte[] b) throws IOException {
+		AttributeCertificateTable dd = new AttributeCertificateTable();
+		dd.set(b);
+		DataReader dr = new DataReader(b);
+		dd.setLength(dr.readDoubleWord());
+		dd.setRevision(dr.readWord());
+		dd.setCertificateType(dr.readWord());
+		byte[] certificate = new byte[dd.getLength() - 8];
+		dr.read(certificate);
+		dd.setCertificate(certificate);
+		return dd;
+	}
 
 	public int getLength() {
 		return length;

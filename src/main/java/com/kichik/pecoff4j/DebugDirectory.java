@@ -9,7 +9,10 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.io.DataReader;
 import com.kichik.pecoff4j.util.DataObject;
+
+import java.io.IOException;
 
 /**
  * Encapsulates the Debug Directory (Image Only). Section 6.1.1 of the PE/COFF
@@ -23,6 +26,21 @@ public class DebugDirectory extends DataObject {
 	private int sizeOfData;
 	private int addressOfRawData;
 	private int pointerToRawData;
+
+	public static DebugDirectory read(byte[] b) throws IOException {
+		DebugDirectory dd = new DebugDirectory();
+		dd.set(b);
+		DataReader dr = new DataReader(b);
+		dd.setCharacteristics(dr.readDoubleWord());
+		dd.setTimeDateStamp(dr.readDoubleWord());
+		dd.setMajorVersion(dr.readWord());
+		dd.setMajorVersion(dr.readWord());
+		dd.setType(dr.readDoubleWord());
+		dd.setSizeOfData(dr.readDoubleWord());
+		dd.setAddressOfRawData(dr.readDoubleWord());
+		dd.setPointerToRawData(dr.readDoubleWord());
+		return dd;
+	}
 
 	public int getCharacteristics() {
 		return characteristics;

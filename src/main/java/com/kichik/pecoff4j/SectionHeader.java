@@ -9,6 +9,11 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
+
+import java.io.IOException;
+
 public class SectionHeader {
 	private String name;
 	private int virtualSize;
@@ -20,6 +25,34 @@ public class SectionHeader {
 	private int numberOfRelocations;
 	private int numberOfLineNumbers;
 	private int characteristics;
+
+	public static SectionHeader read(IDataReader dr) throws IOException {
+		SectionHeader sh = new SectionHeader();
+		sh.setName(dr.readUtf(8));
+		sh.setVirtualSize(dr.readDoubleWord());
+		sh.setVirtualAddress(dr.readDoubleWord());
+		sh.setSizeOfRawData(dr.readDoubleWord());
+		sh.setPointerToRawData(dr.readDoubleWord());
+		sh.setPointerToRelocations(dr.readDoubleWord());
+		sh.setPointerToLineNumbers(dr.readDoubleWord());
+		sh.setNumberOfRelocations(dr.readWord());
+		sh.setNumberOfLineNumbers(dr.readWord());
+		sh.setCharacteristics(dr.readDoubleWord());
+		return sh;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeUtf(getName(), 8);
+		dw.writeDoubleWord(getVirtualSize());
+		dw.writeDoubleWord(getVirtualAddress());
+		dw.writeDoubleWord(getSizeOfRawData());
+		dw.writeDoubleWord(getPointerToRawData());
+		dw.writeDoubleWord(getPointerToRelocations());
+		dw.writeDoubleWord(getPointerToLineNumbers());
+		dw.writeWord(getNumberOfRelocations());
+		dw.writeWord(getNumberOfLineNumbers());
+		dw.writeDoubleWord(getCharacteristics());
+	}
 
 	public String getName() {
 		return name;

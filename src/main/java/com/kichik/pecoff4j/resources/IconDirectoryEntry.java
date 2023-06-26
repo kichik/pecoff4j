@@ -9,6 +9,11 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
+import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
+
+import java.io.IOException;
+
 public class IconDirectoryEntry {
 	private int width;
 	private int height;
@@ -18,6 +23,31 @@ public class IconDirectoryEntry {
 	private int bitCount;
 	private int bytesInRes;
 	private int offset;
+
+	public static IconDirectoryEntry read(IDataReader dr) throws IOException {
+		IconDirectoryEntry ge = new IconDirectoryEntry();
+		ge.setWidth(dr.readByte());
+		ge.setHeight(dr.readByte());
+		ge.setColorCount(dr.readByte());
+		ge.setReserved(dr.readByte());
+		ge.setPlanes(dr.readWord());
+		ge.setBitCount(dr.readWord());
+		ge.setBytesInRes(dr.readDoubleWord());
+		ge.setOffset(dr.readDoubleWord());
+
+		return ge;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeByte(getWidth());
+		dw.writeByte(getHeight());
+		dw.writeByte(getColorCount());
+		dw.writeByte(getReserved());
+		dw.writeWord(getPlanes());
+		dw.writeWord(getBitCount());
+		dw.writeDoubleWord(getBytesInRes());
+		dw.writeDoubleWord(getOffset());
+	}
 
 	public int getWidth() {
 		return width;

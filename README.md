@@ -45,8 +45,8 @@ import com.kichik.pecoff4j.PE;
 import com.kichik.pecoff4j.ResourceDirectory;
 import com.kichik.pecoff4j.ResourceEntry;
 import com.kichik.pecoff4j.constant.ResourceType;
+import com.kichik.pecoff4j.io.DataReader;
 import com.kichik.pecoff4j.io.PEParser;
-import com.kichik.pecoff4j.io.ResourceParser;
 import com.kichik.pecoff4j.resources.StringFileInfo;
 import com.kichik.pecoff4j.resources.StringTable;
 import com.kichik.pecoff4j.resources.VersionInfo;
@@ -61,7 +61,7 @@ public class Main {
 		ResourceEntry[] entries = ResourceHelper.findResources(rd, ResourceType.VERSION_INFO);
 		for (int i = 0; i < entries.length; i++) {
 			byte[] data = entries[i].getData();
-			VersionInfo version = ResourceParser.readVersionInfo(data);
+			VersionInfo version = VersionInfo.read(new DataReader(data));
 
 			StringFileInfo strings = version.getStringFileInfo();
 			StringTable table = strings.getTable(0);

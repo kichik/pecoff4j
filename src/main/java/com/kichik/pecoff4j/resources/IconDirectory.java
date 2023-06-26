@@ -9,12 +9,37 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
+import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class IconDirectory {
 	private int reserved;
 	private int type;
 	private ArrayList entries = new ArrayList();
+
+	public static IconDirectory read(IDataReader dr) throws IOException {
+		IconDirectory gi = new IconDirectory();
+		gi.setReserved(dr.readWord());
+		gi.setType(dr.readWord());
+		int count = dr.readWord();
+		for (int i = 0; i < count; i++) {
+			gi.add(IconDirectoryEntry.read(dr));
+		}
+
+		return gi;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeWord(getReserved());
+		dw.writeWord(getType());
+		dw.writeWord(getCount());
+		for (int i = 0; i < getCount(); i++) {
+			getEntry(i).write(dw);
+		}
+	}
 
 	public void add(IconDirectoryEntry entry) {
 		entries.add(entry);

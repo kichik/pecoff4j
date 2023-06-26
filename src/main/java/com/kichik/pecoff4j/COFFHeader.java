@@ -9,6 +9,11 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
+
+import java.io.IOException;
+
 public class COFFHeader {
 	private int machine;
 	private int numberOfSections;
@@ -17,6 +22,28 @@ public class COFFHeader {
 	private int numberOfSymbols;
 	private int sizeOfOptionalHeader;
 	private int characteristics;
+
+	public static COFFHeader read(IDataReader dr) throws IOException {
+		COFFHeader h = new COFFHeader();
+		h.setMachine(dr.readWord());
+		h.setNumberOfSections(dr.readWord());
+		h.setTimeDateStamp(dr.readDoubleWord());
+		h.setPointerToSymbolTable(dr.readDoubleWord());
+		h.setNumberOfSymbols(dr.readDoubleWord());
+		h.setSizeOfOptionalHeader(dr.readWord());
+		h.setCharacteristics(dr.readWord());
+		return h;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeWord(getMachine());
+		dw.writeWord(getNumberOfSections());
+		dw.writeDoubleWord(getTimeDateStamp());
+		dw.writeDoubleWord(getPointerToSymbolTable());
+		dw.writeDoubleWord(getNumberOfSymbols());
+		dw.writeWord(getSizeOfOptionalHeader());
+		dw.writeWord(getCharacteristics());
+	}
 
 	public int getMachine() {
 		return machine;

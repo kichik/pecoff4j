@@ -9,6 +9,11 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
+
+import java.io.IOException;
+
 public class ResourceDirectoryTable {
 	private int characteristics;
 	private int timeDateStamp;
@@ -16,6 +21,27 @@ public class ResourceDirectoryTable {
 	private int minVersion;
 	private int numNameEntries;
 	private int numIdEntries;
+
+	public static ResourceDirectoryTable read(IDataReader dr) throws IOException {
+		ResourceDirectoryTable t = new ResourceDirectoryTable();
+		t.setCharacteristics(dr.readDoubleWord());
+		t.setTimeDateStamp(dr.readDoubleWord());
+		t.setMajorVersion(dr.readWord());
+		t.setMinVersion(dr.readWord());
+		t.setNumNameEntries(dr.readWord());
+		t.setNumIdEntries(dr.readWord());
+
+		return t;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeDoubleWord(getCharacteristics());
+		dw.writeDoubleWord(getTimeDateStamp());
+		dw.writeWord(getMajorVersion());
+		dw.writeWord(getMinVersion());
+		dw.writeWord(getNumNameEntries());
+		dw.writeWord(getNumIdEntries());
+	}
 
 	public int getCharacteristics() {
 		return characteristics;

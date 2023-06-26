@@ -9,6 +9,11 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
+import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
+
+import java.io.IOException;
+
 public class FixedFileInfo {
 	private int signature;
 	private int strucVersion;
@@ -23,6 +28,40 @@ public class FixedFileInfo {
 	private int fileSubtype;
 	private int fileDateMS;
 	private int fileDateLS;
+
+	public static FixedFileInfo read(IDataReader dr) throws IOException {
+		FixedFileInfo ffi = new FixedFileInfo();
+		ffi.setSignature(dr.readDoubleWord());
+		ffi.setStrucVersion(dr.readDoubleWord());
+		ffi.setFileVersionMS(dr.readDoubleWord());
+		ffi.setFileVersionLS(dr.readDoubleWord());
+		ffi.setProductVersionMS(dr.readDoubleWord());
+		ffi.setProductVersionLS(dr.readDoubleWord());
+		ffi.setFileFlagMask(dr.readDoubleWord());
+		ffi.setFileFlags(dr.readDoubleWord());
+		ffi.setFileOS(dr.readDoubleWord());
+		ffi.setFileType(dr.readDoubleWord());
+		ffi.setFileSubtype(dr.readDoubleWord());
+		ffi.setFileDateMS(dr.readDoubleWord());
+		ffi.setFileDateLS(dr.readDoubleWord());
+		return ffi;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeDoubleWord(getSignature());
+		dw.writeDoubleWord(getStrucVersion());
+		dw.writeDoubleWord(getFileVersionMS());
+		dw.writeDoubleWord(getFileVersionLS());
+		dw.writeDoubleWord(getProductVersionMS());
+		dw.writeDoubleWord(getProductVersionLS());
+		dw.writeDoubleWord(getFileFlagMask());
+		dw.writeDoubleWord(getFileFlags());
+		dw.writeDoubleWord(getFileOS());
+		dw.writeDoubleWord(getFileType());
+		dw.writeDoubleWord(getFileSubtype());
+		dw.writeDoubleWord(getFileDateMS());
+		dw.writeDoubleWord(getFileDateLS());
+	}
 
 	public int getSignature() {
 		return signature;

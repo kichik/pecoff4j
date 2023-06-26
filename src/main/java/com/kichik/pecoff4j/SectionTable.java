@@ -9,11 +9,14 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.IntMap;
 
 public class SectionTable {
@@ -27,6 +30,32 @@ public class SectionTable {
 	private List<SectionHeader> headers = new ArrayList();
 	private IntMap sections = new IntMap();
 	private RVAConverter rvaConverter;
+
+	public static SectionTable read(PE pe, IDataReader dr)
+			throws IOException {
+		SectionTable st = new SectionTable();
+		int ns = pe.getCoffHeader().getNumberOfSections();
+		for (int i = 0; i < ns; i++) {
+			st.add(SectionHeader.read(dr));
+		}
+
+		SectionHeader[] sorted = st.getHeadersPointerSorted();
+		int[] virtualAddress = new int[sorted.length];
+		int[] pointerToRawData = new int[sorted.length];
+		for (int i = 0; i < sorted.length; i++) {
+			virtualAddress[i] = sorted[i].getVirtualAddress();
+			pointerToRawData[i] = sorted[i].getPointerToRawData();
+		}
+
+		st.setRvaConverter(new RVAConverter(virtualAddress, pointerToRawData));
+		return st;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		for (SectionHeader header : headers) {
+			header.write(dw);
+		}
+	}
 
 	public void add(SectionHeader header) {
 		headers.add(header);

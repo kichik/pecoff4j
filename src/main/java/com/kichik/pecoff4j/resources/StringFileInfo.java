@@ -10,9 +10,12 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.Strings;
 
 public class StringFileInfo {
@@ -22,6 +25,52 @@ public class StringFileInfo {
 	private String key;
 	private int padding;
 	private List<StringTable> tables = new ArrayList<StringTable>();
+
+	public static StringFileInfo read(IDataReader dr) throws IOException {
+		int initialPos = dr.getPosition();
+
+		StringFileInfo sfi = new StringFileInfo();
+
+		sfi.setLength(dr.readWord());
+		sfi.setValueLength(dr.readWord());
+		sfi.setType(dr.readWord());
+		sfi.setKey(dr.readUnicode());
+		sfi.setPadding(dr.align(4));
+
+		while (dr.getPosition() - initialPos < sfi.getLength())
+			sfi.add(StringTable.read(dr));
+
+		return sfi;
+	}
+
+	public static StringFileInfo readPartial(IDataReader dr, int initialPos, int length, int valueLength, int type, String key) throws IOException {
+		StringFileInfo sfi = new StringFileInfo();
+
+		sfi.setLength(length);
+		sfi.setValueLength(valueLength);
+		sfi.setType(type);
+		sfi.setKey(key);
+		sfi.setPadding(dr.align(4));
+		while (dr.getPosition() - initialPos < sfi.getLength()) {
+			sfi.add(StringTable.read(dr));
+		}
+		return sfi;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeWord(getLength());
+		if (getLength() == 0) {
+			return;
+		}
+		dw.writeWord(getValueLength());
+		dw.writeWord(getType());
+		dw.writeUnicode(getKey());
+		dw.align(4);
+		for (int i = 0; i < getCount(); i++) {
+			StringTable table = getTable(i);
+			table.write(dw);
+		}
+	}
 
 	public void add(StringTable table) {
 		tables.add(table);

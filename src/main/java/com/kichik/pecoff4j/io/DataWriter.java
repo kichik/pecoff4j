@@ -10,6 +10,7 @@
 package com.kichik.pecoff4j.io;
 
 import java.io.BufferedOutputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -102,5 +103,36 @@ public class DataWriter implements IDataWriter {
 		out.write(b);
 		out.write(0);
 		position += b.length + 1;
+	}
+
+	@Override
+	public void writeUnicode(String s) throws IOException {
+		for (char c : s.toCharArray()) {
+			writeWord(c);
+		}
+		writeWord(0);
+	}
+
+	@Override
+	public void writeUnicode(String s, int len) throws IOException {
+		char[] c = s.toCharArray();
+		int i = 0;
+		for (; i < c.length && i < len; i++) {
+			writeWord(c[i]);
+		}
+		for (; i < len; i++) {
+			writeWord(0);
+		}
+	}
+
+	@Override
+	public int align(int alignment) throws IOException {
+		int off = (alignment - (getPosition() % alignment)) % alignment;
+		try {
+			writeByte(0, off);
+		} catch (EOFException ignored) {
+			// no need to align when it's at the end of its data
+		}
+		return off;
 	}
 }

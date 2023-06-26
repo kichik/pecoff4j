@@ -29,8 +29,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- must be marked as 7 instead of 1.7; otherwise: "Fatal error compiling: release version 1.7 not supported" -->
-        <maven.compiler.release>7</maven.compiler.release>
+        <maven.compiler.release>8</maven.compiler.release>
     </properties>
 
     <scm>
@@ -114,9 +113,9 @@
                             <release>9</release>
                         </configuration>
                     </execution>
-                    <!-- compile sources for Java 7 -->
+                    <!-- compile sources for Java 8 -->
                     <execution>
-                        <id>java-7-compile</id>
+                        <id>java-8-compile</id>
                         <goals>
                             <goal>compile</goal>
                         </goals>

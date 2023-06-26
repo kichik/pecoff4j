@@ -9,6 +9,11 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
+import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
+
+import java.io.IOException;
+
 public class BitmapInfoHeader {
 	private int size;
 	private int width;
@@ -21,6 +26,37 @@ public class BitmapInfoHeader {
 	private int ypelsPerMeter;
 	private int clrUsed;
 	private int clrImportant;
+
+	public static BitmapInfoHeader read(IDataReader dr) throws IOException {
+		BitmapInfoHeader bh = new BitmapInfoHeader();
+		bh.setSize(dr.readDoubleWord());
+		bh.setWidth(dr.readDoubleWord());
+		bh.setHeight(dr.readDoubleWord());
+		bh.setPlanes(dr.readWord());
+		bh.setBitCount(dr.readWord());
+		bh.setCompression(dr.readDoubleWord());
+		bh.setSizeImage(dr.readDoubleWord());
+		bh.setXpelsPerMeter(dr.readDoubleWord());
+		bh.setYpelsPerMeter(dr.readDoubleWord());
+		bh.setClrUsed(dr.readDoubleWord());
+		bh.setClrImportant(dr.readDoubleWord());
+
+		return bh;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeDoubleWord(getSize());
+		dw.writeDoubleWord(getWidth());
+		dw.writeDoubleWord(getHeight());
+		dw.writeWord(getPlanes());
+		dw.writeWord(getBitCount());
+		dw.writeDoubleWord(getCompression());
+		dw.writeDoubleWord(getSizeImage());
+		dw.writeDoubleWord(getXpelsPerMeter());
+		dw.writeDoubleWord(getYpelsPerMeter());
+		dw.writeDoubleWord(getClrUsed());
+		dw.writeDoubleWord(getClrImportant());
+	}
 
 	public int getSize() {
 		return size;

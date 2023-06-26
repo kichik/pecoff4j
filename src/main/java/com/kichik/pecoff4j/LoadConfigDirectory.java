@@ -9,7 +9,10 @@
  *******************************************************************************/
 package com.kichik.pecoff4j;
 
+import com.kichik.pecoff4j.io.DataReader;
 import com.kichik.pecoff4j.util.DataObject;
+
+import java.io.IOException;
 
 public class LoadConfigDirectory extends DataObject {
 	private int size;
@@ -32,6 +35,37 @@ public class LoadConfigDirectory extends DataObject {
 	private long securityCookie;
 	private long seHandlerTable;
 	private long seHandlerCount;
+
+	public static LoadConfigDirectory read(PE pe, byte[] b) throws IOException {
+		DataReader dr = new DataReader(b);
+		LoadConfigDirectory lcd = new LoadConfigDirectory();
+		lcd.set(b);
+		lcd.setSize(dr.readDoubleWord());
+		lcd.setTimeDateStamp(dr.readDoubleWord());
+		lcd.setMajorVersion(dr.readWord());
+		lcd.setMinorVersion(dr.readWord());
+		lcd.setGlobalFlagsClear(dr.readDoubleWord());
+		lcd.setGlobalFlagsSet(dr.readDoubleWord());
+		lcd.setCriticalSectionDefaultTimeout(dr.readDoubleWord());
+		lcd.setDeCommitFreeBlockThreshold(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+		lcd.setDeCommitTotalFreeThreshold(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+		lcd.setLockPrefixTable(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+		lcd.setMaximumAllocationSize(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+		lcd.setVirtualMemoryThreshold(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+		lcd.setProcessAffinityMask(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+		lcd.setProcessHeapFlags(dr.readDoubleWord());
+		lcd.setCsdVersion(dr.readWord());
+		lcd.setReserved(dr.readWord());
+		lcd.setEditList(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+		if (dr.hasMore()) // optional
+			lcd.setSecurityCookie(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+		if (dr.hasMore()) // optional
+			lcd.setSeHandlerTable(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+		if (dr.hasMore()) // optional
+			lcd.setSeHandlerCount(pe.is64() ? dr.readLong() : dr.readDoubleWord());
+
+		return lcd;
+	}
 
 	public int getSize() {
 		return size;

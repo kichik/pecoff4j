@@ -10,8 +10,12 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
+import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.Reflection;
 import com.kichik.pecoff4j.util.Strings;
+
+import java.io.IOException;
 
 public class StringPair {
 	private int length;
@@ -20,6 +24,52 @@ public class StringPair {
 	private String key;
 	private String value;
 	private int padding;
+
+	public static StringPair read(IDataReader dr) throws IOException {
+		int initialPos = dr.getPosition();
+
+		StringPair sp = new StringPair();
+		sp.setLength(dr.readWord());
+		sp.setValueLength(dr.readWord());
+		sp.setType(dr.readWord());
+		sp.setKey(dr.readUnicode());
+		sp.setPadding(dr.align(4));
+
+		int remainingWords = (sp.getLength() - (dr.getPosition() - initialPos)) / 2;
+		int valueLength = sp.getValueLength();
+		if (sp.getType() == 0) // wType == 0 => binary; wLength is in bytes
+			valueLength /= 2;
+		if (valueLength > remainingWords)
+			valueLength = remainingWords;
+		sp.setValue(dr.readUnicode(valueLength).trim());
+
+		int remainingBytes = (sp.getLength() - (dr.getPosition() - initialPos));
+		dr.skipBytes(remainingBytes);
+		dr.align(4);
+		return sp;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		int initialPos = dw.getPosition();
+
+		dw.writeWord(getLength());
+		dw.writeWord(getValueLength());
+		dw.writeWord(getType());
+		dw.writeUnicode(getKey());
+		dw.align(4);
+
+		int remainingWords = (getLength() - (dw.getPosition() - initialPos)) / 2;
+		int valueLength = getValueLength();
+		if (getType() == 0) // wType == 0 => binary; wLength is in bytes
+			valueLength /= 2;
+		if (valueLength > remainingWords)
+			valueLength = remainingWords;
+		dw.writeUnicode(getValue(), valueLength);
+
+		int remainingBytes = (getLength() - (dw.getPosition() - initialPos));
+		dw.writeByte(0, remainingBytes);
+		dw.align(4);
+	}
 
 	public int getLength() {
 		return length;

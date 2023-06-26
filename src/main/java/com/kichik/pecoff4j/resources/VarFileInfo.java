@@ -9,6 +9,10 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
+import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +22,31 @@ public class VarFileInfo {
 	private int type;
 	private String key;
 	private final List<Var> vars = new ArrayList<>();
+
+	public static VarFileInfo readPartial(IDataReader dr, int initialPos, int length, int valueLength, int type, String key) throws IOException {
+		VarFileInfo vfi = new VarFileInfo();
+		vfi.setLength(length);
+		vfi.setValueLength(valueLength);
+		vfi.setType(type);
+		vfi.setKey(key);
+		dr.align(4);
+
+		while (dr.getPosition() < initialPos + length) {
+			vfi.addVar(Var.read(dr));
+		}
+		return vfi;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeWord(getLength());
+		dw.writeWord(getValueLength());
+		dw.writeWord(getType());
+		dw.writeUnicode(getKey());
+		dw.align(4);
+		for (Var v : getVars()) {
+			v.write(dw);
+		}
+	}
 
 	public void setLength(int length) {
 		this.length = length;

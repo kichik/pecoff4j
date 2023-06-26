@@ -9,11 +9,32 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
+import com.kichik.pecoff4j.io.IDataReader;
+import com.kichik.pecoff4j.io.IDataWriter;
+
+import java.io.IOException;
+
 public class RGBQuad {
 	private int blue;
 	private int green;
 	private int red;
 	private int reserved;
+
+	public static RGBQuad read(IDataReader dr) throws IOException {
+		RGBQuad r = new RGBQuad();
+		r.setBlue(dr.readByte());
+		r.setGreen(dr.readByte());
+		r.setRed(dr.readByte());
+		r.setReserved(dr.readByte());
+		return r;
+	}
+
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeByte(getBlue());
+		dw.writeByte(getGreen());
+		dw.writeByte(getRed());
+		dw.writeByte(getReserved());
+	}
 
 	public int getBlue() {
 		return blue;
