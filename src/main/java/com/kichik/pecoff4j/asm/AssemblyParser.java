@@ -178,7 +178,6 @@ public class AssemblyParser {
 			}
 			break;
 		}
-		println(opcode);
 		return null;
 	}
 
