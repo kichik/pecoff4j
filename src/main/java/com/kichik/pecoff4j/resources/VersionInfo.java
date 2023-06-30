@@ -11,7 +11,6 @@ package com.kichik.pecoff4j.resources;
 
 import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.io.IDataWriter;
-import com.kichik.pecoff4j.io.ResourceAssembler;
 
 import java.io.IOException;
 
@@ -65,7 +64,7 @@ public class VersionInfo {
 		dw.writeWord(getType());
 		dw.writeUnicode(getKey());
 		dw.align(4);
-		ResourceAssembler.write(getFixedFileInfo(), dw);
+		getFixedFileInfo().write(dw);
 
 		StringFileInfo stringFileInfo = getStringFileInfo();
 		if (stringFileInfo != null) {

@@ -8,10 +8,14 @@ import com.kichik.pecoff4j.resources.GroupIconDirectory;
 import com.kichik.pecoff4j.resources.IconImage;
 import com.kichik.pecoff4j.resources.Manifest;
 import com.kichik.pecoff4j.resources.VersionInfo;
+import com.kichik.pecoff4j.util.IO;
 import com.kichik.pecoff4j.util.ResourceHelper;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class ReadWriteTest {
     @Test
@@ -96,5 +100,27 @@ public class ReadWriteTest {
             image.write(writer);
             writer.assertEndOfStream();
         }
+    }
+
+    /**
+     * Check that all the executables and libraries in a given folder (default is System32 directory) can be read
+     * and written back.
+     */
+    public static void main(String[] args) throws IOException {
+        String directory = args.length >= 0 ? args[0] : "C:/windows/system32";
+        File[] files = IO.findFiles(new File(directory),
+                (dir, name) -> name.endsWith(".dll") && !name.contains("dllcache"));
+
+        for (File file : files) {
+            System.out.println("Checking " + file);
+            PE pe = PEParser.parse(file);
+            try (InputStream expected = new FileInputStream(file)) {
+                ValidatingWriter writer = new ValidatingWriter(new DataReader(expected));
+
+                pe.write(writer);
+                writer.assertEndOfStream();
+            }
+        }
+
     }
 }
