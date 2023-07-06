@@ -1,20 +1,29 @@
 package com.kichik.pecoff4j.resources;
 
+import com.kichik.pecoff4j.RebuildableStructure;
 import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.io.IDataWriter;
+import com.kichik.pecoff4j.util.Strings;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.kichik.pecoff4j.util.Alignment.*;
 
 /**
  * A list of language and code page identifier pairs.
  *
  * See <a href="https://learn.microsoft.com/en-us/windows/win32/menurc/var-str">Var structure</a> for details.
  */
-public class Var {
+public class Var implements RebuildableStructure {
+	/** The length of this structure (in bytes) */
 	private int length;
+
+	/** The length of the values (in bytes) */
 	private int valueLength;
+
+	/** 1 for text data, 0 for binary data */
 	private int type;
 	private String key;
 	private final List<Integer> values = new ArrayList<>();
@@ -33,13 +42,21 @@ public class Var {
 		return v;
 	}
 
+	@Override
+	public int rebuild() {
+		valueLength = values.size() * 4;
+		length = alignDword(6 + Strings.getUtf16Length(key)) + valueLength;
+		return length;
+	}
+
+	@Override
 	public void write(IDataWriter dw) throws IOException {
-		dw.writeWord(getLength());
-		dw.writeWord(getValueLength());
-		dw.writeWord(getType());
-		dw.writeUnicode(getKey());
+		dw.writeWord(length);
+		dw.writeWord(valueLength);
+		dw.writeWord(type);
+		dw.writeUnicode(key);
 		dw.align(4);
-		for (Integer value : getValues()) {
+		for (Integer value : values) {
 			dw.writeDoubleWord(value);
 		}
 	}

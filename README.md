@@ -48,6 +48,7 @@ import com.kichik.pecoff4j.constant.ResourceType;
 import com.kichik.pecoff4j.io.DataReader;
 import com.kichik.pecoff4j.io.PEParser;
 import com.kichik.pecoff4j.resources.StringFileInfo;
+import com.kichik.pecoff4j.resources.StringPair;
 import com.kichik.pecoff4j.resources.StringTable;
 import com.kichik.pecoff4j.resources.VersionInfo;
 import com.kichik.pecoff4j.util.ResourceHelper;
@@ -64,11 +65,9 @@ public class Main {
 			VersionInfo version = VersionInfo.read(new DataReader(data));
 
 			StringFileInfo strings = version.getStringFileInfo();
-			StringTable table = strings.getTable(0);
-			for (int j = 0; j < table.getCount(); j++) {
-				String key = table.getString(j).getKey();
-				String value = table.getString(j).getValue();
-				System.out.println(key + " = " + value);
+			StringTable table = strings.getTables().get(0);
+			for (List<StringPair> pair :table.getStrings()){
+				System.out.println(pair.getKey() + " = " + pair.getValue());
 			}
 		}
 	}

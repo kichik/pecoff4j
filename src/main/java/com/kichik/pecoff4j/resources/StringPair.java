@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
+import com.kichik.pecoff4j.RebuildableStructure;
 import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.Reflection;
@@ -17,13 +18,24 @@ import com.kichik.pecoff4j.util.Strings;
 
 import java.io.IOException;
 
-public class StringPair {
+import static com.kichik.pecoff4j.util.Alignment.*;
+
+/**
+ * A string pair.
+ *
+ * See <a href="https://learn.microsoft.com/en-us/windows/win32/menurc/string-str">String structure</a> for details.
+ */
+public class StringPair implements RebuildableStructure {
+	/** The length of this structure (in bytes) */
 	private int length;
+
+	/** The length of this value String (in words) */
 	private int valueLength;
+
+	/** 1 for text data, 0 for binary data */
 	private int type;
 	private String key;
 	private String value;
-	private int padding;
 
 	public static StringPair read(IDataReader dr) throws IOException {
 		int initialPos = dr.getPosition();
@@ -33,15 +45,17 @@ public class StringPair {
 		sp.setValueLength(dr.readWord());
 		sp.setType(dr.readWord());
 		sp.setKey(dr.readUnicode());
-		sp.setPadding(dr.align(4));
+		dr.align(4);
 
 		int remainingWords = (sp.getLength() - (dr.getPosition() - initialPos)) / 2;
 		int valueLength = sp.getValueLength();
-		if (sp.getType() == 0) // wType == 0 => binary; wLength is in bytes
+		if (sp.getType() == 0) { // wType == 0 => binary; wLength is in bytes
 			valueLength /= 2;
-		if (valueLength > remainingWords)
+		}
+		if (valueLength > remainingWords) {
 			valueLength = remainingWords;
-		sp.setValue(dr.readUnicode(valueLength).trim());
+		}
+		sp.setValue(dr.readUnicode(valueLength - 1));
 
 		int remainingBytes = (sp.getLength() - (dr.getPosition() - initialPos));
 		dr.skipBytes(remainingBytes);
@@ -49,24 +63,42 @@ public class StringPair {
 		return sp;
 	}
 
+	@Override
+	public int rebuild() {
+		if (value.isEmpty()) {
+			// sometimes single null-byte is stored, so valueLength could also be 1 or 2 (depending on type)
+			valueLength = 0;
+		}
+		else if (type == 0) { // wType == 0 => binary; wLength is in bytes
+			valueLength = Strings.getUtf16Length(value);
+		} else {
+			valueLength = Strings.getUtf16Length(value) / 2;
+		}
+		length = sizeOf();
+		return length;
+	}
+
+	@Override
 	public void write(IDataWriter dw) throws IOException {
 		int initialPos = dw.getPosition();
 
-		dw.writeWord(getLength());
-		dw.writeWord(getValueLength());
-		dw.writeWord(getType());
-		dw.writeUnicode(getKey());
+		dw.writeWord(length);
+		dw.writeWord(valueLength);
+		dw.writeWord(type);
+		dw.writeUnicode(key);
 		dw.align(4);
 
-		int remainingWords = (getLength() - (dw.getPosition() - initialPos)) / 2;
-		int valueLength = getValueLength();
-		if (getType() == 0) // wType == 0 => binary; wLength is in bytes
-			valueLength /= 2;
-		if (valueLength > remainingWords)
-			valueLength = remainingWords;
-		dw.writeUnicode(getValue(), valueLength);
+		int remainingWords = (length - (dw.getPosition() - initialPos)) / 2;
+		int valueLengthInBytes = valueLength;
+		if (getType() == 0) {// wType == 0 => binary; wLength is in bytes
+			valueLengthInBytes /= 2;
+		}
+		if (valueLengthInBytes > remainingWords) {
+			valueLengthInBytes = remainingWords;
+		}
+		dw.writeUnicode(value, valueLengthInBytes);
 
-		int remainingBytes = (getLength() - (dw.getPosition() - initialPos));
+		int remainingBytes = (length - (dw.getPosition() - initialPos));
 		dw.writeByte(0, remainingBytes);
 		dw.align(4);
 	}
@@ -117,15 +149,8 @@ public class StringPair {
 	}
 
 	public int sizeOf() {
-		return 6 + padding + Strings.getUtf16Length(key)
-				+ Strings.getUtf16Length(value);
+		return alignDword(6 + Strings.getUtf16Length(key))
+				+ (value.isEmpty() ? 0 : Strings.getUtf16Length(value));
 	}
 
-	public int getPadding() {
-		return padding;
-	}
-
-	public void setPadding(int padding) {
-		this.padding = padding;
-	}
 }

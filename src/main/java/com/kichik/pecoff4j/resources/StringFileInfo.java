@@ -14,17 +14,32 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.kichik.pecoff4j.RebuildableStructure;
 import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.Strings;
 
-public class StringFileInfo {
+import static com.kichik.pecoff4j.util.Alignment.alignDword;
+
+/**
+ * File information structure.
+ *
+ * See <a href="https://learn.microsoft.com/en-us/windows/win32/menurc/stringfileinfo">StringFileInfo structure</a> for details.
+ */
+public class StringFileInfo implements RebuildableStructure {
+	/** The length of this structure (in bytes) */
 	private int length;
+
+	/** Always 0 */
 	private int valueLength;
+
+	/** 1 for text data, 0 for binary data */
 	private int type;
+
+	/** Must be "StringFileInfo" */
 	private String key;
-	private int padding;
-	private List<StringTable> tables = new ArrayList<StringTable>();
+
+	private final List<StringTable> tables = new ArrayList<>();
 
 	public static StringFileInfo read(IDataReader dr) throws IOException {
 		int initialPos = dr.getPosition();
@@ -35,10 +50,11 @@ public class StringFileInfo {
 		sfi.setValueLength(dr.readWord());
 		sfi.setType(dr.readWord());
 		sfi.setKey(dr.readUnicode());
-		sfi.setPadding(dr.align(4));
+		dr.align(4);
 
-		while (dr.getPosition() - initialPos < sfi.getLength())
+		while (dr.getPosition() - initialPos < sfi.getLength()) {
 			sfi.add(StringTable.read(dr));
+		}
 
 		return sfi;
 	}
@@ -50,24 +66,36 @@ public class StringFileInfo {
 		sfi.setValueLength(valueLength);
 		sfi.setType(type);
 		sfi.setKey(key);
-		sfi.setPadding(dr.align(4));
+		dr.align(4);
 		while (dr.getPosition() - initialPos < sfi.getLength()) {
 			sfi.add(StringTable.read(dr));
 		}
 		return sfi;
 	}
 
+	@Override
+	public int rebuild() {
+		valueLength = 0;
+
+		int sum = alignDword(6 + Strings.getUtf16Length(key));
+		for (StringTable table : tables) {
+			sum += table.rebuild();
+		}
+		length = sum;
+		return length;
+	}
+
+	@Override
 	public void write(IDataWriter dw) throws IOException {
-		dw.writeWord(getLength());
-		if (getLength() == 0) {
+		dw.writeWord(length);
+		if (length == 0) {
 			return;
 		}
-		dw.writeWord(getValueLength());
-		dw.writeWord(getType());
-		dw.writeUnicode(getKey());
+		dw.writeWord(valueLength);
+		dw.writeWord(type);
+		dw.writeUnicode(key);
 		dw.align(4);
-		for (int i = 0; i < getCount(); i++) {
-			StringTable table = getTable(i);
+		for (StringTable table : tables) {
 			table.write(dw);
 		}
 	}
@@ -82,6 +110,10 @@ public class StringFileInfo {
 
 	public StringTable getTable(int index) {
 		return tables.get(index);
+	}
+
+	public List<StringTable> getTables() {
+		return tables;
 	}
 
 	public int getLength() {
@@ -116,18 +148,11 @@ public class StringFileInfo {
 		this.key = key;
 	}
 
-	public int getPadding() {
-		return padding;
-	}
-
-	public void setPadding(int padding) {
-		this.padding = padding;
-	}
-
 	public int sizeOf() {
-		int actualLength = 6 + padding + Strings.getUtf16Length(key);
-		for (StringTable t : tables)
+		int actualLength = alignDword(6 + Strings.getUtf16Length(key));
+		for (StringTable t : tables) {
 			actualLength += t.sizeOf();
+		}
 		return actualLength;
 	}
 }
