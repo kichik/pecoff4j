@@ -107,7 +107,7 @@ public class ReadWriteTest {
      * and written back.
      */
     public static void main(String[] args) throws IOException {
-        String directory = args.length >= 0 ? args[0] : "C:/windows/system32";
+        String directory = args.length > 0 ? args[0] : "C:/windows/system32";
         File[] files = IO.findFiles(new File(directory),
                 (dir, name) -> name.endsWith(".dll") && !name.contains("dllcache"));
 

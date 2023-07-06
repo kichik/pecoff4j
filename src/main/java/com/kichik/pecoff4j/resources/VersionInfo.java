@@ -9,18 +9,40 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
+import com.kichik.pecoff4j.RebuildableStructure;
 import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.io.IDataWriter;
+import com.kichik.pecoff4j.util.Strings;
 
 import java.io.IOException;
 
-public class VersionInfo {
+import static com.kichik.pecoff4j.util.Alignment.*;
+
+/**
+ * File version information structure.
+ *
+ * See <a href="https://learn.microsoft.com/en-us/windows/win32/menurc/vs-versioninfo">VS_VERSIONINFO structure</a> for details.
+ */
+public class VersionInfo implements RebuildableStructure {
+	/** The length of this structure without padding at the end */
 	private int length;
+
+	/** The length of the FixedFileInfo or 0 if it does not exist */
 	private int valueLength;
+
+	/** 1 for text data, 0 for binary data */
 	private int type;
+
+	/** Must be "VS_VERSION_INFO" */
 	private String key;
+
+	/** The optional FixedFileInfo structure */
 	private FixedFileInfo fixedFileInfo;
+
+	/** The optional StringFileInfo structure */
 	private StringFileInfo stringFileInfo;
+
+	/** The optional VarFileInfo structure */
 	private VarFileInfo varFileInfo;
 
 	public static VersionInfo read(IDataReader dr)
@@ -32,8 +54,10 @@ public class VersionInfo {
 		vi.setType(dr.readWord());
 		vi.setKey(dr.readUnicode());
 		dr.align(4);
-		vi.setFixedFileInfo(FixedFileInfo.read(dr));
-		dr.align(4);
+		if (vi.getValueLength() != 0) {
+			vi.setFixedFileInfo(FixedFileInfo.read(dr));
+			dr.align(4);
+		}
 
 		while (dr.getPosition() < versionInfoPos + vi.getLength()) {
 			int initialPos = dr.getPosition();
@@ -58,20 +82,46 @@ public class VersionInfo {
 		return vi;
 	}
 
-	public void write(IDataWriter dw) throws IOException {
-		dw.writeWord(getLength());
-		dw.writeWord(getValueLength());
-		dw.writeWord(getType());
-		dw.writeUnicode(getKey());
-		dw.align(4);
-		getFixedFileInfo().write(dw);
+	@Override
+	public int rebuild() {
+		int sum = alignDword(6 + Strings.getUtf16Length(key));
 
-		StringFileInfo stringFileInfo = getStringFileInfo();
+		if (fixedFileInfo != null) {
+			valueLength = FixedFileInfo.sizeOf();
+			sum += valueLength;
+		} else {
+			valueLength = 0;
+		}
+
 		if (stringFileInfo != null) {
+			sum = alignDword(sum);
+			sum += stringFileInfo.rebuild();
+		}
+		if (varFileInfo != null) {
+			sum = alignDword(sum);
+			sum += varFileInfo.rebuild();
+		}
+		length = sum;
+		return length;
+	}
+
+	@Override
+	public void write(IDataWriter dw) throws IOException {
+		dw.writeWord(length);
+		dw.writeWord(valueLength);
+		dw.writeWord(type);
+		dw.writeUnicode(key);
+		dw.align(4);
+		if (fixedFileInfo != null) {
+			fixedFileInfo.write(dw);
+		}
+
+		if (stringFileInfo != null) {
+			dw.align(4);
 			stringFileInfo.write(dw);
 		}
-		VarFileInfo varFileInfo = getVarFileInfo();
 		if (varFileInfo != null) {
+			dw.align(4);
 			varFileInfo.write(dw);
 		}
 	}

@@ -9,17 +9,33 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
+import com.kichik.pecoff4j.RebuildableStructure;
 import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.io.IDataWriter;
+import com.kichik.pecoff4j.util.Strings;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VarFileInfo {
+import static com.kichik.pecoff4j.util.Alignment.*;
+
+/**
+ * Structure for version information data.
+ *
+ * See <a href="https://learn.microsoft.com/en-us/windows/win32/menurc/varfileinfo">VarFileInfo structure</a> for details.
+ */
+public class VarFileInfo implements RebuildableStructure {
+	/** The length of this structure including its children */
 	private int length;
+
+	/** Always 0 */
 	private int valueLength;
+
+	/** 1 for text data, 0 for binary data */
 	private int type;
+
+	/** Must be "VarFileInfo" */
 	private String key;
 	private final List<Var> vars = new ArrayList<>();
 
@@ -37,13 +53,26 @@ public class VarFileInfo {
 		return vfi;
 	}
 
+	@Override
+	public int rebuild() {
+		valueLength = 0;
+
+		int sum = alignDword(6 + Strings.getUtf16Length(key));
+		for (Var v : vars) {
+			sum += v.rebuild();
+		}
+		length = sum;
+		return length;
+	}
+
+	@Override
 	public void write(IDataWriter dw) throws IOException {
-		dw.writeWord(getLength());
-		dw.writeWord(getValueLength());
-		dw.writeWord(getType());
-		dw.writeUnicode(getKey());
+		dw.writeWord(length);
+		dw.writeWord(valueLength);
+		dw.writeWord(type);
+		dw.writeUnicode(key);
 		dw.align(4);
-		for (Var v : getVars()) {
+		for (Var v : vars) {
 			v.write(dw);
 		}
 	}

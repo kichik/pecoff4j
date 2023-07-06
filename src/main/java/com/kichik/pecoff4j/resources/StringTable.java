@@ -14,17 +14,29 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.kichik.pecoff4j.RebuildableStructure;
 import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.Strings;
 
-public class StringTable {
+import static com.kichik.pecoff4j.util.Alignment.*;
+
+/**
+ * A string table. Holds language dependent string pairs.
+ */
+public class StringTable implements RebuildableStructure {
+	/** The length of this structure (in bytes) */
 	private int length;
+
+	/** Always 0 */
 	private int valueLength;
+
+	/** 1 for text data, 0 for binary data */
 	private int type;
+
+	/** string containing language identifier (first half) and code page (second half) as 8 digit hex value */
 	private String key;
-	private int padding;
-	private List<StringPair> strings = new ArrayList<StringPair>();
+	private final List<StringPair> strings = new ArrayList<>();
 
 	public static StringTable read(IDataReader dr) throws IOException {
 		int initialPos = dr.getPosition();
@@ -37,41 +49,60 @@ public class StringTable {
 		vfi.setValueLength(dr.readWord());
 		vfi.setType(dr.readWord());
 		vfi.setKey(dr.readUnicode());
-		vfi.setPadding(dr.align(4));
+		dr.align(4);
 
-		while (dr.getPosition() - initialPos < vfi.getLength())
+		while (dr.getPosition() - initialPos < vfi.getLength()) {
 			vfi.add(StringPair.read(dr));
+		}
 
 		return vfi;
 	}
 
+	@Override
+	public int rebuild() {
+		valueLength = 0;
+
+		for (StringPair stringPair : strings) {
+			stringPair.rebuild();
+		}
+		length = sizeOf();
+		return length;
+	}
+
+	@Override
 	public void write(IDataWriter dw) throws IOException {
-		dw.writeWord(getLength());
-		if (getLength() == 0) {
+		dw.writeWord(length);
+		if (length == 0) {
 			return;
 		}
 
-		dw.writeWord(getValueLength());
-		dw.writeWord(getType());
-		dw.writeUnicode(getKey());
+		dw.writeWord(valueLength);
+		dw.writeWord(type);
+		dw.writeUnicode(key);
 		dw.align(4);
 
-		for (int i = 0; i < getCount(); i++) {
-			StringPair pair = getString(i);
-			pair.write(dw);
+		for (StringPair stringPair : strings) {
+			stringPair.write(dw);
 		}
 	}
 
+	@Deprecated
 	public void add(StringPair string) {
 		strings.add(string);
 	}
 
+	@Deprecated
 	public int getCount() {
 		return strings.size();
 	}
 
+	@Deprecated
 	public StringPair getString(int index) {
 		return strings.get(index);
+	}
+
+	public List<StringPair> getStrings() {
+		return strings;
 	}
 
 	public int getLength() {
@@ -84,10 +115,6 @@ public class StringTable {
 
 	public int getType() {
 		return type;
-	}
-
-	public int getPadding() {
-		return padding;
 	}
 
 	public String getKey() {
@@ -110,14 +137,11 @@ public class StringTable {
 		this.type = type;
 	}
 
-	public void setPadding(int padding) {
-		this.padding = padding;
-	}
-
 	public int sizeOf() {
-		int actualLength = 6 + padding + Strings.getUtf16Length(key);
-		for (StringPair s : strings)
-			actualLength += s.sizeOf();
+		int actualLength = alignDword(6 + Strings.getUtf16Length(key));
+		for (StringPair s : strings) {
+			actualLength = alignDword(actualLength) + s.sizeOf();
+		}
 		return actualLength;
 	}
 }

@@ -79,7 +79,8 @@ public class ValidatingWriter implements IDataWriter {
 
 	@Override
 	public void writeUnicode(String s, int len) throws IOException {
-		Assertions.assertEquals(expected.readUnicode(len).trim(), s);
+		Assertions.assertEquals(expected.readUnicode(len - 1), s);
+		Assertions.assertEquals(expected.readWord(), 0);
 	}
 
 	@Override
@@ -87,9 +88,11 @@ public class ValidatingWriter implements IDataWriter {
 		int off = (alignment - (getPosition() % alignment)) % alignment;
 		if (off != 0) {
 			for (int i = 0; i < off; i++) {
-				int value = expected.readByte();
-				if (value != 0 && value != PADDING[i % 16]) {
-					Assertions.fail("Padding unexpected");
+				if (expected.hasMore()) {
+					int value = expected.readByte();
+					if (value != 0 && value != PADDING[i % 16]) {
+						Assertions.fail("Padding unexpected");
+					}
 				}
 			}
 		}
