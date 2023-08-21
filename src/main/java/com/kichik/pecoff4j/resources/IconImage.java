@@ -9,12 +9,13 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
+import com.kichik.pecoff4j.WritableStructure;
 import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.io.IDataWriter;
 
 import java.io.IOException;
 
-public class IconImage {
+public class IconImage implements WritableStructure {
 	private BitmapInfoHeader header;
 	private RGBQuad[] colors;
 	private byte[] xorMask;
@@ -67,6 +68,7 @@ public class IconImage {
 		return ii;
 	}
 
+	@Override
 	public void write(IDataWriter dw) throws IOException {
 		if (getHeader() != null) {
 			getHeader().write(dw);

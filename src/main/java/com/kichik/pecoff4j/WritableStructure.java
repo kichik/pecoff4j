@@ -8,7 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
- * A structure that be written using a data writer.
+ * A structure that can be written using a data writer.
  */
 public interface WritableStructure {
     /**

@@ -42,14 +42,11 @@ public class IconExtractor {
 			icd.setType(1);
 			icd.setReserved(0);
 			icf.setDirectory(icd);
-			IconImage[] images = new IconImage[gid.getCount()];
-			icf.setImages(images);
 
-			for (int j = 0; j < gid.getCount(); j++) {
-				GroupIconDirectoryEntry gide = gid.getEntry(j);
+			for (GroupIconDirectoryEntry gide : gid.getEntries()) {
 				IconDirectoryEntry ide = new IconDirectoryEntry();
 				ide.copyFrom(gide);
-				icd.add(ide);
+				icd.getEntries().add(ide);
 				ResourceEntry[] icos = ResourceHelper.findResources(rd,
 						ResourceType.ICON, gide.getId());
 				if (icos == null || icos.length != 1) {
@@ -60,11 +57,11 @@ public class IconExtractor {
 				// Check for PNG data
 				if (gide.getWidth() == 0 && gide.getHeight() == 0) {
 					IconImage ii = IconImage.readPNG(d);
-					images[j] = ii;
+					icf.setImage(ide, ii);
 				} else {
 					IconImage ii = IconImage.readIcon(new DataReader(
 							d), gide.getBytesInRes());
-					images[j] = ii;
+					icf.setImage(ide, ii);
 				}
 			}
 

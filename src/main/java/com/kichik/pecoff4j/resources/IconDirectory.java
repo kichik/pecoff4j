@@ -14,11 +14,12 @@ import com.kichik.pecoff4j.io.IDataWriter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class IconDirectory {
 	private int reserved;
 	private int type;
-	private ArrayList entries = new ArrayList();
+	private final List<IconDirectoryEntry> entries = new ArrayList<>();
 
 	public static IconDirectory read(IDataReader dr) throws IOException {
 		IconDirectory gi = new IconDirectory();
@@ -33,24 +34,31 @@ public class IconDirectory {
 	}
 
 	public void write(IDataWriter dw) throws IOException {
-		dw.writeWord(getReserved());
-		dw.writeWord(getType());
-		dw.writeWord(getCount());
-		for (int i = 0; i < getCount(); i++) {
-			getEntry(i).write(dw);
+		dw.writeWord(reserved);
+		dw.writeWord(type);
+		dw.writeWord(entries.size());
+		for (IconDirectoryEntry entry : entries) {
+			entry.write(dw);
 		}
 	}
 
+	@Deprecated
 	public void add(IconDirectoryEntry entry) {
 		entries.add(entry);
 	}
 
+	@Deprecated
 	public int getCount() {
 		return entries.size();
 	}
 
+	@Deprecated
 	public IconDirectoryEntry getEntry(int index) {
-		return (IconDirectoryEntry) entries.get(index);
+		return entries.get(index);
+	}
+
+	public List<IconDirectoryEntry> getEntries() {
+		return entries;
 	}
 
 	public void setReserved(int reserved) {
