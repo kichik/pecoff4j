@@ -9,7 +9,7 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
-import com.kichik.pecoff4j.RebuildableStructure;
+import com.kichik.pecoff4j.WritableStructure;
 import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.Strings;
@@ -23,7 +23,7 @@ import static com.kichik.pecoff4j.util.Alignment.*;
  *
  * See <a href="https://learn.microsoft.com/en-us/windows/win32/menurc/vs-versioninfo">VS_VERSIONINFO structure</a> for details.
  */
-public class VersionInfo implements RebuildableStructure {
+public class VersionInfo implements WritableStructure {
 	/** The length of this structure without padding at the end */
 	private int length;
 
@@ -82,7 +82,6 @@ public class VersionInfo implements RebuildableStructure {
 		return vi;
 	}
 
-	@Override
 	public int rebuild() {
 		int sum = alignDword(6 + Strings.getUtf16Length(key));
 

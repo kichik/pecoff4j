@@ -9,7 +9,7 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
-import com.kichik.pecoff4j.RebuildableStructure;
+import com.kichik.pecoff4j.WritableStructure;
 import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.Strings;
@@ -25,7 +25,7 @@ import static com.kichik.pecoff4j.util.Alignment.*;
  *
  * See <a href="https://learn.microsoft.com/en-us/windows/win32/menurc/varfileinfo">VarFileInfo structure</a> for details.
  */
-public class VarFileInfo implements RebuildableStructure {
+public class VarFileInfo implements WritableStructure {
 	/** The length of this structure including its children */
 	private int length;
 
@@ -53,7 +53,6 @@ public class VarFileInfo implements RebuildableStructure {
 		return vfi;
 	}
 
-	@Override
 	public int rebuild() {
 		valueLength = 0;
 

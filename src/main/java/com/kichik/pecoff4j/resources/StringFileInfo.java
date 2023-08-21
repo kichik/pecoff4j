@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.kichik.pecoff4j.RebuildableStructure;
+import com.kichik.pecoff4j.WritableStructure;
 import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.Strings;
@@ -26,7 +26,7 @@ import static com.kichik.pecoff4j.util.Alignment.alignDword;
  *
  * See <a href="https://learn.microsoft.com/en-us/windows/win32/menurc/stringfileinfo">StringFileInfo structure</a> for details.
  */
-public class StringFileInfo implements RebuildableStructure {
+public class StringFileInfo implements WritableStructure {
 	/** The length of this structure (in bytes) */
 	private int length;
 
@@ -73,7 +73,6 @@ public class StringFileInfo implements RebuildableStructure {
 		return sfi;
 	}
 
-	@Override
 	public int rebuild() {
 		valueLength = 0;
 
