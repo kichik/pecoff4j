@@ -10,13 +10,20 @@
 package com.kichik.pecoff4j;
 
 import com.kichik.pecoff4j.constant.ImageDataDirectoryType;
+import com.kichik.pecoff4j.constant.SectionFlag;
 import com.kichik.pecoff4j.io.DataEntry;
+import com.kichik.pecoff4j.io.DataReader;
+import com.kichik.pecoff4j.io.DataWriter;
 import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.io.IDataWriter;
+import com.kichik.pecoff4j.util.PaddingType;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class PE {
+import static com.kichik.pecoff4j.util.Alignment.align;
+
+public class PE implements WritableStructure {
 	private DOSHeader dosHeader;
 	private DOSStub stub;
 	private PESignature signature;
@@ -158,6 +165,134 @@ public class PE {
 		id.setDebugRawData(b);
 	}
 
+	/**
+	 * Rebuild the resources section and update the various size fields and the PE checksum.
+	 */
+	public int rebuild(PaddingType paddingType) {
+		// rebuild resource table data
+		ResourceDirectory resourceTable = imageData.getResourceTable();
+		if (resourceTable != null) {
+			ImageDataDirectory resTable = optionalHeader.getDataDirectory(ImageDataDirectoryType.RESOURCE_TABLE);
+			int resBaseAddress = resTable.getVirtualAddress();
+
+			int resSize = resourceTable.rebuild(resBaseAddress);
+			byte[] resData = resourceTable.toByteArray(paddingType, optionalHeader.getFileAlignment());
+
+			// update resource data section
+			for (int i = 0; i < sectionTable.getNumberOfSections(); i++) {
+				SectionHeader header = sectionTable.getHeader(i);
+				SectionData section = sectionTable.getSection(i);
+				if (header.getVirtualAddress() == resTable.getVirtualAddress()) {
+					if (header.getVirtualSize() == resTable.getSize()) {
+						header.setVirtualSize(resSize);
+						header.setSizeOfRawData(align(resSize, optionalHeader.getFileAlignment()));
+						resTable.setSize(resSize);
+						section.setData(resData);
+						break;
+					} else {
+						throw new UnsupportedOperationException("Partial update of section is not supported");
+					}
+				}
+			}
+
+			// update virtual address and raw data pointer
+			int virtualAddress = 0;
+			int fileAddress = 0;
+			for (SectionHeader header : sectionTable.getHeadersPointerSorted()) {
+				if (header.getVirtualAddress() > resTable.getVirtualAddress()) {
+					for (ImageDataDirectory dataDirectory : optionalHeader.getDataDirectories()) {
+						if (dataDirectory.getVirtualAddress() == header.getVirtualAddress()) {
+							dataDirectory.setVirtualAddress(virtualAddress);
+							break;
+						}
+					}
+					header.setVirtualAddress(virtualAddress);
+					header.setPointerToRawData(fileAddress);
+				}
+				virtualAddress = align(header.getVirtualAddress() + header.getVirtualSize(), optionalHeader.getSectionAlignment());
+				fileAddress = align(header.getPointerToRawData() + header.getSizeOfRawData(), optionalHeader.getFileAlignment());
+			}
+		}
+
+		// update size fields
+		optionalHeader.setSizeOfInitializedData(
+				calculateSizeOfInitializedData(sectionTable, optionalHeader.getFileAlignment()));
+		optionalHeader.setSizeOfImage(calculateSizeOfImage(sectionTable, optionalHeader.getSectionAlignment()));
+
+		int length = updateChecksum(paddingType);
+
+		return length;
+	}
+
+	private int calculateSizeOfInitializedData(SectionTable sectionTable, int fileAlignment) {
+		int sum = 0;
+		for (int i = 0; i < sectionTable.getNumberOfSections(); i++) {
+			SectionHeader header = sectionTable.getHeader(i);
+			if ((header.getCharacteristics() & SectionFlag.IMAGE_SCN_CNT_INITIALIZED_DATA) != 0) {
+				sum += Math.max(header.getSizeOfRawData(), align(header.getVirtualSize(), fileAlignment));
+			}
+		}
+		return sum;
+	}
+
+	private int calculateSizeOfImage(SectionTable sectionTable, int sectionAlignment) {
+		// find the highest address used in any section (virtual address space)
+		int max = 0;
+		for (int i = 0; i < sectionTable.getNumberOfSections(); i++) {
+			SectionHeader header = sectionTable.getHeader(i);
+			max = Math.max(max, header.getVirtualAddress() + header.getVirtualSize());
+		}
+		return align(max, sectionAlignment);
+	}
+
+	/**
+	 * Update Checksum and return the length of the executable file.
+	 */
+	private int updateChecksum(PaddingType paddingType) {
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			DataWriter dataWriter = new DataWriter(baos);
+			dataWriter.setPaddingMode(paddingType);
+			write(dataWriter);
+			dataWriter.close();
+
+			int length = baos.size();
+			// align to DWORD
+			baos.write(new byte[(4 - (baos.size() % 4)) % 4]);
+			byte[] data = baos.toByteArray();
+
+			long checksum = 0;
+
+			try (DataReader reader = new DataReader(data)) {
+				while (reader.hasMore()) {
+					// skip data where checksum is stored
+					if (reader.getPosition() == (dosHeader.getAddressOfNewExeHeader() + 0x58)) {
+						reader.readDoubleWord();
+						continue;
+					}
+					long doubleWord = ((long) reader.readDoubleWord()) & 0xffffffffL;
+					checksum = (checksum & 0xffffffffL) + (doubleWord & 0xffffffffL);
+
+					if (checksum >= 1L << 32) {
+						checksum = (checksum & 0xffffffffL) + (checksum >> 32);
+					}
+				}
+			}
+
+			checksum = (checksum & 0xffff) + (checksum >> 16);
+			checksum = checksum + (checksum >> 16);
+			checksum = checksum & 0xffff;
+			checksum += length; // must be original data length
+
+			optionalHeader.setCheckSum((int) checksum);
+			return length;
+		} catch (IOException e) {
+			// cannot happen due to in-memory implementation of writer and reader
+			return 0;
+		}
+	}
+
+	@Override
 	public void write(IDataWriter dw) throws IOException {
 		getDosHeader().write(dw);
 		getStub().write(dw);

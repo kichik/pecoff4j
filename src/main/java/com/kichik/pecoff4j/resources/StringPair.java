@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.resources;
 
-import com.kichik.pecoff4j.RebuildableStructure;
+import com.kichik.pecoff4j.WritableStructure;
 import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.Reflection;
@@ -25,7 +25,7 @@ import static com.kichik.pecoff4j.util.Alignment.*;
  *
  * See <a href="https://learn.microsoft.com/en-us/windows/win32/menurc/string-str">String structure</a> for details.
  */
-public class StringPair implements RebuildableStructure {
+public class StringPair implements WritableStructure {
 	/** The length of this structure (in bytes) */
 	private int length;
 
@@ -63,7 +63,6 @@ public class StringPair implements RebuildableStructure {
 		return sp;
 	}
 
-	@Override
 	public int rebuild() {
 		if (value.isEmpty()) {
 			// sometimes single null-byte is stored, so valueLength could also be 1 or 2 (depending on type)

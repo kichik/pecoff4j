@@ -1,6 +1,6 @@
 package com.kichik.pecoff4j.resources;
 
-import com.kichik.pecoff4j.RebuildableStructure;
+import com.kichik.pecoff4j.WritableStructure;
 import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.Strings;
@@ -16,7 +16,7 @@ import static com.kichik.pecoff4j.util.Alignment.*;
  *
  * See <a href="https://learn.microsoft.com/en-us/windows/win32/menurc/var-str">Var structure</a> for details.
  */
-public class Var implements RebuildableStructure {
+public class Var implements WritableStructure {
 	/** The length of this structure (in bytes) */
 	private int length;
 
@@ -42,7 +42,6 @@ public class Var implements RebuildableStructure {
 		return v;
 	}
 
-	@Override
 	public int rebuild() {
 		valueLength = values.size() * 4;
 		length = alignDword(6 + Strings.getUtf16Length(key)) + valueLength;

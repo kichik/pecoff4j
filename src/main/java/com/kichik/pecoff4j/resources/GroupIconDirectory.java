@@ -13,12 +13,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.kichik.pecoff4j.WritableStructure;
 import com.kichik.pecoff4j.io.DataReader;
 import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.Reflection;
 
-public class GroupIconDirectory {
+public class GroupIconDirectory implements WritableStructure {
 	private int reserved;
 	private int type;
 	private List<GroupIconDirectoryEntry> entries = new ArrayList<>();
@@ -72,6 +73,7 @@ public class GroupIconDirectory {
 		return gi;
 	}
 
+	@Override
 	public void write(IDataWriter dw) throws IOException {
 		dw.writeWord(reserved);
 		dw.writeWord(type);

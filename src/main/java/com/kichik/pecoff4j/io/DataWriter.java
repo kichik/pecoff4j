@@ -9,6 +9,8 @@
  *******************************************************************************/
 package com.kichik.pecoff4j.io;
 
+import com.kichik.pecoff4j.util.PaddingType;
+
 import java.io.BufferedOutputStream;
 import java.io.EOFException;
 import java.io.File;
@@ -20,6 +22,7 @@ import java.io.OutputStream;
 public class DataWriter implements IDataWriter {
 	private BufferedOutputStream out;
 	private int position;
+	private PaddingType paddingType = PaddingType.PATTERN;
 
 	public DataWriter(File output) throws FileNotFoundException {
 		this(new FileOutputStream(output));
@@ -27,6 +30,10 @@ public class DataWriter implements IDataWriter {
 
 	public DataWriter(OutputStream out) {
 		this.out = new BufferedOutputStream(out);
+	}
+
+	public void setPaddingMode(PaddingType paddingType) {
+		this.paddingType = paddingType;
 	}
 
 	@Override
@@ -129,7 +136,10 @@ public class DataWriter implements IDataWriter {
 	public int align(int alignment) throws IOException {
 		int off = (alignment - (getPosition() % alignment)) % alignment;
 		try {
-			writeByte(0, off);
+			byte[] padding = paddingType.getData();
+			for (int i = 0; i < off; i++) {
+				writeByte(padding[i % padding.length]);
+			}
 		} catch (EOFException ignored) {
 			// no need to align when it's at the end of its data
 		}

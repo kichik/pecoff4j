@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.kichik.pecoff4j.RebuildableStructure;
+import com.kichik.pecoff4j.WritableStructure;
 import com.kichik.pecoff4j.io.IDataReader;
 import com.kichik.pecoff4j.io.IDataWriter;
 import com.kichik.pecoff4j.util.Strings;
@@ -24,7 +24,7 @@ import static com.kichik.pecoff4j.util.Alignment.*;
 /**
  * A string table. Holds language dependent string pairs.
  */
-public class StringTable implements RebuildableStructure {
+public class StringTable implements WritableStructure {
 	/** The length of this structure (in bytes) */
 	private int length;
 
@@ -58,7 +58,6 @@ public class StringTable implements RebuildableStructure {
 		return vfi;
 	}
 
-	@Override
 	public int rebuild() {
 		valueLength = 0;
 

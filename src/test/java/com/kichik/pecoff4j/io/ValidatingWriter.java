@@ -1,5 +1,6 @@
 package com.kichik.pecoff4j.io;
 
+import com.kichik.pecoff4j.util.PaddingType;
 import org.junit.jupiter.api.Assertions;
 
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class ValidatingWriter implements IDataWriter {
 
-	private static final byte[] PADDING = "PADDINGXXPADDING".getBytes(StandardCharsets.US_ASCII);
+	private static final byte[] PADDING = PaddingType.PATTERN.getData();
 
 	private final IDataReader expected;
 
