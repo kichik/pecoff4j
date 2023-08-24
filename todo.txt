@@ -1,6 +1,3 @@
-
-- resource assembler needs to write out resource directory from scratch
-
 - use cases
 	- winrun4j rcedit impl
 	- icon extractor
