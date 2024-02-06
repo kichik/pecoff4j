@@ -21,7 +21,7 @@ This fork of PECOFF4J is available on [Maven Central](https://search.maven.org/a
 <dependency>
   <groupId>com.kichik.pecoff4j</groupId>
   <artifactId>pecoff4j</artifactId>
-  <version>0.3.1</version>
+  <version>0.4.1</version>
 </dependency>
 ```
 
@@ -35,6 +35,11 @@ Sources are licensed under [Common Public License v1.0](http://www.eclipse.org/l
 ## New Features
 
 The project was forked to implement version string parsing for a [StackOverflow question](http://stackoverflow.com/questions/23845480/how-to-get-windows-file-details/23848792).
+
+Recently, support for modifying the resource directory has been added (e.g. adding or removing icons). See
+the [ResourceDirectoryTest](https://github.com/kichik/pecoff4j/blob/master/src/test/java/com/kichik/pecoff4j/ResourceDirectoryTest.java)
+for some basic examples. Use the `rebuild` method to re-calculate the internal structures prior to creating the binary
+using the `write` method.
 
 ### Example
 
@@ -60,13 +65,13 @@ public class Main {
 		ResourceDirectory rd = pe.getImageData().getResourceTable();
 
 		ResourceEntry[] entries = ResourceHelper.findResources(rd, ResourceType.VERSION_INFO);
-		for (int i = 0; i < entries.length; i++) {
-			byte[] data = entries[i].getData();
+		for (ResourceEntry entry : entries) {
+			byte[] data = entry.getData();
 			VersionInfo version = VersionInfo.read(new DataReader(data));
 
 			StringFileInfo strings = version.getStringFileInfo();
 			StringTable table = strings.getTables().get(0);
-			for (List<StringPair> pair :table.getStrings()){
+			for (List<StringPair> pair : table.getStrings()){
 				System.out.println(pair.getKey() + " = " + pair.getValue());
 			}
 		}
@@ -88,7 +93,3 @@ OriginalFilename = NOTEPAD.EXE
 ProductName = Microsoft® Windows® Operating System
 ProductVersion = 6.1.7600.16385
 ```
-
-## Other Forks
-
-[jonnyzzz/PE](https://github.com/jonnyzzz/PE) has even more features and probably got much more love than this fork.
